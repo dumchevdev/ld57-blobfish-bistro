@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
@@ -233,3 +234,4 @@ namespace Game.Runtime.CMS.Editor
         public Sprite Sprite;
     }
 }
+#endif
