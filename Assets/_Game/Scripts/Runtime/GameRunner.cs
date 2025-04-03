@@ -1,6 +1,7 @@
 ﻿using Game.Runtime.CMS;
 using Game.Runtime.ServiceLocator;
 using Game.Runtime.Services.Audio;
+using Game.Runtime.Services.Save;
 using UnityEngine;
 
 namespace Game.Runtime
@@ -25,14 +26,15 @@ namespace Game.Runtime
         {
             var audioService = new AudioService(10);
             ServiceLocator<AudioService>.RegisterService(audioService);
-            
-            audioService.Play(CMSConstants.CMSEntityPrefab);
-            Debug.Log($"{CMSProvider.GetEntity(CMSConstants.Test.TestEntity).EntityId}");
+
+            var saveService = new SaveService();
+            ServiceLocator<SaveService>.RegisterService(saveService);
         }
 
         private void UnregisterServices()
         {
             ServiceLocator<AudioService>.UnregisterService();
+            ServiceLocator<SaveService>.UnregisterService();
         }
 
         private void OnDestroy()

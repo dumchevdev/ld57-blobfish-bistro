@@ -7,7 +7,7 @@ namespace Game.Runtime.CMS.Editor
 {
     public class CMSEntityExplorer : EditorWindow
     {
-        private const string SEARCH_PATH = "Assets/_Game/Resources/CMS";
+        private const string SEARCH_PATH = "Assets/_Game/Scripts/Runtime/CMS/Resources";
 
         private string searchQuery = "";
         private TreeViewState treeViewState;

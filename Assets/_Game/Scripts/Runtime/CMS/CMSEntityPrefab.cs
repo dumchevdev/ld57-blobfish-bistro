@@ -6,7 +6,6 @@ namespace Game.Runtime.CMS
     public class CMSEntityPrefab : MonoBehaviour
     {
         [SerializeField, HideInInspector] private string entityId;
-        
         [SerializeReference] public List<CMSComponent> Components;
         
         public string EntityId => entityId;

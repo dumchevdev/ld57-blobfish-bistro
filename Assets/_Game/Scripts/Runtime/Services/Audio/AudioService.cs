@@ -12,13 +12,13 @@ namespace Game.Runtime.Services.Audio
 {
     public class AudioService : IService, IDisposable
     {
-        public bool MuteSFX;
-        public bool MuteAmbient;
-        public bool MuteMusic;
+        private bool _muteSFX;
+        private bool _muteAmbient;
+        private bool _muteMusic;
 
-        public float SFXVolume = 1.0f;
-        public float AmbientVolume = 1.0f;
-        public float MusicVolume = 1.0f;
+        private float _sfxVolume = 1.0f;
+        private float _ambientVolume = 1.0f;
+        private float _musicVolume = 1.0f;
         
         private readonly GameObject _audioObject;
         private readonly AudioSource _ambientSource;
@@ -54,12 +54,43 @@ namespace Game.Runtime.Services.Audio
             Play(CMSProvider.GetEntity(entityId));
         }
         
-        public void Play<T>() where T : CMSEntity
+        public void SetVolume(AudioType type, float volume)
         {
-            Play(CMSProvider.GetEntity<T>());
+            switch (type)
+            {
+                case AudioType.SFX:
+                    _sfxVolume = volume;
+                    break;
+                case AudioType.Ambient:
+                    _ambientVolume = volume;
+                    _ambientSource.volume = _ambientVolume;
+                    break;
+                case AudioType.Music:
+                    _musicVolume = volume;
+                    _musicSource.volume = volume;
+                    break;
+            }
         }
 
-        public void Play(CMSEntity definition)
+        public void Mute(AudioType type, bool mute)
+        {
+            switch (type)
+            {
+                case AudioType.SFX:
+                    _muteSFX = mute;
+                    break;
+                case AudioType.Ambient:
+                    _muteAmbient = mute;
+                    _ambientSource.enabled = !mute;
+                    break;
+                case AudioType.Music:
+                    _muteMusic = mute;
+                    _musicSource.enabled = !mute;
+                    break;
+            }
+        }
+
+        private void Play(CMSEntity definition)
         {
             if (definition.Is<SFXComponent>())
                 PlaySFX(definition);
@@ -69,9 +100,9 @@ namespace Game.Runtime.Services.Audio
                 PlayMusic(music);
         }
 
-        public void PlaySFX(CMSEntity sfxEntity)
+        private void PlaySFX(CMSEntity sfxEntity)
         {
-            if (!MuteSFX && CanPlaySFX(sfxEntity.EntityId))
+            if (!_muteSFX && CanPlaySFX(sfxEntity.EntityId))
             {
                 if (sfxEntity.Is(out SFXLibraryComponent sfxLibraryComponent))
                 {
@@ -81,12 +112,12 @@ namespace Game.Runtime.Services.Audio
                     if (audioSource != null)
                     {
                         audioSource.clip = clip;
-                        audioSource.volume = SFXVolume * sfxLibraryComponent.Volume;
+                        audioSource.volume = _sfxVolume * sfxLibraryComponent.Volume;
                         
                         audioSource.Play();
                         _lastPlayTime[sfxEntity.EntityId] = Time.time;
                         
-                        ReturnAudioSourceToPool(audioSource, clip.length).Forget();
+                       ReturnAudioSourceToPool(audioSource, clip.length).Forget();
                     }
                 }
             }
@@ -111,7 +142,9 @@ namespace Game.Runtime.Services.Audio
 
         private async UniTask ReturnAudioSourceToPool(AudioSource audioSource, float delay)
         {
+            ResetPoolToken();
             _poolTokenSource = new CancellationTokenSource();
+            
             await UniTask.WaitForSeconds(delay, cancellationToken: _poolTokenSource.Token);
             
             audioSource.Stop();
@@ -127,71 +160,40 @@ namespace Game.Runtime.Services.Audio
             return Time.time - lastTimePlayed >= cooldown;
         }
 
-        public void PlayAmbient(AmbientComponent ambient)
+        private void PlayAmbient(AmbientComponent ambient)
         {
-            if (!MuteAmbient)
+            if (!_muteAmbient)
             {
                 _ambientSource.clip = ambient.Clip;
                 _ambientSource.loop = true;
-                _ambientSource.volume = AmbientVolume;
+                _ambientSource.volume = _ambientVolume;
                 
                 _ambientSource.Play();
             }
         }
 
-        public void PlayMusic(MusicComponent music)
+        private void PlayMusic(MusicComponent music)
         {
-            if (!MuteMusic)
+            if (!_muteMusic)
             {
                 _musicSource.clip = music.Clip;
                 _musicSource.loop = true;
-                _musicSource.volume = MusicVolume;
+                _musicSource.volume = _musicVolume;
                 
                 _musicSource.Play();
             }
         }
 
-        public void SetVolume(AudioType type, float volume)
+        private void ResetPoolToken()
         {
-            switch (type)
-            {
-                case AudioType.SFX:
-                    SFXVolume = volume;
-                    break;
-                case AudioType.Ambient:
-                    AmbientVolume = volume;
-                    _ambientSource.volume = AmbientVolume;
-                    break;
-                case AudioType.Music:
-                    MusicVolume = volume;
-                    _musicSource.volume = volume;
-                    break;
-            }
-        }
-
-        public void Mute(AudioType type, bool mute)
-        {
-            switch (type)
-            {
-                case AudioType.SFX:
-                    MuteSFX = mute;
-                    break;
-                case AudioType.Ambient:
-                    MuteAmbient = mute;
-                    _ambientSource.enabled = !mute;
-                    break;
-                case AudioType.Music:
-                    MuteMusic = mute;
-                    _musicSource.enabled = !mute;
-                    break;
-            }
+            _poolTokenSource?.Cancel();
+            _poolTokenSource?.Dispose();
+            _poolTokenSource = null;
         }
 
         public void Dispose()
         {
-            _poolTokenSource?.Cancel();
-            _poolTokenSource?.Dispose();
-            
+            ResetPoolToken();
             UnityEngine.Object.Destroy(_audioObject);
         }
     }
