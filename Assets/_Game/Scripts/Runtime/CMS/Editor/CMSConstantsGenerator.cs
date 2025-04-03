@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Game.Runtime.Utils.Helpers;
 using UnityEditor;
 using UnityEngine;
 
@@ -11,9 +10,9 @@ namespace Game.Runtime.CMS.Editor
 {
     public class CMSConstantsGenerator : AssetPostprocessor
     {
-        private const string ResourcesFolderPath = "_Game/Scripts/Runtime/CMS/Resources";
+        private const string ResourcesFolderPath = "_Game/Resources/CMS";
         private const string OutputFolderPath = "_Game/Scripts/Runtime/CMS/";
-        private const string OutputClassName = "CMSConstants";
+        private const string OutputClassName = "CMSPrefabs";
         
         private static readonly HashSet<string> CSharpKeywords = new HashSet<string>
         {
@@ -28,9 +27,12 @@ namespace Game.Runtime.CMS.Editor
             "void", "volatile", "while"
         };
 
-        [MenuItem("Tools/CMS/Generate Entity Identifiers")]
+        [MenuItem("Tools/CMS/Reload")]
         public static void GenerateResourceClass()
         {
+            CMSProvider.Unload();
+            CMSProvider.Load();
+            
             var resourcesPath = Path.Combine(Application.dataPath, ResourcesFolderPath);
             if (!Directory.Exists(resourcesPath))
             {
@@ -73,7 +75,6 @@ namespace Game.Runtime.CMS.Editor
             builder.AppendLine("    {");
             
             GenerateFolderConstants(resourcesPath, builder, "        ");
-            GenerateEntityTypeConstants(builder, "        ");
             
             builder.AppendLine("    }");
             builder.AppendLine("}");
@@ -100,15 +101,6 @@ namespace Game.Runtime.CMS.Editor
                 {
                     builder.AppendLine($"{indent}public const string {fileName} = \"{relativePath}\";");
                 }
-            }
-        }
-
-        private static void GenerateEntityTypeConstants(StringBuilder builder, string indent)
-        {
-            var entities = Helpers.ReflectionHelper.FindAllSubsClasses<CMSEntity>();
-            foreach (var entity in entities)
-            {
-                builder.AppendLine($"{indent}public const string {entity.Name} = \"{entity.FullName}\";");
             }
         }
 

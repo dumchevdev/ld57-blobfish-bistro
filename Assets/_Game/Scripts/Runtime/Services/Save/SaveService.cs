@@ -28,31 +28,38 @@ namespace Game.Runtime.Services.Save
         
         private async void StartAutoSave()
         {
-            ResetCancellationToken();   
+            _saveTokenSource?.Cancel();
             _saveTokenSource = new CancellationTokenSource();
-            
-            while (true)
+
+            try
             {
-                await UniTask.WaitForSeconds(1, cancellationToken: _saveTokenSource.Token);
-                
-                if (_saveTokenSource.IsCancellationRequested)
-                    return;
-                
-                var str = JsonConvert.SerializeObject(SaveData);
-                PlayerPrefs.SetString(SaveId, str);
+                while (true)
+                {
+                    await UniTask.WaitForSeconds(1, cancellationToken: _saveTokenSource.Token)
+                        .SuppressCancellationThrow();
+
+                    if ( _saveTokenSource == null || _saveTokenSource.IsCancellationRequested)
+                        return;
+                    
+                    var str = JsonConvert.SerializeObject(SaveData);
+                    PlayerPrefs.SetString(SaveId, str);
+                }
+            }
+            finally
+            {
+                ResetSaveToken();
             }
         }
 
-        private void ResetCancellationToken()
+        private void ResetSaveToken()
         {
-            _saveTokenSource?.Cancel();
             _saveTokenSource?.Dispose();
             _saveTokenSource = null;
         }
 
         public void Dispose()
         {
-            ResetCancellationToken();
+            ResetSaveToken();
         }
     }
 }

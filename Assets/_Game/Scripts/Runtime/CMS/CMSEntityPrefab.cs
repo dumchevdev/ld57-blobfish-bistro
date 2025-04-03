@@ -15,9 +15,9 @@ namespace Game.Runtime.CMS
         {
             string path = UnityEditor.AssetDatabase.GetAssetPath(gameObject);
         
-            if (path.StartsWith("Assets/_Game/Scripts/Runtime/CMS/Resources") && path.EndsWith(".prefab"))
+            if (path.StartsWith("Assets/_Game/Resources/CMS/") && path.EndsWith(".prefab"))
             {
-                path = path.Substring("Assets/_Game/Scripts/Runtime/CMS/Resources/".Length);
+                path = path.Substring("Assets/_Game/Resources/".Length);
                 path = path.Substring(0, path.Length - ".prefab".Length);
             }
 

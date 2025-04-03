@@ -29,7 +29,7 @@ namespace Game.Runtime.Services.Audio
 
         private CancellationTokenSource _poolTokenSource;
 
-        public AudioService(int initialPoolSize)
+        public AudioService()
         {
             _lastPlayTime = new Dictionary<string, float>();
             _audioSourcePool = new List<AudioSource>();
@@ -38,7 +38,7 @@ namespace Game.Runtime.Services.Audio
             _ambientSource = _audioObject.AddComponent<AudioSource>();
             _musicSource = _audioObject.AddComponent<AudioSource>();
 
-            for (int i = 0; i < initialPoolSize; i++)
+            for (int i = 0; i < 10; i++)
             {
                 var audioSource = _audioObject.AddComponent<AudioSource>();
                 audioSource.playOnAwake = false;
@@ -102,7 +102,7 @@ namespace Game.Runtime.Services.Audio
 
         private void PlaySFX(CMSEntity sfxEntity)
         {
-            if (!_muteSFX && CanPlaySFX(sfxEntity.EntityId))
+            if (!_muteSFX && CanPlaySFX(sfxEntity))
             {
                 if (sfxEntity.Is(out SFXLibraryComponent sfxLibraryComponent))
                 {
@@ -142,21 +142,32 @@ namespace Game.Runtime.Services.Audio
 
         private async UniTask ReturnAudioSourceToPool(AudioSource audioSource, float delay)
         {
-            ResetPoolToken();
+            _poolTokenSource?.Cancel();
             _poolTokenSource = new CancellationTokenSource();
+
+            try
+            {
+                await UniTask.WaitForSeconds(delay, cancellationToken: _poolTokenSource.Token)
+                    .SuppressCancellationThrow();
             
-            await UniTask.WaitForSeconds(delay, cancellationToken: _poolTokenSource.Token);
-            
-            audioSource.Stop();
-            audioSource.clip = null;
+                if ( _poolTokenSource == null || _poolTokenSource.IsCancellationRequested)
+                    return;
+                
+                audioSource.Stop();
+                audioSource.clip = null;
+            }
+            finally
+            {
+                ResetPoolToken();
+            }
         }
 
-        private bool CanPlaySFX(string sfxId)
+        private bool CanPlaySFX(CMSEntity entity)
         {
-            if (!_lastPlayTime.TryGetValue(sfxId, value: out var lastTimePlayed))
+            if (!_lastPlayTime.TryGetValue(entity.EntityId, value: out var lastTimePlayed))
                 return true;
 
-            float cooldown = CMSProvider.GetEntity<CMSEntity>().GetComponent<SFXComponent>().Cooldown;
+            float cooldown = entity.GetComponent<SFXComponent>().Cooldown;
             return Time.time - lastTimePlayed >= cooldown;
         }
 
@@ -186,15 +197,14 @@ namespace Game.Runtime.Services.Audio
 
         private void ResetPoolToken()
         {
-            _poolTokenSource?.Cancel();
             _poolTokenSource?.Dispose();
             _poolTokenSource = null;
         }
-
+        
         public void Dispose()
         {
+            Debug.Log("dISPOSED");
             ResetPoolToken();
-            UnityEngine.Object.Destroy(_audioObject);
         }
     }
 }

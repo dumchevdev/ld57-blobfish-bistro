@@ -18,6 +18,20 @@ namespace Game.Runtime.Utils.Helpers
 
                 return subclasses;
             }
+
+            public static Type[] FindAllImplementations<TInterface>() where TInterface : class
+            {
+                Type interfaceType = typeof(TInterface);
+                Assembly assembly = Assembly.GetAssembly(interfaceType);
+
+                Type[] types = assembly.GetTypes();
+                Type[] implementations = types.Where(type => 
+                    !type.IsAbstract && 
+                    !type.IsInterface && 
+                    type.GetInterfaces().Contains(interfaceType)).ToArray();
+
+                return implementations;
+            }
         }
     }
 }

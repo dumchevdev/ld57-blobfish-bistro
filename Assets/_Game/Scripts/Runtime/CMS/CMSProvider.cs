@@ -5,12 +5,6 @@ using UnityEngine;
 
 namespace Game.Runtime.CMS
 {
-    public class TestEcs : CMSEntity
-    {
-        public TestEcs(string entityId, List<CMSComponent> components = null) : base(entityId, components)
-        {
-        }
-    }
     public static class CMSProvider
     {
         private static bool _loaded;
@@ -39,20 +33,16 @@ namespace Game.Runtime.CMS
 
             return entity;
         }
-
-        public static T GetEntity<T>() where T : CMSEntity
+        
+        public static CMSEntity GetEntity<T>() where T : CMSEntity
         {
             var entityId = typeof(T).FullName;
-
-            if (_entitiesDatabase.GetEntityOrDefault(entityId) is not T entity)
+            var entity = _entitiesDatabase.GetEntityOrDefault(entityId);
+            
+            if (entity == default)
                 throw new Exception($"[CMS] Unable to resolve entity id '{entityId}'");
 
             return entity;
-        }
-        
-        public static T GetData<T>() where T : CMSComponent, new()
-        {
-            return GetEntity<CMSEntity>().GetComponent<T>();
         }
 
         public static List<T> GetAll<T>() where T : CMSEntity
