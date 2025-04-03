@@ -16,7 +16,7 @@ namespace Game.Runtime.Services.UI
 
         public UIFaderService()
         {
-            var canvas = new GameObject("ScreenFaderCanvas").AddComponent<Canvas>();
+            var canvas = new GameObject("UIFaderService").AddComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
             canvas.sortingOrder = 9;
 
@@ -29,6 +29,8 @@ namespace Game.Runtime.Services.UI
             _fadeImage.color = new Color(0f, 0f, 0f, 1f);
         
             UnityEngine.Object.DontDestroyOnLoad(canvas.gameObject);
+            
+            FadeOut().Forget();
         }
         
         public async UniTask FadeIn()

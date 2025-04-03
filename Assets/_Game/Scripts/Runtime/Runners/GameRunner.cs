@@ -2,33 +2,36 @@
 using System.Collections.Generic;
 using System.Reflection;
 using Game.Runtime.CMS;
-using Game.Runtime.CMS.Commons;
-using Game.Runtime.CMS.Entities.Scenarios;
 using Game.Runtime.ServiceLocator;
 using Game.Runtime.Utils.Helpers;
 using UnityEngine;
 
-namespace Game.Runtime.Framework
+namespace Game.Runtime.Runners
 {
     public class GameRunner : MonoBehaviour
     {
-        private bool _isRunning;
+        private static bool _isRunning;
         
         private readonly List<Type> _cachedServices = new();
         private readonly List<IUpdatable> _updatableServices = new();
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        static void InstantiateAutoSaveSystem()
+        {
+            if (!_isRunning)
+            {
+                GameObject servicedMain = new GameObject("GameRunner");
+                servicedMain.AddComponent<GameRunner>();
+                
+                DontDestroyOnLoad(servicedMain);
+                _isRunning = true;
+            }
+        }
         
         private void Awake()
         {
-            if (_isRunning) return;
-            
             CMSProvider.Load();
-
             RegisterServices();
-            DontDestroyOnLoad(this);
-
-            _isRunning = true;
-
-            CMSProvider.GetEntity<TestScenarioEntity>().GetComponent<FuncComponent>().Func.Invoke();
         }
 
         private void Update()

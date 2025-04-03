@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6564586338573842989}
   - component: {fileID: 3506693818595382969}
   m_Layer: 0
-  m_Name: SayTextEntity
+  m_Name: SayText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -50,25 +50,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3491bc35dc84132acbda8b4eb9ddf2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  entityId: CMS/Services/SayTextEntity
+  entityId: CMS/Services/SayText
   Components:
-  - rid: 8201920311462723928
-  - rid: 8201920311462723929
-  - rid: 8201920311462723934
+  - rid: 8201920311462723977
+  - rid: 8201920311462723978
   references:
     version: 2
     RefIds:
-    - rid: 8201920311462723928
+    - rid: 8201920311462723977
       type: {class: SFXComponent, ns: Game.Runtime.CMS.Audio, asm: Runtime}
       data:
-        Cooldown: 0.1
-    - rid: 8201920311462723929
-      type: {class: SFXLibraryComponent, ns: Game.Runtime.CMS.Audio, asm: Runtime}
-      data:
         Clips:
-        - {fileID: 8300000, guid: df96bba3642a25b41961457786ecac94, type: 3}
+        - {fileID: 8300000, guid: 321952ef8a7e0b948a7f6f0ae103a538, type: 3}
         Volume: 1
-    - rid: 8201920311462723934
+        Cooldown: 0.1
+    - rid: 8201920311462723978
       type: {class: PrefabComponent, ns: Game.Runtime.CMS.Commons, asm: Runtime}
       data:
         Prefab: {fileID: 3629664642240260995}

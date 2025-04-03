@@ -15,7 +15,7 @@ namespace Game.Runtime.Services.UI
         
         public UISayService()
         {
-            var sayPrefab = CMSProvider.GetEntity(CMSPrefabs.Services.SayTextEntity).GetComponent<PrefabComponent>().Prefab;
+            var sayPrefab = CMSProvider.GetEntity(CMSPrefabs.Services.SayText).GetComponent<PrefabComponent>().Prefab;
             var sayObject = UnityEngine.Object.Instantiate(sayPrefab);
             sayObject.name = nameof(UISayService);
             
@@ -26,7 +26,7 @@ namespace Game.Runtime.Services.UI
         
         public async UniTask Print(string message, string fx = "wave")
         {
-            await ServiceLocator<UITextService>.GetService().Print(_text, message, fx, CMSPrefabs.Services.SayTextEntity);
+            await ServiceLocator<UITextService>.GetService().Print(_text, message, fx, CMSPrefabs.Services.SayText);
         }
 
         public async UniTask UnPrint(string fx = "wave")

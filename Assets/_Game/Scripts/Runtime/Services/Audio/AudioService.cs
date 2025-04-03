@@ -92,33 +92,30 @@ namespace Game.Runtime.Services.Audio
 
         private void Play(CMSEntity definition)
         {
-            if (definition.Is<SFXComponent>())
-                PlaySFX(definition);
-            else if (definition.Is<AmbientComponent>(out var ambient))
-                PlayAmbient(ambient);
-            else if (definition.Is<MusicComponent>(out var music))
-                PlayMusic(music);
+            if (definition.Is(out SFXComponent sfxComponent))
+                PlaySFX(definition, sfxComponent);
+            else if (definition.Is(out AmbientComponent ambientComponent))
+                PlayAmbient(ambientComponent);
+            else if (definition.Is(out MusicComponent musicComponent))
+                PlayMusic(musicComponent);
         }
 
-        private void PlaySFX(CMSEntity sfxEntity)
+        private void PlaySFX(CMSEntity sfxEntity, SFXComponent sfxComponent)
         {
             if (!_muteSFX && CanPlaySFX(sfxEntity))
             {
-                if (sfxEntity.Is(out SFXLibraryComponent sfxLibraryComponent))
-                {
-                    var clip = sfxLibraryComponent.Clips.GetRandom(ignoreEmpty: true);
-                    var audioSource = GetAvailableAudioSource();
+                var clip = sfxComponent.Clips.GetRandom(ignoreEmpty: true);
+                var audioSource = GetAvailableAudioSource();
 
-                    if (audioSource != null)
-                    {
-                        audioSource.clip = clip;
-                        audioSource.volume = _sfxVolume * sfxLibraryComponent.Volume;
-                        
-                        audioSource.Play();
-                        _lastPlayTime[sfxEntity.EntityId] = Time.time;
-                        
-                       ReturnAudioSourceToPool(audioSource, clip.length).Forget();
-                    }
+                if (audioSource != null)
+                {
+                    audioSource.clip = clip;
+                    audioSource.volume = _sfxVolume * sfxComponent.Volume;
+                    
+                    audioSource.Play();
+                    _lastPlayTime[sfxEntity.EntityId] = Time.time;
+                    
+                   ReturnAudioSourceToPool(audioSource, clip.length).Forget();
                 }
             }
         }
@@ -203,7 +200,6 @@ namespace Game.Runtime.Services.Audio
         
         public void Dispose()
         {
-            Debug.Log("dISPOSED");
             ResetPoolToken();
         }
     }

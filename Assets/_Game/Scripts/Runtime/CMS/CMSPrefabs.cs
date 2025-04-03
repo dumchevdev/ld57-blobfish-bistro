@@ -10,9 +10,20 @@ namespace Game.Runtime.CMS
 {
     public static class CMSPrefabs
     {
+        public static class Audio
+        {
+            public static class SFX
+            {
+                public const string SFXClick = "CMS/Audio/SFX/SFXClick";
+                public const string SFXImpact = "CMS/Audio/SFX/SFXImpact";
+                public const string SFXKill = "CMS/Audio/SFX/SFXKill";
+                public const string SFXTyping = "CMS/Audio/SFX/SFXTyping";
+            }
+            public const string Ambient = "CMS/Audio/Ambient";
+        }
         public static class Services
         {
-            public const string SayTextEntity = "CMS/Services/SayTextEntity";
+            public const string SayText = "CMS/Services/SayText";
         }
     }
 }

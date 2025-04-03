@@ -5,7 +5,6 @@ using Game.Runtime.Services.States;
 using Game.Runtime.ServiceLocator;
 using Game.Runtime.Services.UI;
 
-
 namespace Game.Runtime.CMS.Entities.Scenarios
 {
     public class TestScenarioEntity : CMSEntity
