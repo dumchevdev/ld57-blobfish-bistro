@@ -24,6 +24,7 @@ namespace Game.Runtime.CMS
         public static class Services
         {
             public const string SayText = "CMS/Services/SayText";
+            public const string UI = "CMS/Services/UI";
         }
     }
 }

@@ -2,13 +2,13 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Game.Runtime.ServiceLocator;
-using Game.Runtime.Services.Input;
 using UnityEngine;
 
 namespace Game.Runtime.Services.States
 {
     public class WaiterService : IService, IDisposable
     {
+        private bool _isSkipped;
         private CancellationTokenSource _waitTokenSource;
 
         public async UniTask SmartWait(float f)
@@ -18,10 +18,11 @@ namespace Game.Runtime.Services.States
 
             try
             {
-                while (f > 0 && !ServiceLocator<InputService>.GetService().OnMouseClickedAfFrame)
+                while (f > 0 && !_isSkipped)
                 {
                     f -= Time.deltaTime;
-                    await UniTask.WaitForEndOfFrame(cancellationToken: _waitTokenSource.Token);
+                    _isSkipped = Input.GetMouseButtonDown(0);
+                    await UniTask.Yield(cancellationToken: _waitTokenSource.Token);
                 }
             }
             finally
@@ -37,9 +38,10 @@ namespace Game.Runtime.Services.States
 
             try
             {
-                while (!ServiceLocator<InputService>.GetService().OnMouseClickedAfFrame)
+                while (!_isSkipped)
                 {
-                    await UniTask.WaitForEndOfFrame(cancellationToken: _waitTokenSource.Token);
+                    _isSkipped = Input.GetMouseButtonDown(0);
+                    await UniTask.Yield(cancellationToken: _waitTokenSource.Token);
                 }
             }
             finally
@@ -47,12 +49,13 @@ namespace Game.Runtime.Services.States
                 ResetWaitToken();
             }
         }
-        
+
         private void ResetWaitToken()
         {
             _waitTokenSource?.Dispose();
             _waitTokenSource = null;
         }
+
 
         public void Dispose()
         {

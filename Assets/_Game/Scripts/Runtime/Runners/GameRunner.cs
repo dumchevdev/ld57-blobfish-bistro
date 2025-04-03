@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
-using Game.Runtime.CMS;
+﻿using Game.Runtime.CMS;
 using Game.Runtime.ServiceLocator;
-using Game.Runtime.Utils.Helpers;
+using Game.Runtime.Services.Audio;
+using Game.Runtime.Services.Save;
+using Game.Runtime.Services.States;
+using Game.Runtime.Services.UI;
 using UnityEngine;
 
 namespace Game.Runtime.Runners
@@ -12,9 +12,6 @@ namespace Game.Runtime.Runners
     {
         private static bool _isRunning;
         
-        private readonly List<Type> _cachedServices = new();
-        private readonly List<IUpdatable> _updatableServices = new();
-
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void InstantiateAutoSaveSystem()
         {
@@ -34,64 +31,26 @@ namespace Game.Runtime.Runners
             RegisterServices();
         }
 
-        private void Update()
-        {
-            foreach (var service in _updatableServices)
-                service.OnUpdate();
-        }
-
         private void RegisterServices()
         {
-            var serviceTypes = Helpers.ReflectionHelper.FindAllImplementations<IService>();
-            foreach (Type serviceType in serviceTypes)
-            {
-                try
-                {
-                    var service = Activator.CreateInstance(serviceType);
-                    RegisterInServiceLocator(serviceType, service);
-            
-                    if (service is IUpdatable updatableService)
-                        _updatableServices.Add(updatableService);
-                    
-                }
-                catch (Exception ex)
-                {
-                    Debug.LogError($"Failed to register service {serviceType.Name}: {ex.Message}");
-                }
-            }
+            ServiceLocator<AudioService>.RegisterService(new AudioService());
+            ServiceLocator<SaveService>.RegisterService(new SaveService());
+            ServiceLocator<WaiterService>.RegisterService(new WaiterService());
+            ServiceLocator<UITextService>.RegisterService(new UITextService());
+            ServiceLocator<UISayService>.RegisterService(new UISayService());
+            ServiceLocator<UIFaderService>.RegisterService(new UIFaderService());
+            ServiceLocator<GameUiService>.RegisterService(new GameUiService());
         }
         
-        private void RegisterInServiceLocator(Type serviceType, object serviceInstance)
-        {
-            var registerMethod = typeof(ServiceLocator<>)
-                .MakeGenericType(serviceType)
-                .GetMethod("RegisterService", BindingFlags.Public | BindingFlags.Static);
-
-            if (registerMethod != null)
-            {
-                registerMethod.Invoke(null, new[] { serviceInstance });
-                _cachedServices.Add(serviceType);
-            }
-        }
-        
-        private void UnregisterInServiceLocator(Type serviceType)
-        {
-            var unregisterMethod = typeof(ServiceLocator<>)
-                .MakeGenericType(serviceType)
-                .GetMethod("UnregisterService", BindingFlags.Public | BindingFlags.Static);
-    
-            unregisterMethod?.Invoke(null, null);
-        }
-
         private void UnregisterServices()
         {
-            foreach (var cachedService in _cachedServices)
-            {
-                UnregisterInServiceLocator(cachedService);
-            }
-            
-            _cachedServices.Clear();
-            _updatableServices.Clear();
+            ServiceLocator<AudioService>.UnregisterService();
+            ServiceLocator<SaveService>.UnregisterService();
+            ServiceLocator<WaiterService>.UnregisterService();
+            ServiceLocator<UITextService>.UnregisterService();
+            ServiceLocator<UISayService>.UnregisterService();
+            ServiceLocator<UIFaderService>.UnregisterService();
+            ServiceLocator<GameUiService>.UnregisterService();
         }
 
         private void OnDestroy()
