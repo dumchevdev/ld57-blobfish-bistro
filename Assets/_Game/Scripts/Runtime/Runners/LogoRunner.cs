@@ -59,7 +59,7 @@ namespace Game.Runtime.Runners
             
             logoText.DOFade(1f, 0.5f);
 
-            await waiterService.SmartWait(1.5f);
+            await waiterService.SmartWait(1f);
 
             audioService.Play(CMSPrefabs.Audio.SFX.SFXClick);
             cameraService.UIShake();

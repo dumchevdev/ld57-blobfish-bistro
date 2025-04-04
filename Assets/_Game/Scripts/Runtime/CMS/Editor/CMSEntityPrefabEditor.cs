@@ -48,7 +48,6 @@ namespace Game.Runtime.CMS.Editor
             
             EditorGUILayout.EndHorizontal();
             
-            // Дополнительная информация о сущности
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField("Components Count", EditorStyles.label, GUILayout.Width(EditorGUIUtility.labelWidth - 4));
             EditorGUILayout.LabelField(_componentsProperty.arraySize.ToString(), EditorStyles.label, GUILayout.ExpandWidth(true));
@@ -78,7 +77,6 @@ namespace Game.Runtime.CMS.Editor
 
                 string typeName = element.managedReferenceValue.GetType().Name;
                 
-                // Фильтрация по поиску
                 if (!string.IsNullOrEmpty(_searchString) && 
                     !typeName.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
                 {
@@ -88,8 +86,7 @@ namespace Game.Runtime.CMS.Editor
                 EditorGUILayout.BeginVertical(EditorStyles.helpBox, GUILayout.ExpandWidth(true));
 
                 EditorGUILayout.BeginHorizontal();
-                GUILayout.Space(12); // Увеличьте значение для большего отступа
-                // Заголовок компонента
+                GUILayout.Space(12);
                 
                 bool isExpanded = EditorGUILayout.Foldout(
                     element.isExpanded,
@@ -98,7 +95,6 @@ namespace Game.Runtime.CMS.Editor
                 );
                 element.isExpanded = isExpanded;
                 
-                // Кнопка удаления
                 if (GUILayout.Button("×", EditorStyles.miniButtonRight, GUILayout.Width(20), GUILayout.Height(18)))
                 {
                     _componentsProperty.DeleteArrayElementAtIndex(i);
@@ -126,13 +122,13 @@ namespace Game.Runtime.CMS.Editor
                 
                 EditorGUILayout.EndVertical();
             }
-            
             EditorGUILayout.EndScrollView();
             
             if (GUILayout.Button("Add Component", EditorStyles.miniButton))
             {
                 ShowAddComponentMenu();
             }
+            
             EditorGUILayout.EndVertical();
         }
 

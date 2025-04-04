@@ -35,11 +35,11 @@ namespace Game.Runtime.Services.Save
             {
                 while (true)
                 {
-                    await UniTask.WaitForSeconds(1, cancellationToken: _saveTokenSource.Token)
-                        .SuppressCancellationThrow();
-
                     if ( _saveTokenSource == null || _saveTokenSource.IsCancellationRequested)
                         return;
+                    
+                    await UniTask.WaitForSeconds(1, cancellationToken: _saveTokenSource.Token)
+                        .SuppressCancellationThrow();
                     
                     var str = JsonConvert.SerializeObject(SaveData);
                     PlayerPrefs.SetString(SaveId, str);

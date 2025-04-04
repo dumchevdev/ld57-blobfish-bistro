@@ -26,7 +26,6 @@ namespace Game.Runtime.CMS.Entities.Scenarios
             await sayService.UnPrint();
             await waiterService.SmartWait(1);
             await sayService.Print("Again Hello world!");
-            await waiterService.WaitMouseClick();
             await waiterService.SmartWait(5);
             await sayService.UnPrint();
             await waiterService.SmartWait(1);

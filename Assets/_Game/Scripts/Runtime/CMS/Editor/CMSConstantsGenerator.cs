@@ -37,7 +37,7 @@ namespace Game.Runtime.CMS.Editor
             var resourcesPath = Path.Combine(Application.dataPath, ResourcesFolderPath);
             if (!Directory.Exists(resourcesPath))
             {
-                Debug.LogError($"Resources folder not found at path: {resourcesPath}");
+                Debug.LogError($"[CMS] Resources folder not found at path: {resourcesPath}");
                 return;
             }
 
@@ -53,7 +53,7 @@ namespace Game.Runtime.CMS.Editor
             File.WriteAllText(outputPath, codeBuilder.ToString());
             AssetDatabase.Refresh();
             
-            Debug.Log($"Successfully generated {OutputClassName} at: {outputPath}");
+            Debug.Log($"[CMS] Successfully generated {OutputClassName} at: {outputPath}");
         }
 
         private static void GenerateFileHeader(StringBuilder builder)
@@ -131,7 +131,7 @@ namespace Game.Runtime.CMS.Editor
             var resourcesIndex = fullPath.IndexOf("Resources", StringComparison.Ordinal);
             if (resourcesIndex == -1)
             {
-                Debug.LogError($"Resources folder not found in path: {fullPath}");
+                Debug.LogError($"[CMS] Resources folder not found in path: {fullPath}");
                 return null;
             }
 

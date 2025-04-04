@@ -8,40 +8,26 @@ namespace Game.Runtime.Services.States
 {
     public class WaiterService : IService, IDisposable
     {
-        private bool _isSkipped;
         private CancellationTokenSource _waitTokenSource;
 
-        public async UniTask SmartWait(float f)
+        public async UniTask SmartWait(float time)
         {
+            var skipped = false;
+
             _waitTokenSource?.Cancel();
             _waitTokenSource = new CancellationTokenSource();
 
             try
             {
-                while (f > 0 && !_isSkipped)
+                while (time > 0 && !skipped)
                 {
-                    f -= Time.deltaTime;
-                    _isSkipped = Input.GetMouseButtonDown(0);
-                    await UniTask.Yield(cancellationToken: _waitTokenSource.Token);
-                }
-            }
-            finally
-            {
-                ResetWaitToken();
-            }
-        }
-        
-        public async UniTask WaitMouseClick()
-        {
-            _waitTokenSource?.Cancel();
-            _waitTokenSource = new CancellationTokenSource();
-
-            try
-            {
-                while (!_isSkipped)
-                {
-                    _isSkipped = Input.GetMouseButtonDown(0);
-                    await UniTask.Yield(cancellationToken: _waitTokenSource.Token);
+                    if (_waitTokenSource == null || _waitTokenSource.IsCancellationRequested)
+                        return;
+                    
+                    time -= Time.deltaTime;
+                    skipped = Input.GetMouseButtonDown(0);
+                    
+                    await UniTask.Yield();
                 }
             }
             finally
@@ -56,7 +42,7 @@ namespace Game.Runtime.Services.States
             _waitTokenSource = null;
         }
 
-
+        
         public void Dispose()
         {
             ResetWaitToken();
