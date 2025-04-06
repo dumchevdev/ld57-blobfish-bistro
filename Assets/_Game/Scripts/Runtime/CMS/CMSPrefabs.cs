@@ -21,6 +21,17 @@ namespace Game.Runtime.CMS
             }
             public const string Ambient = "CMS/Audio/Ambient";
         }
+        public static class Gameplay
+        {
+            public const string Character = "CMS/Gameplay/Character";
+            public const string Client = "CMS/Gameplay/Client";
+            public const string ClientQueue = "CMS/Gameplay/ClientQueue";
+            public const string Day = "CMS/Gameplay/Day";
+            public const string FoodBehaviour = "CMS/Gameplay/FoodBehaviour";
+            public const string FoodDeliveryArea = "CMS/Gameplay/FoodDeliveryArea";
+            public const string Foods = "CMS/Gameplay/Foods";
+            public const string Tables = "CMS/Gameplay/Tables";
+        }
         public static class Services
         {
             public const string SayText = "CMS/Services/SayText";

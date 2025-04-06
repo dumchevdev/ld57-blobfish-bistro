@@ -35,6 +35,25 @@ namespace Game.Runtime.Services.States
                 ResetWaitToken();
             }
         }
+        
+        public async UniTask WaitTimer(float time, CancellationTokenSource tokenSource, Action onTimeout = null)
+        {
+            try
+            {
+                while (tokenSource != null && !tokenSource.IsCancellationRequested && time > 0)
+                {
+                    time -= Time.deltaTime;
+                    await UniTask.Yield(tokenSource.Token, cancelImmediately: true)
+                        .SuppressCancellationThrow();
+                }
+            }
+            finally
+            {
+                tokenSource?.Dispose();
+                onTimeout?.Invoke();
+            }
+        }
+
 
         private void ResetWaitToken()
         {
