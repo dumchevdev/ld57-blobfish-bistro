@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Game.Runtime.CMS;
 using Game.Runtime.CMS.Commons;
 using Game.Runtime.Gameplay.Character;
 using Game.Runtime.ServiceLocator;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Game.Runtime.Gameplay.Interactives
 {
@@ -33,6 +35,15 @@ namespace Game.Runtime.Gameplay.Interactives
         public TableData GetTable(int tableId)
         {
             return _tables.Find(table => table.Id == tableId);
+        }
+
+        public void ShowAllTable(Color color, float width, bool blocked)
+        {
+            foreach (var tableData in _tables)
+            {
+                if (tableData.Client == null)
+                    tableData.Behaviour.SetOutlineColor(color, width, blocked);
+            }
         }
     }
 }

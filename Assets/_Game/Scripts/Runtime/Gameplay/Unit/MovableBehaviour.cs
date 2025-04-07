@@ -13,9 +13,11 @@ namespace Game.Runtime.Gameplay.Character
         
         private CancellationTokenSource _moveTokenSource;
         private bool _isMoving;
-    
+
         public async UniTask MoveToPoint(Vector2 targetPosition, Action onCallback = null, CancellationToken externalToken = default)
         {
+            Debug.Log("Try move!!!!!!!!!");
+
             if (_isMoving) return;
             
             _moveTokenSource?.Cancel();

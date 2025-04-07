@@ -1,6 +1,5 @@
 ﻿using Game.Runtime.Gameplay.Character;
 using Game.Runtime.ServiceLocator;
-using UnityEngine;
 
 namespace Game.Runtime.Gameplay.Interactives
 {
@@ -13,6 +12,8 @@ namespace Game.Runtime.Gameplay.Interactives
             var tableData = ServiceLocator<TableService>.GetService().GetTable(interactable.Id);
             var characterService = ServiceLocator<CharacterService>.GetService();
             
+            tableData.Client.View.ShowHint(true, tableData.Client.OrderData.FoodId);
+
             characterService.MoveTo(tableData.Behaviour.CharacterPoint.position, () =>
             {
                 if (characterService.TryGetHandWithFood(tableData.Client.OrderData.FoodId, out var handData))

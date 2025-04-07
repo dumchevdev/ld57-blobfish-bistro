@@ -32,7 +32,7 @@ namespace Game.Runtime.Gameplay.FoodDelivery
             _foodFactory = new FoodFactory();
 
             var foodPoints = deliveryPrefab.GetComponentsInChildren<Transform>();
-            for (int i = 1; i < foodPoints.Length; i++)
+            for (int i = 2; i < foodPoints.Length; i++)
                 _foodPoints.Add(new FoodPointData(foodPoints[i]));
 
             ApplyFoodOrders().Forget();

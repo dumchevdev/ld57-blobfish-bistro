@@ -35,17 +35,31 @@ namespace Game.Runtime.Gameplay.Interactives
                 {
                     var tableData = ServiceLocator<TableService>.GetService().GetTable(_clientData.TableId);
                     _clientData.View.SetStrategy(new OrderClientInteraction());
+                    _clientData.View.ShowHintWarning(true);
+                    tableData.Client = _clientData;
                     tableData.Behaviour.SetStrategy(new OrderTableInteraction());
+                    break;
+                }
+                case ClientState.WaitingForFood:
+                {
+                    _clientData.View.ShowHintWarning(false);
+                    _clientData.View.ShowHint(true, _clientData.OrderData.FoodId);
+
                     break;
                 }
                 case ClientState.EatingFood:
                 {
+                    var tableData = ServiceLocator<TableService>.GetService().GetTable(_clientData.TableId);
+                    tableData.Food.Behaviour.Interacting = false;
+                    
+                    _clientData.View.ShowHint(false);
                     ServiceLocator<WaiterService>.GetService().WaitTimer(5, _checkTokenSource, 
                         () => _clientData.State = ClientState.Leaving).Forget();
                     break;
                 }
                 case ClientState.Leaving:
                 {
+                    _clientData.View.SetOutline();
                     _clientData.View.SetStrategy(new NotingClientInteraction());
                     
                     if (_clientData.TableId > -1)
@@ -53,8 +67,11 @@ namespace Game.Runtime.Gameplay.Interactives
                         var tableData = ServiceLocator<TableService>.GetService().GetTable(_clientData.TableId);
                         if (tableData.Food != null)
                             tableData.Behaviour.SetStrategy(new CleanupTableInteraction());
-                        else 
+                        else
+                        {
+                            tableData.Client = null;
                             tableData.Behaviour.SetStrategy(new EmptyTableInteraction());
+                        }
                     }
                     
                     var leavePosition = ServiceLocator<LevelPointsService>.GetService().LeavePoint.position;

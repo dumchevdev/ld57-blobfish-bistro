@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿using Game.Runtime.CMS;
+using Game.Runtime.Framework.Services.Camera;
+using Game.Runtime.ServiceLocator;
+using Game.Runtime.Services.Audio;
+using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace Game.Runtime.Gameplay.Interactives
@@ -22,16 +26,19 @@ namespace Game.Runtime.Gameplay.Interactives
         public void OnPointerClick(PointerEventData eventData)
         {
             _current?.ExecuteInteraction(this);
+            if (_current != null)
+            {
+                ServiceLocator<CameraService>.GetService().UIShake();
+                ServiceLocator<AudioService>.GetService().Play(CMSPrefabs.Audio.SFX.SFXTyping);
+            }
         }
 
-        public void OnPointerEnter(PointerEventData eventData)
+        public virtual void OnPointerEnter(PointerEventData eventData)
         {
-            // gameObject.GetComponent<SpriteRenderer>().color = Color.green;
         }
 
-        public void OnPointerExit(PointerEventData eventData)
+        public virtual void OnPointerExit(PointerEventData eventData)
         {
-            // gameObject.GetComponent<SpriteRenderer>().color = Color.white;
         }
     }
 }

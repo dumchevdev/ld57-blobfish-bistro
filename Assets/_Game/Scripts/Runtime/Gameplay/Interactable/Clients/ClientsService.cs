@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Game.Runtime.CMS;
@@ -202,6 +203,16 @@ namespace Game.Runtime.Gameplay.Interactives
             
             _clients.Clear();
             _clientsQueue.Clear();
+        }
+
+        public bool IsFirstInQueue(int clientId)
+        {
+            return _clientsQueue.Count > 0 && _clientsQueue[0].ClientData.Id == clientId;
+        }
+
+        public bool IsInQueue(int clientId)
+        {
+            return _clientsQueue.Count > 0 && _clientsQueue.Any(x => x.ClientData.Id == clientId);
         }
     }
 }

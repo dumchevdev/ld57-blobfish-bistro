@@ -54,7 +54,27 @@ MonoBehaviour:
       type: {class: FoodsComponent, ns: Game.Runtime.CMS.Components.Gameplay, asm: Runtime}
       data:
         Foods:
-        - Id: test_food
+        - Id: test_0
+          CookingTime: 4
+          Sprite: {fileID: -4445964157895293935, guid: 87456ba0789d24746be63456eb603bef, type: 3}
+          Price: 2
+        - Id: test_1
+          CookingTime: 6
+          Sprite: {fileID: 6585025107175598728, guid: 87456ba0789d24746be63456eb603bef, type: 3}
+          Price: 2
+        - Id: test_2
+          CookingTime: 3
+          Sprite: {fileID: -2454808421282613970, guid: 87456ba0789d24746be63456eb603bef, type: 3}
+          Price: 2
+        - Id: test_3
+          CookingTime: 3
+          Sprite: {fileID: -4123689952565877476, guid: 87456ba0789d24746be63456eb603bef, type: 3}
+          Price: 2
+        - Id: test_4
           CookingTime: 2
-          Sprite: {fileID: 5751508951580130967, guid: 0545857f2e1d85e439c514a23f6c4ba0, type: 3}
-          Price: 0
+          Sprite: {fileID: -100693523691448942, guid: 87456ba0789d24746be63456eb603bef, type: 3}
+          Price: 2
+        - Id: test_5
+          CookingTime: 8
+          Sprite: {fileID: 8664334917540797407, guid: 87456ba0789d24746be63456eb603bef, type: 3}
+          Price: 2

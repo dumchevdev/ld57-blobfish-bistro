@@ -22,6 +22,8 @@ namespace Game.Runtime.Gameplay.FoodDelivery
 
         public void ExecuteInteraction(InteractableObject interactable)
         {
+            if (!_foodBehaviour.Interacting) return;
+            
             var foodBehaviour = interactable.GetComponent<FoodBehaviour>();
             ServiceLocator<CharacterService>.GetService().MoveTo(foodBehaviour.Point.position, () =>
             {

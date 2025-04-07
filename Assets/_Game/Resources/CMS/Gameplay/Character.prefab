@@ -68,7 +68,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfd00461b608468bb360016db60cd0c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _moveSpeed: 3
+  _moveSpeed: 5
 --- !u!1 &8856950413332256410
 GameObject:
   m_ObjectHideFlags: 0
@@ -148,7 +148,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 3
   m_Sprite: {fileID: 3542127132570728493, guid: 6c856449060c35043890017ed36855a1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -248,7 +248,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a88ef00e05c44ca8c0eeb52692ef0bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseScale: {x: 1, y: 1, z: 1}
+  baseScale: {x: 1.5, y: 1.5, z: 1.5}
   inhaleScale: 1.05
   exhaleScale: 0.95
   breathDuration: 3

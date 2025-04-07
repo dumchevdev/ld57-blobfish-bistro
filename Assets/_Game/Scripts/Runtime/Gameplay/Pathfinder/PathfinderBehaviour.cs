@@ -6,7 +6,7 @@ namespace Game.Runtime.Gameplay.Pathfinder
     public class PathfinderBehaviour : MonoBehaviour
     {
         [SerializeField] private float _nodeRadius = 0.25f;
-        [SerializeField] private Vector2 _gridSize = new Vector2(20, 20);
+        [SerializeField] private Vector2 _gridSize = new Vector2(20, 10);
 
         [Header("Debug")] [SerializeField] public bool _drawGridInEditor = false;
         [SerializeField] private Color _walkableColor = Color.green;

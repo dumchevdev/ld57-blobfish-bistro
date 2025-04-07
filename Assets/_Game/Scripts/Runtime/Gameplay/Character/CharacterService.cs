@@ -26,8 +26,6 @@ namespace Game.Runtime.Gameplay.Character
             var characterPrefab = CMSProvider.GetEntity(CMSPrefabs.Gameplay.Character).GetComponent<PrefabComponent>().Prefab;
             _movable = Object.Instantiate(characterPrefab, position, Quaternion.identity).GetComponent<MovableBehaviour>();
             CharacterData = new CharacterData();
-            
-            Debug.Log($"[GAMEPLAY] Character spawned");
         }
 
         public bool TryGetHandWithFood(string foodId, out CharacterHandData handData)
@@ -64,7 +62,8 @@ namespace Game.Runtime.Gameplay.Character
 
         public void MoveTo(Vector2 targetPosition, Action onCallback = null)
         {
-            _unitCommandManager.AddCommand(async _ => await _movable.MoveToPoint(targetPosition, onCallback, _));
+            _unitCommandManager.AddCommand(async cancellationToken => 
+                await _movable.MoveToPoint(targetPosition, onCallback, cancellationToken));
         }
 
         public void TakeOrder(TableData tableData, Action onCallback = null)

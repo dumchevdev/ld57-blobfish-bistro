@@ -1,7 +1,6 @@
 ﻿using Game.Runtime.Gameplay.Character;
 using Game.Runtime.Gameplay.FoodDelivery;
 using Game.Runtime.ServiceLocator;
-using UnityEngine;
 
 namespace Game.Runtime.Gameplay.Interactives
 {

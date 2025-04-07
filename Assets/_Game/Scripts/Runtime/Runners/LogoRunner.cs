@@ -54,14 +54,14 @@ namespace Game.Runtime.Runners
             
             await waiterService.SmartWait(0.5f);
             
-            audioService.Play(CMSPrefabs.Audio.SFX.SFXClick);
+            audioService.Play(CMSPrefabs.Audio.SFX.SFXTyping);
             cameraService.UIShake();
             
             logoText.DOFade(1f, 0.5f);
 
             await waiterService.SmartWait(1f);
 
-            audioService.Play(CMSPrefabs.Audio.SFX.SFXClick);
+            audioService.Play(CMSPrefabs.Audio.SFX.SFXTyping);
             cameraService.UIShake();
 
             logoText.DOFade(0f, 1f);
@@ -70,14 +70,14 @@ namespace Game.Runtime.Runners
 
             logoText.text = "<size=50%>MADE IN 48 HOURS FOR\nLUDUM DARE 57</size>";
 
-            audioService.Play(CMSPrefabs.Audio.SFX.SFXClick);
+            audioService.Play(CMSPrefabs.Audio.SFX.SFXTyping);
             cameraService.UIShake();
 
             logoText.DOFade(1f, 0.5f);
 
             await waiterService.SmartWait(3.5f);
 
-            audioService.Play(CMSPrefabs.Audio.SFX.SFXClick);
+            audioService.Play(CMSPrefabs.Audio.SFX.SFXTyping);
             cameraService.UIShake();
 
             logoText.DOFade(0f, 1.5f);

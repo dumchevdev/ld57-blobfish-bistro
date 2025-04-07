@@ -9,7 +9,6 @@ using Game.Runtime.Gameplay.Pathfinder;
 using Game.Runtime.ServiceLocator;
 using Game.Runtime.Services.UI;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Game.Runtime.Runners
 {
