@@ -38,6 +38,12 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Background
+    uniqueID: 482023339
+    locked: 0
+  - name: Outliner
+    uniqueID: 398874763
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
