@@ -15,16 +15,12 @@ namespace Game.Runtime.Gameplay.Character
     public class CharacterService : IService, IDisposable
     {
         public CharacterData CharacterData { get; private set; }
-        
-        private readonly UnitCommandManager _unitCommandManager = new();
-        private readonly CancellationTokenSource _moveTokenSource = new();
-        
-        private MovableBehaviour _movable;
+        public MovableBehaviour Movable { get; private set; }
 
         public void SpawnCharacter(Vector3 position)
         {
             var characterPrefab = CMSProvider.GetEntity(CMSPrefabs.Gameplay.Character).GetComponent<PrefabComponent>().Prefab;
-            _movable = Object.Instantiate(characterPrefab, position, Quaternion.identity).GetComponent<MovableBehaviour>();
+            Movable = Object.Instantiate(characterPrefab, position, Quaternion.identity).GetComponent<MovableBehaviour>();
             CharacterData = new CharacterData();
         }
 
@@ -60,30 +56,9 @@ namespace Game.Runtime.Gameplay.Character
             return null;
         }
 
-        public void MoveTo(Vector2 targetPosition, Action onCallback = null)
-        {
-            _unitCommandManager.AddCommand(async cancellationToken => 
-                await _movable.MoveToPoint(targetPosition, onCallback, cancellationToken));
-        }
-
-        public void TakeOrder(TableData tableData, Action onCallback = null)
-        {
-            var randomFood = CMSProvider.GetEntity(CMSPrefabs.Gameplay.Foods).GetComponent<FoodsComponent>().Foods.GetRandom();
-            
-            var orderData = new ClientOrderData(randomFood.Id, tableData.Id);
-            tableData.Client.OrderData = orderData;
-            
-            _unitCommandManager.AddCommand(async _ =>
-            {
-                await ServiceLocator<FoodDeliveryService>.GetService().Enqueue(orderData);
-                onCallback?.Invoke();
-            });
-        }
-
         public void Dispose()
         {
-            _unitCommandManager?.Dispose();
-            _moveTokenSource?.Dispose();
+            Movable.Dispose();
         }
     }
 }

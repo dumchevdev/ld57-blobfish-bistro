@@ -16,7 +16,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4601548135822499711
 Transform:
   m_ObjectHideFlags: 0
@@ -354,7 +354,6 @@ GameObject:
   - component: {fileID: 297545483483860066}
   - component: {fileID: 8005173660619342571}
   - component: {fileID: 9207997467062988669}
-  - component: {fileID: 7145534740560370623}
   m_Layer: 0
   m_Name: Client
   m_TagString: Untagged
@@ -433,24 +432,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f7b533222d64583bc1f2d28458b729a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 8267740950508054681}
+  Id: 0
+  CanInteract: 0
+  OutlineColor: {r: 1, g: 1, b: 1, a: 1}
   spriteRenderer: {fileID: 3946628670777762262}
+  animator: {fileID: 8267740950508054681}
   hint: {fileID: 1203280986172401737}
   iconSpriteRenderer: {fileID: 9064371174902326184}
   hintWarning: {fileID: 21300000, guid: dcb9fe9c3901d184c8599c578ec044c7, type: 3}
---- !u!114 &7145534740560370623
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2946776692581078673}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 182a887a3dcb4985bc3acf23c379929c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isTable: 0
 --- !u!1 &8058714986552905847
 GameObject:
   m_ObjectHideFlags: 0

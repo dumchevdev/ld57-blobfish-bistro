@@ -49,8 +49,8 @@ namespace Game.Runtime.Services.States
             }
             finally
             {
-                tokenSource?.Dispose();
-                onTimeout?.Invoke();
+                if (tokenSource != null && !tokenSource.IsCancellationRequested)
+                    onTimeout?.Invoke();
             }
         }
 

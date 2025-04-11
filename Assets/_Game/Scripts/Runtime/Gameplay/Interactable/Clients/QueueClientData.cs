@@ -2,8 +2,8 @@
 {
     public class QueueClientData
     {
-        public ClientData ClientData;
         public int PointIndex;
+        public readonly ClientData ClientData;
 
         public QueueClientData(ClientData clientData, int pointIndex)
         {

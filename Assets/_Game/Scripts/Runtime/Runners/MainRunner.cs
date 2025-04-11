@@ -3,7 +3,6 @@ using Game.Runtime.Framework.Services.Camera;
 using Game.Runtime.Framework.Services.Game;
 using Game.Runtime.Gameplay.Character;
 using Game.Runtime.Gameplay.FoodDelivery;
-using Game.Runtime.Gameplay.Interactives;
 using Game.Runtime.Gameplay.Level;
 using Game.Runtime.Gameplay.Pathfinder;
 using Game.Runtime.ServiceLocator;
@@ -33,8 +32,6 @@ namespace Game.Runtime.Runners
             ServiceLocator<DayTimerService>.RegisterService(new DayTimerService());
             ServiceLocator<PathfinderService>.RegisterService(new PathfinderService());
             ServiceLocator<CharacterService>.RegisterService(new CharacterService());
-            ServiceLocator<TableService>.RegisterService(new TableService());
-            ServiceLocator<ClientsService>.RegisterService(new ClientsService());
             ServiceLocator<LevelPointsService>.RegisterService(new LevelPointsService(spawnCharacterPoint, leavePoint, spawnClientPoint));
         }
         
@@ -46,8 +43,6 @@ namespace Game.Runtime.Runners
             ServiceLocator<DayTimerService>.UnregisterService();
             ServiceLocator<PathfinderService>.UnregisterService();
             ServiceLocator<CharacterService>.UnregisterService();
-            ServiceLocator<ClientsService>.UnregisterService();
-            ServiceLocator<TableService>.UnregisterService();
             ServiceLocator<LevelPointsService>.UnregisterService();
         }
 
@@ -56,7 +51,7 @@ namespace Game.Runtime.Runners
             ServiceLocator<PathfinderService>.GetService().CreateGrid();
             ServiceLocator<DayTimerService>.GetService().StartDay().Forget();
             ServiceLocator<CharacterService>.GetService().SpawnCharacter(spawnCharacterPoint.position);
-            ServiceLocator<ClientsService>.GetService().StartQueueSpawning().Forget();
+            ServiceLocator<GameService>.GetService().StartGameLoop();
             
             await ServiceLocator<UIFaderService>.GetService().FadeOut();
         }

@@ -2,17 +2,16 @@
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using UnityEngine;
 
 namespace Game.Runtime.Gameplay.Character
 {
     public class UnitCommandManager : IDisposable
     {
-        private readonly Queue<Func<CancellationToken, UniTask>> _commandQueue = new();
+        private readonly Queue<Func<UniTask>> _commandQueue = new();
         private CancellationTokenSource _cts = new();
         private bool _isProcessing;
 
-        public void AddCommand(Func<CancellationToken, UniTask> command)
+        public void AddCommand(Func<UniTask> command)
         {
             _commandQueue.Enqueue(command);
             ProcessCommands().Forget();
@@ -28,7 +27,7 @@ namespace Game.Runtime.Gameplay.Character
                 while (_commandQueue.Count > 0 && !_cts.IsCancellationRequested)
                 {
                     var command = _commandQueue.Dequeue();
-                    await command(_cts.Token).SuppressCancellationThrow();
+                    await command.Invoke().AttachExternalCancellation(_cts.Token).SuppressCancellationThrow();
                 }
             }
             finally

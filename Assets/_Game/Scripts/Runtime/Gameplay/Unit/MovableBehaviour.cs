@@ -14,10 +14,8 @@ namespace Game.Runtime.Gameplay.Character
         private CancellationTokenSource _moveTokenSource;
         private bool _isMoving;
 
-        public async UniTask MoveToPoint(Vector2 targetPosition, Action onCallback = null, CancellationToken externalToken = default)
+        public async UniTask MoveToPoint(Vector2 targetPosition, CancellationToken externalToken = default)
         {
-            Debug.Log("Try move!!!!!!!!!");
-
             if (_isMoving) return;
             
             _moveTokenSource?.Cancel();
@@ -28,7 +26,7 @@ namespace Game.Runtime.Gameplay.Character
             
             if (path == null || path.Count == 0)
             {
-                Debug.LogWarning("Path not found or target is unreachable");
+                Debug.LogWarning("[MOVABLE] No path found");
                 return;
             }
             
@@ -58,7 +56,6 @@ namespace Game.Runtime.Gameplay.Character
             finally
             {
                 _isMoving = false;
-                onCallback?.Invoke();
                 ResetMoveToken();
             }
         }

@@ -73,7 +73,6 @@ GameObject:
   - component: {fileID: 4601914773008578004}
   - component: {fileID: 6279060183510498229}
   - component: {fileID: 5685044140095665020}
-  - component: {fileID: 2160590362436334791}
   - component: {fileID: 6378294529846293887}
   m_Layer: 3
   m_Name: Table
@@ -167,23 +166,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fcd3ab03f2d4e9b8ce5239e41d1014f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Id: 0
+  CanInteract: 0
+  OutlineColor: {r: 1, g: 1, b: 1, a: 1}
+  spriteRenderer: {fileID: 6279060183510498229}
   CharacterPoint: {fileID: 7491473954438175439}
   ClientPoint: {fileID: 53076326394270937}
   FoodPoint: {fileID: 1777286454090821389}
-  _renderer: {fileID: 6279060183510498229}
---- !u!114 &2160590362436334791
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5572968815721279039}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 182a887a3dcb4985bc3acf23c379929c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isTable: 1
 --- !u!70 &6378294529846293887
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

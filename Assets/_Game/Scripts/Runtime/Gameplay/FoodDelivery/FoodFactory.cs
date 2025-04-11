@@ -13,17 +13,11 @@ namespace Game.Runtime.Gameplay.FoodDelivery
 {
     public class FoodFactory : IDisposable
     {
-        public bool IsFree;
+        public bool IsFree = true;
         
-        private readonly List<FoodBehaviour> _foodPool;
+        private readonly List<FoodBehaviour> _foodPool = new();
         
         private CancellationTokenSource _factoryTokenSource;
-
-        public FoodFactory()
-        {
-            _foodPool = new List<FoodBehaviour>();
-            IsFree = true;
-        }
 
         public async UniTask CreateFood(string foodId, FoodPointData foodPointData)
         {
@@ -46,7 +40,10 @@ namespace Game.Runtime.Gameplay.FoodDelivery
                 
                 foodBehaviour.SetFoodSprite(foodComponent.Sprite);
                 foodBehaviour.transform.position = foodPointData.Point.position;
-                foodBehaviour.SetStrategy(new FoodInteraction(foodId, foodBehaviour, foodPointData));
+
+                foodBehaviour.Settings.IsClickable = true;
+                foodBehaviour.Settings.IsHighlightable = true;
+                foodBehaviour.InteractionStrategy = new FoodInteraction(foodId, foodBehaviour, foodPointData);
                 foodBehaviour.gameObject.SetActive(true);
                 
                 IsFree = true;
@@ -77,6 +74,8 @@ namespace Game.Runtime.Gameplay.FoodDelivery
 
         public void ReturnFoodBehaviour(FoodBehaviour foodBehaviour)
         {
+            foodBehaviour.Settings.IsClickable = false;
+            foodBehaviour.Settings.IsHighlightable = false;
             foodBehaviour.gameObject.SetActive(false);
             _foodPool.Add(foodBehaviour);
         }

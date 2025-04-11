@@ -5,7 +5,6 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using Game.Runtime.CMS;
 using Game.Runtime.CMS.Commons;
-using Game.Runtime.Gameplay.Interactives;
 using Game.Runtime.ServiceLocator;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -15,7 +14,7 @@ namespace Game.Runtime.Gameplay.FoodDelivery
     public class FoodDeliveryService : IService, IDisposable
     {
         private readonly List<FoodPointData> _foodPoints;
-        private readonly Queue<ClientOrderData> _orderQueue;
+        private readonly Queue<string> _orderQueue;
         private readonly FoodFactory _foodFactory;
 
         private CancellationTokenSource _foodTokenSource;
@@ -23,7 +22,7 @@ namespace Game.Runtime.Gameplay.FoodDelivery
         public FoodDeliveryService()
         {
             _foodPoints = new List<FoodPointData>();
-            _orderQueue = new Queue<ClientOrderData>();
+            _orderQueue = new Queue<string>();
             
             var deliveryPrefab = CMSProvider.GetEntity(CMSPrefabs.Gameplay.FoodDeliveryArea).GetComponent<PrefabComponent>().Prefab;
             var deliveryObject = Object.Instantiate(deliveryPrefab);
@@ -38,10 +37,9 @@ namespace Game.Runtime.Gameplay.FoodDelivery
             ApplyFoodOrders().Forget();
         }
 
-        public UniTask Enqueue(ClientOrderData foodOrderData)
+        public void Enqueue(string foodId)
         {
-            _orderQueue.Enqueue(foodOrderData);
-            return UniTask.CompletedTask;
+            _orderQueue.Enqueue(foodId);
         }
 
         private bool AnyFoodPointFree()
@@ -81,13 +79,13 @@ namespace Game.Runtime.Gameplay.FoodDelivery
             {
                 if (_orderQueue.Count > 0 && _foodFactory.IsFree && AnyFoodPointFree())
                 {
-                    var orderData = _orderQueue.Dequeue();
+                    var foodId = _orderQueue.Dequeue();
                     var foodPoint = GetFoodPoint();
                     
-                    if (foodPoint == null)
+                    if (string.IsNullOrEmpty(foodId) || foodPoint == null)
                         return;
                     
-                    _foodFactory.CreateFood(orderData.FoodId, foodPoint).Forget();
+                    _foodFactory.CreateFood(foodId, foodPoint).Forget();
                 }
                 
                 await UniTask.Yield();

@@ -2,9 +2,8 @@
 {
     public class FoodData
     {
-        public string Id;
-        public FoodBehaviour Behaviour;
-        public FoodPointData FoodPointData;
+        public readonly string Id;
+        public readonly FoodBehaviour Behaviour;
 
         public FoodData(string id, FoodBehaviour behaviour)
         {

@@ -9,36 +9,62 @@ namespace Game.Runtime.Gameplay.Interactives
 {
     public abstract class InteractableObject : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
     {
-        public int Id { get; private set; }
-        
-        public IInteraction _current;
+        public int Id;
+        public readonly InteractableSettings Settings = new();
+        public IInteraction InteractionStrategy;
 
-        public void SetId(int id)
+        [SerializeField] protected SpriteRenderer spriteRenderer;
+        
+        private readonly int _outlineWidth = Shader.PropertyToID("_OutlineWidth");
+        private readonly int _outlineColor = Shader.PropertyToID("_OutlineColor");
+
+        protected void Start()
         {
-            Id = id;
+            ResetBehaviour();
         }
-    
-        public void SetStrategy(IInteraction strategy)
+
+        public void ShowOutline()
         {
-            _current = strategy;
+            spriteRenderer.material.SetColor(_outlineColor, Settings.OutlineColor);
+            spriteRenderer.material.SetFloat(_outlineWidth, 0.06f);
+        }
+
+        public void HideOutline()
+        {
+            spriteRenderer.material.SetFloat(_outlineWidth, 0);
+        }
+
+        public void ResetBehaviour()
+        {
+            HideOutline();
+            ResetBehaviorInternal();
         }
         
+        protected virtual void ResetBehaviorInternal() { }
+
         public void OnPointerClick(PointerEventData eventData)
         {
-            _current?.ExecuteInteraction(this);
-            if (_current != null)
+            if (!Settings.IsClickable) return;
+            
+            InteractionStrategy?.ExecuteInteraction(this);
+            if (InteractionStrategy != null)
             {
+                Debug.Log($"{InteractionStrategy.DebugName}");
                 ServiceLocator<CameraService>.GetService().UIShake();
                 ServiceLocator<AudioService>.GetService().Play(CMSPrefabs.Audio.SFX.SFXTyping);
             }
         }
 
-        public virtual void OnPointerEnter(PointerEventData eventData)
+        public void OnPointerEnter(PointerEventData eventData)
         {
+            if (!Settings.IsHighlightable) return;
+            ShowOutline();
         }
 
-        public virtual void OnPointerExit(PointerEventData eventData)
+        public void OnPointerExit(PointerEventData eventData)
         {
+            if (!Settings.IsHighlightable) return;
+            HideOutline();
         }
     }
 }

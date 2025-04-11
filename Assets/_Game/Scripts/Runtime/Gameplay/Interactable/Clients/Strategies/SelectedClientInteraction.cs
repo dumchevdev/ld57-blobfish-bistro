@@ -1,5 +1,5 @@
-﻿using Game.Runtime.ServiceLocator;
-using UnityEngine;
+﻿using Game.Runtime.Framework.Services.Game;
+using Game.Runtime.ServiceLocator;
 
 namespace Game.Runtime.Gameplay.Interactives
 {
@@ -9,12 +9,7 @@ namespace Game.Runtime.Gameplay.Interactives
 
         public void ExecuteInteraction(InteractableObject interactable)
         {
-            var clientData = ServiceLocator<ClientsService>.GetService().GetClient(interactable.Id);
-            Debug.Log($"Selected client: {clientData}. Id {interactable.Id}");
-            clientData.State = ClientState.ChoosingTable;
-            
-            var clientBehaviour = interactable.GetComponent<ClientBehaviour>();
-            clientBehaviour.SetSelectedState(true);
+            ServiceLocator<GameService>.GetService().SelectQueueClient(interactable.Id);
         }
     }
 }

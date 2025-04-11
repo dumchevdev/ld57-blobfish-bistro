@@ -24,12 +24,24 @@ namespace Game.Runtime.Gameplay.Interactives
                 HandleMoodTimer();
             }
         }
+        
+        public void ResetMoodTimer()
+        {
+            _clientData.Mood = ClientMood.Happy;
+            _moodTokenSource.Cancel();
+            StartMoodTimer().Forget();
+        }
+
+        public void StopMoodTimer()
+        {
+            _moodTokenSource.Cancel();
+        }
 
         private void HandleMoodTimer()
         {
             if (_clientData.Mood == ClientMood.Angry)
             {
-                _clientData.State = ClientState.Leaving;
+                _clientData.StateMachine.ChangeState<LeavingClientState>();
                 return;
             }
 

@@ -4,15 +4,15 @@ using Game.Runtime.ServiceLocator;
 
 namespace Game.Runtime.Gameplay.Interactives
 {
-    public class CleanupTableInteraction : IInteraction
+    public class TakeOrderClientInteraction : IInteraction
     {
-        public string DebugName => nameof(CleanupTableInteraction);
+        public string DebugName => nameof(TakeOrderClientInteraction);
 
         public void ExecuteInteraction(InteractableObject interactable)
         {
             var gameService = ServiceLocator<GameService>.GetService();
-            var orderData = gameService.GetOrderByTable(interactable.Id);
-            if (orderData != null) gameService.CleanupTable(orderData);
+            var orderData = gameService.GetOrderByClient(interactable.Id);
+            if (orderData != null) gameService.TakeOrder(orderData);
         }
     }
 }

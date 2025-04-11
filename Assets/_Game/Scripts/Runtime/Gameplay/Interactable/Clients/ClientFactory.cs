@@ -20,29 +20,13 @@ namespace Game.Runtime.Gameplay.Interactives
         public ClientData CreateClient(CMSEntity clientModel)
         {
             ClientData clientData = null;
-            var sprite = clientModel.GetComponent<ClientAnimationClipsComponent>().ClientAnimators.GetRandom();
-            var spawnPoint = ServiceLocator<LevelPointsService>.GetService().SpawnClientPoint;
             
             if (_clientsPool.Count > 0)
             {
                 clientData = _clientsPool[0];
-                clientData.Id = _counter;
-                clientData.TableId = -1;
+                ConfigureClient(clientData, clientModel);
                 
-                clientData.View.SetAnimator(sprite);
-                clientData.Mood = ClientMood.Happy;
-                
-                var qwer = clientData.View.GetComponent<InteractableObject>();
-                qwer.SetId(_counter);
-                
-                clientData.MoodChecker.StartMoodTimer().Forget();
-                clientData.View.transform.position = spawnPoint.position;
-                
-                clientData.View.gameObject.SetActive(true);
-                
-                _counter++;
                 _clientsPool.RemoveAt(0);
-
                 return clientData;
             }
             
@@ -50,25 +34,37 @@ namespace Game.Runtime.Gameplay.Interactives
             var clientBehaviour = Object.Instantiate(clientPrefab).GetComponent<ClientBehaviour>();
             var movableBehaviour = clientBehaviour.gameObject.AddComponent<MovableBehaviour>();
             
-            var interactableObject = clientBehaviour.GetComponent<InteractableObject>();
-            interactableObject.SetId(_counter);
-            
-            clientData = new ClientData(_counter, clientBehaviour, movableBehaviour);
-            clientData.View.SetAnimator(sprite);
-            clientData.Mood = ClientMood.Happy;
-            clientData.MoodChecker.StartMoodTimer().Forget();
-            
-            clientData.View.transform.position = spawnPoint.position;
-            _counter++;
+            clientData = new ClientData(clientBehaviour, movableBehaviour);
+            ConfigureClient(clientData, clientModel);
             
             return clientData;
+        }
+
+        private void ConfigureClient(ClientData clientData, CMSEntity clientModel)
+        {
+            var spawnPoint = ServiceLocator<LevelPointsService>.GetService().SpawnClientPoint;
+            var animator = clientModel.GetComponent<ClientAnimationClipsComponent>().ClientAnimators.GetRandom();
+            
+            clientData.Id = _counter;
+            clientData.View.Id = _counter;
+            _counter++;
+
+            clientData.View.SetAnimator(animator);
+            clientData.Mood = ClientMood.Happy;
+            
+            clientData.MoodChecker.StartMoodTimer().Forget();
+            clientData.View.transform.position = spawnPoint.position;
+            
+            clientData.StateMachine.ChangeState<EmptyClientState>();
+            clientData.View.gameObject.SetActive(true);
         }
 
         public void Return(ClientData clientData)
         {
             clientData.Id = -1;
-            clientData.TableId = -1;
+            clientData.View.Id = -1;
             clientData.View.gameObject.SetActive(false);
+            
             _clientsPool.Add(clientData);
         }
 

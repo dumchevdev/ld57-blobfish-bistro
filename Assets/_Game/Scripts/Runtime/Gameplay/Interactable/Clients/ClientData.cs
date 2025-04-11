@@ -1,12 +1,12 @@
 using System;
 using Game.Runtime.Gameplay.Character;
+using Game.Runtime.StateMachine;
 
 namespace Game.Runtime.Gameplay.Interactives
 {
     public class ClientData : IDisposable
     {
         public int Id;
-        public int TableId;
 
         public ClientMood Mood 
         {
@@ -17,41 +17,34 @@ namespace Game.Runtime.Gameplay.Interactives
                 _mood = value;
             }
         }
-
-        public ClientState State
-        {
-            get => _state;
-            set
-            {
-                StateChecker.HandleStateChanged(value);
-                _state = value;
-            }
-        }
-
-        public ClientOrderData OrderData;
-        public ClientBehaviour View;
-        public MovableBehaviour Movable;
-        public ClientStateChecker StateChecker;
-        public ClientMoodChecker MoodChecker;
-
-        private ClientState _state;
         private ClientMood _mood;
         
-        public ClientData(int id, ClientBehaviour view, MovableBehaviour movable)
+        public readonly MovableBehaviour Movable;
+        public readonly ClientMoodChecker MoodChecker;
+        public readonly ClientBehaviour View;
+        public readonly StateMachine<ClientData> StateMachine;
+        
+        public ClientData(ClientBehaviour view, MovableBehaviour movable)
         {
-            Id = id;
             View = view;
             Movable = movable;
-            StateChecker = new ClientStateChecker(this);
             MoodChecker = new ClientMoodChecker(this);
-            TableId = -1;
+            
+            StateMachine = new StateMachine<ClientData>(this);
+            StateMachine.AddState(new BrowsingMenuClientState());
+            StateMachine.AddState(new EatingOrderFoodClientState());
+            StateMachine.AddState(new EmptyClientState());
+            StateMachine.AddState(new LeavingClientState());
+            StateMachine.AddState(new WaitingFoodClientState());
+            StateMachine.AddState(new WaitingInQueueClientState());
+            StateMachine.AddState(new WaitingOrderClientState());
         }
 
         public void Dispose()
         {
             Movable.Dispose();
             MoodChecker.Dispose();
-            StateChecker.Dispose();
+            View.ResetBehaviour();
         }
     }
 }
