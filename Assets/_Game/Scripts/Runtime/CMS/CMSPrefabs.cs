@@ -24,8 +24,8 @@ namespace Game.Runtime.CMS
         public static class Gameplay
         {
             public const string Character = "CMS/Gameplay/Character";
-            public const string Client = "CMS/Gameplay/Client";
-            public const string ClientQueue = "CMS/Gameplay/ClientQueue";
+            public const string Customer = "CMS/Gameplay/Customer";
+            public const string CustomersQueue = "CMS/Gameplay/CustomersQueue";
             public const string Day = "CMS/Gameplay/Day";
             public const string FoodBehaviour = "CMS/Gameplay/FoodBehaviour";
             public const string FoodDeliveryArea = "CMS/Gameplay/FoodDeliveryArea";

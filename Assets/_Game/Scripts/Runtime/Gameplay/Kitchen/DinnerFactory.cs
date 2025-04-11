@@ -12,12 +12,12 @@ using Object = UnityEngine.Object;
 
 namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Kitchen
 {
-    public class FoodFactory : IDisposable
+    public class DinnerFactory : IDisposable
     {
-        private readonly List<DinnerBehaviour> _foodPool = new();
+        private readonly List<DinnerBehaviour> _dinnerPool = new();
         private CancellationTokenSource _factoryTokenSource;
 
-        public async UniTask CreateFood(string foodId, FoodPointData foodPointData)
+        public async UniTask CreateFood(string foodId, DinnerPointData dinnerPointData)
         {
             _factoryTokenSource?.Cancel();
             _factoryTokenSource = new CancellationTokenSource();
@@ -32,11 +32,11 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Kitchen
                 await UniTask.WaitForSeconds(foodComponent.CookingTime, cancellationToken: _factoryTokenSource.Token);
                 
                 foodBehaviour.SetFoodSprite(foodComponent.Sprite);
-                foodBehaviour.transform.position = foodPointData.Point.position;
+                foodBehaviour.transform.position = dinnerPointData.Point.position;
 
                 foodBehaviour.Settings.IsClickable = true;
                 foodBehaviour.Settings.IsHighlightable = true;
-                foodBehaviour.InteractionStrategy = new DinnerInteraction(foodId, foodBehaviour, foodPointData);
+                foodBehaviour.InteractionStrategy = new DinnerInteraction(foodId, foodBehaviour, dinnerPointData);
                 foodBehaviour.gameObject.SetActive(true);
             }
             finally
@@ -49,14 +49,16 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Kitchen
         {
             DinnerBehaviour dinnerBehaviour = null;
             
-            if (_foodPool.Count > 0)
+            for (int i = 0; i < _dinnerPool.Count; i++)
             {
-                dinnerBehaviour = _foodPool[0];
-                _foodPool.Remove(dinnerBehaviour);
-
-                return dinnerBehaviour;
+                if (!_dinnerPool[i].gameObject.activeInHierarchy)
+                {
+                    dinnerBehaviour = _dinnerPool[i];
+                    _dinnerPool.RemoveAt(i);
+                    return dinnerBehaviour;
+                }
             }
-            
+         
             var foodPrefab = CMSProvider.GetEntity(CMSPrefabs.Gameplay.FoodBehaviour).GetComponent<PrefabComponent>().Prefab;
             dinnerBehaviour = Object.Instantiate(foodPrefab).GetComponent<DinnerBehaviour>();
 
@@ -68,7 +70,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Kitchen
             dinnerBehaviour.Settings.IsClickable = false;
             dinnerBehaviour.Settings.IsHighlightable = false;
             dinnerBehaviour.gameObject.SetActive(false);
-            _foodPool.Add(dinnerBehaviour);
+            _dinnerPool.Add(dinnerBehaviour);
         }
 
         private void ResetFactoryToken()

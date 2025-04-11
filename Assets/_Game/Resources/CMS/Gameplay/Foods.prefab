@@ -46,35 +46,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityId: CMS/Gameplay/Foods
   Components:
-  - rid: 8201920368704225493
+  - rid: 8201920494689845379
   references:
     version: 2
     RefIds:
-    - rid: 8201920368704225493
-      type: {class: FoodsComponent, ns: Game.Runtime.CMS.Components.Gameplay, asm: Runtime}
+    - rid: 8201920494689845379
+      type: {class: FoodsComponent, ns: Game.Runtime._Game.Scripts.Runtime.CMS.Components.Gameplay, asm: Runtime}
       data:
         Foods:
         - Id: test_0
           CookingTime: 2
           Sprite: {fileID: -4445964157895293935, guid: 87456ba0789d24746be63456eb603bef, type: 3}
-          Price: 2
+          Price: 0
         - Id: test_1
-          CookingTime: 6
+          CookingTime: 2
           Sprite: {fileID: 6585025107175598728, guid: 87456ba0789d24746be63456eb603bef, type: 3}
-          Price: 2
+          Price: 0
         - Id: test_2
           CookingTime: 2
           Sprite: {fileID: -2454808421282613970, guid: 87456ba0789d24746be63456eb603bef, type: 3}
-          Price: 2
+          Price: 0
         - Id: test_3
           CookingTime: 2
           Sprite: {fileID: -4123689952565877476, guid: 87456ba0789d24746be63456eb603bef, type: 3}
-          Price: 2
+          Price: 0
         - Id: test_4
           CookingTime: 2
           Sprite: {fileID: -100693523691448942, guid: 87456ba0789d24746be63456eb603bef, type: 3}
-          Price: 2
+          Price: 0
         - Id: test_5
-          CookingTime: 8
+          CookingTime: 2
           Sprite: {fileID: 8664334917540797407, guid: 87456ba0789d24746be63456eb603bef, type: 3}
-          Price: 2
+          Price: 0

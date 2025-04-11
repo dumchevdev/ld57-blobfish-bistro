@@ -9,18 +9,18 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Dishes
     {
         private readonly string _foodId;
         private readonly DinnerBehaviour _dinnerBehaviour;
-        private readonly FoodPointData _foodPointData;
+        private readonly DinnerPointData _dinnerPointData;
 
-        public DinnerInteraction(string foodId, DinnerBehaviour dinnerBehaviour, FoodPointData foodPointData)
+        public DinnerInteraction(string foodId, DinnerBehaviour dinnerBehaviour, DinnerPointData dinnerPointData)
         {
             _foodId = foodId;
             _dinnerBehaviour = dinnerBehaviour;
-            _foodPointData = foodPointData;
+            _dinnerPointData = dinnerPointData;
         }
 
         public void ExecuteInteraction(InteractableObject interactable)
         {
-            ServiceLocator<GameService>.GetService().TakeFood(_foodId, _dinnerBehaviour, _foodPointData);
+            ServiceLocator<GameService>.GetService().TakeFood(_foodId, _dinnerBehaviour, _dinnerPointData);
         }
     }
 }

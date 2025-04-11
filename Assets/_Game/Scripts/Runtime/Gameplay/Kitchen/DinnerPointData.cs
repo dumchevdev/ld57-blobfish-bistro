@@ -2,12 +2,12 @@
 
 namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Kitchen
 {
-    public class FoodPointData
+    public class DinnerPointData
     {
-        public Transform Point;
         public bool IsOccupied;
+        public readonly Transform Point;
 
-        public FoodPointData(Transform point)
+        public DinnerPointData(Transform point)
         {
             Point = point;
         }

@@ -46,11 +46,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityId: CMS/Audio/Ambient
   Components:
-  - rid: 8201920311462723971
+  - rid: 8201920494689845363
   references:
     version: 2
     RefIds:
-    - rid: 8201920311462723971
-      type: {class: AmbientComponent, ns: Game.Runtime.CMS.Audio, asm: Runtime}
+    - rid: 8201920494689845363
+      type: {class: AmbientComponent, ns: Game.Runtime._Game.Scripts.Runtime.CMS.Components.Audio, asm: Runtime}
       data:
         Clip: {fileID: 8300000, guid: 6752e7a57e85b454e8b9cb333d480bd5, type: 3}

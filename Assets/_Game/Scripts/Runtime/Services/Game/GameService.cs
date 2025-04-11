@@ -173,7 +173,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
             });
         }
 
-        public void TakeFood(string foodId, DinnerBehaviour dinnerBehaviour, FoodPointData foodPointData)
+        public void TakeFood(string foodId, DinnerBehaviour dinnerBehaviour, DinnerPointData dinnerPointData)
         {
             dinnerBehaviour.InteractionStrategy = new EmptyInteraction();
             
@@ -191,7 +191,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
                         .GetComponent<FoodsComponent>().Foods.First(food => food.Id == foodId);
                     characterService.HandsVisual.SetHandSprite(foodComponent.Sprite, characterHand.IsRightHand);
                     
-                    ServiceLocator<KitchenService>.GetService().ReturnFoodPoint(foodPointData);
+                    ServiceLocator<KitchenService>.GetService().ReturnFoodPoint(dinnerPointData);
                 }
                 return UniTask.CompletedTask;
             });
@@ -266,12 +266,13 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
         public async UniTask RemoveClient(CustomerData customerData)
         {
             _clients.Remove(customerData);
-            _queueManager.ReturnClient(customerData);
+            _queueManager.TryRemoveCustomerInQueue(customerData);
 
             var leavePosition = ServiceLocator<LevelPointsService>.GetService().LeavePoint.position;
             await customerData.Movable.MoveToPoint(leavePosition, _gameTokenSource.Token);
             
             customerData.Dispose();
+            _queueManager.ReturnPool(customerData);
         }
 
         private void InitializeTables()

@@ -405,11 +405,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityId: CMS/Gameplay/FoodDeliveryArea
   Components:
-  - rid: 8201920365552992342
+  - rid: 8201920494689845378
   references:
     version: 2
     RefIds:
-    - rid: 8201920365552992342
-      type: {class: PrefabComponent, ns: Game.Runtime.CMS.Commons, asm: Runtime}
+    - rid: 8201920494689845378
+      type: {class: PrefabComponent, ns: Game.Runtime._Game.Scripts.Runtime.CMS.Components.Commons, asm: Runtime}
       data:
         Prefab: {fileID: 8546432989674754061}

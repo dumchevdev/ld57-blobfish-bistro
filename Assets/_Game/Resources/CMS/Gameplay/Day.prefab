@@ -46,11 +46,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityId: CMS/Gameplay/Day
   Components:
-  - rid: 8201920365552992348
+  - rid: 8201920494689845376
   references:
     version: 2
     RefIds:
-    - rid: 8201920365552992348
-      type: {class: DayComponent, ns: Game.Runtime.CMS.Components.Gameplay, asm: Runtime}
+    - rid: 8201920494689845376
+      type: {class: DayComponent, ns: Game.Runtime._Game.Scripts.Runtime.CMS.Components.Gameplay, asm: Runtime}
       data:
         DayTimer: 120

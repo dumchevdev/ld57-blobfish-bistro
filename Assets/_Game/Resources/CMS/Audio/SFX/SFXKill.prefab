@@ -46,12 +46,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityId: CMS/Audio/SFX/SFXKill
   Components:
-  - rid: 8201920311462723980
+  - rid: 8201920494689845366
   references:
     version: 2
     RefIds:
-    - rid: 8201920311462723980
-      type: {class: SFXComponent, ns: Game.Runtime.CMS.Audio, asm: Runtime}
+    - rid: 8201920494689845366
+      type: {class: SFXComponent, ns: Game.Runtime._Game.Scripts.Runtime.CMS.Components.Audio, asm: Runtime}
       data:
         Clips:
         - {fileID: 8300000, guid: 0821b772d49a0a7408ac3713c9d0a0cc, type: 3}

@@ -105,12 +105,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityId: CMS/Gameplay/FoodBehaviour
   Components:
-  - rid: 8201920365552992344
+  - rid: 8201920494689845377
   references:
     version: 2
     RefIds:
-    - rid: 8201920365552992344
-      type: {class: PrefabComponent, ns: Game.Runtime.CMS.Commons, asm: Runtime}
+    - rid: 8201920494689845377
+      type: {class: PrefabComponent, ns: Game.Runtime._Game.Scripts.Runtime.CMS.Components.Commons, asm: Runtime}
       data:
         Prefab: {fileID: 827963954612487709}
 --- !u!114 &-6117827390901051904
@@ -125,8 +125,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64ab026f7bdc43a0ad2275c5616dd304, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Point: {fileID: 6430992162009019968}
+  Id: 0
   spriteRenderer: {fileID: 1832925845668085958}
+  Point: {fileID: 6430992162009019968}
 --- !u!58 &3707283570378024618
 CircleCollider2D:
   m_ObjectHideFlags: 0

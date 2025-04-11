@@ -16,16 +16,16 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Kitchen
 {
     public class KitchenService : IService, IDisposable
     {
-        private readonly List<FoodPointData> _foodPoints;
+        private readonly List<DinnerPointData> _foodPoints;
         private readonly ConcurrentQueue<string> _orderQueue;
-        private readonly FoodFactory _foodFactory;
+        private readonly DinnerFactory _dinnerFactory;
         private readonly SemaphoreSlim _factoryLock = new(1, 1);
 
         private CancellationTokenSource _foodTokenSource;
     
         public KitchenService()
         {
-            _foodPoints = new List<FoodPointData>();
+            _foodPoints = new List<DinnerPointData>();
             _orderQueue = new ConcurrentQueue<string>();
         
             var deliveryPrefab = CMSProvider.GetEntity(CMSPrefabs.Gameplay.FoodDeliveryArea)
@@ -33,11 +33,11 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Kitchen
             var deliveryObject = Object.Instantiate(deliveryPrefab);
             deliveryObject.name = nameof(KitchenService);
         
-            _foodFactory = new FoodFactory();
+            _dinnerFactory = new DinnerFactory();
 
             var foodPoints = deliveryPrefab.GetComponentsInChildren<Transform>();
             for (int i = 2; i < foodPoints.Length; i++)
-                _foodPoints.Add(new FoodPointData(foodPoints[i]));
+                _foodPoints.Add(new DinnerPointData(foodPoints[i]));
 
             ApplyFoodOrders().Forget();
         }
@@ -59,18 +59,18 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Kitchen
             return false;
         }
 
-        private bool TryGetFreeFoodPoint(out FoodPointData foodPoint)
+        private bool TryGetFreeFoodPoint(out DinnerPointData dinnerPoint)
         {
             foreach (var point in _foodPoints)
             {
                 if (!point.IsOccupied)
                 {
                     point.IsOccupied = true;
-                    foodPoint = point;
+                    dinnerPoint = point;
                     return true;
                 }
             }
-            foodPoint = null;
+            dinnerPoint = null;
             return false;
         }
 
@@ -97,7 +97,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Kitchen
                     try
                     {
                         Debug.Log($"[FOOD DELIVERY] Creating food order for foodId: {foodId}");
-                        await _foodFactory.CreateFood(foodId, foodPoint);
+                        await _dinnerFactory.CreateFood(foodId, foodPoint);
                     }
                     catch
                     {
@@ -108,14 +108,14 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Kitchen
             }
         }
 
-        public void ReturnFoodPoint(FoodPointData foodPointData)
+        public void ReturnFoodPoint(DinnerPointData dinnerPointData)
         {
-            foodPointData.IsOccupied = false;
+            dinnerPointData.IsOccupied = false;
         }
 
         public void ReturnFoodBehaviour(DinnerBehaviour dinnerBehaviour)
         {
-            _foodFactory.ReturnFoodBehaviour(dinnerBehaviour);
+            _dinnerFactory.ReturnFoodBehaviour(dinnerBehaviour);
         }
 
         public void Dispose()
@@ -124,7 +124,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Kitchen
             _foodTokenSource?.Dispose();
             _foodTokenSource = null;
             _factoryLock?.Dispose();
-            _foodFactory?.Dispose();
+            _dinnerFactory?.Dispose();
         }
     }
 }

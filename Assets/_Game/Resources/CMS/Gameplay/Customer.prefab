@@ -390,36 +390,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3491bc35dc84132acbda8b4eb9ddf2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  entityId: CMS/Gameplay/Client
+  entityId: CMS/Gameplay/Customer
   Components:
-  - rid: 8201920368704225381
-  - rid: 8201920368704225475
-  - rid: 8201920381680353421
+  - rid: 8201920494689845369
+  - rid: 8201920494689845370
+  - rid: 8201920494689845372
   references:
     version: 2
     RefIds:
-    - rid: 8201920368704225381
-      type: {class: PrefabComponent, ns: Game.Runtime.CMS.Commons, asm: Runtime}
+    - rid: 8201920494689845369
+      type: {class: PrefabComponent, ns: Game.Runtime._Game.Scripts.Runtime.CMS.Components.Commons, asm: Runtime}
       data:
         Prefab: {fileID: 2946776692581078673}
-    - rid: 8201920368704225475
-      type: {class: ClientMoodComponent, ns: Game.Runtime.CMS.Components.Gameplay, asm: Runtime}
-      data:
-        ClientMoodViews:
-        - Mood: 0
-          Color: {r: 0.06587124, g: 1, b: 0, a: 1}
-        - Mood: 1
-          Color: {r: 1, g: 0.9345745, b: 0, a: 1}
-        - Mood: 2
-          Color: {r: 1, g: 0.06844188, b: 0, a: 1}
-    - rid: 8201920381680353421
-      type: {class: ClientAnimationClipsComponent, ns: Game.Runtime.CMS.Components.Gameplay, asm: Runtime}
+    - rid: 8201920494689845370
+      type: {class: ClientAnimationClipsComponent, ns: Game.Runtime._Game.Scripts.Runtime.CMS.Components.Gameplay, asm: Runtime}
       data:
         ClientAnimators:
         - {fileID: 22100000, guid: 7c247fc7b071014429f287b4a00d654e, type: 2}
         - {fileID: 22100000, guid: 039d82471d6881b46b75eef5d1dfec30, type: 2}
         - {fileID: 22100000, guid: 1de74586f85b116429f45ba420dc54a1, type: 2}
         - {fileID: 22100000, guid: 16955fae1f2ebdb49ba5dbc5e42ae8fc, type: 2}
+    - rid: 8201920494689845372
+      type: {class: ClientMoodComponent, ns: Game.Runtime._Game.Scripts.Runtime.CMS.Components.Gameplay, asm: Runtime}
+      data:
+        ClientMoodViews:
+        - Mood: 0
+          Color: {r: 0, g: 1, b: 0.08817577, a: 1}
+        - Mood: 1
+          Color: {r: 0.9778857, g: 1, b: 0, a: 1}
+        - Mood: 2
+          Color: {r: 1, g: 0, b: 0, a: 1}
 --- !u!114 &9207997467062988669
 MonoBehaviour:
   m_ObjectHideFlags: 0

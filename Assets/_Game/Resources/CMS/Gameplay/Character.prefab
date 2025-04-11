@@ -138,12 +138,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityId: CMS/Gameplay/Character
   Components:
-  - rid: 8201920368704225381
+  - rid: 8201920494689845368
   references:
     version: 2
     RefIds:
-    - rid: 8201920368704225381
-      type: {class: PrefabComponent, ns: Game.Runtime.CMS.Commons, asm: Runtime}
+    - rid: 8201920494689845368
+      type: {class: PrefabComponent, ns: Game.Runtime._Game.Scripts.Runtime.CMS.Components.Commons, asm: Runtime}
       data:
         Prefab: {fileID: 2946776692581078673}
 --- !u!114 &-8677942432637054554

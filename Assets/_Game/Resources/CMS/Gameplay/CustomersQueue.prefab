@@ -80,21 +80,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3491bc35dc84132acbda8b4eb9ddf2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  entityId: CMS/Gameplay/ClientQueue
+  entityId: CMS/Gameplay/CustomersQueue
   Components:
-  - rid: 8201920368704225480
-  - rid: 8201920368704225593
+  - rid: 8201920494689845373
+  - rid: 8201920494689845374
   references:
     version: 2
     RefIds:
-    - rid: 8201920368704225480
-      type: {class: PrefabComponent, ns: Game.Runtime.CMS.Commons, asm: Runtime}
+    - rid: 8201920494689845373
+      type: {class: ClientsQueueComponent, ns: Game.Runtime._Game.Scripts.Runtime.CMS.Components.Gameplay, asm: Runtime}
+      data:
+        SpawnInterval: 3
+    - rid: 8201920494689845374
+      type: {class: PrefabComponent, ns: Game.Runtime._Game.Scripts.Runtime.CMS.Components.Commons, asm: Runtime}
       data:
         Prefab: {fileID: 1999294617325955508}
-    - rid: 8201920368704225593
-      type: {class: ClientsQueueComponent, ns: Game.Runtime.CMS.Components.Gameplay, asm: Runtime}
-      data:
-        SpawnInterval: 5
 --- !u!1 &2537642545523753763
 GameObject:
   m_ObjectHideFlags: 0

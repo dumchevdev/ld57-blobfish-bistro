@@ -52,20 +52,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityId: CMS/Services/SayText
   Components:
-  - rid: 8201920311462723977
-  - rid: 8201920311462723978
+  - rid: 8201920494689845381
   references:
     version: 2
     RefIds:
-    - rid: 8201920311462723977
-      type: {class: SFXComponent, ns: Game.Runtime.CMS.Audio, asm: Runtime}
-      data:
-        Clips:
-        - {fileID: 8300000, guid: 321952ef8a7e0b948a7f6f0ae103a538, type: 3}
-        Volume: 1
-        Cooldown: 0.1
-    - rid: 8201920311462723978
-      type: {class: PrefabComponent, ns: Game.Runtime.CMS.Commons, asm: Runtime}
+    - rid: 8201920494689845381
+      type: {class: PrefabComponent, ns: Game.Runtime._Game.Scripts.Runtime.CMS.Components.Commons, asm: Runtime}
       data:
         Prefab: {fileID: 3629664642240260995}
 --- !u!23 &6564586338573842989
