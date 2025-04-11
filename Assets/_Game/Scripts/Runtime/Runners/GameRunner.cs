@@ -1,12 +1,12 @@
-﻿using Game.Runtime.CMS;
-using Game.Runtime.ServiceLocator;
-using Game.Runtime.Services.Audio;
-using Game.Runtime.Services.Save;
-using Game.Runtime.Services.States;
-using Game.Runtime.Services.UI;
+﻿using Game.Runtime._Game.Scripts.Runtime.CMS;
+using Game.Runtime._Game.Scripts.Runtime.ServiceLocator;
+using Game.Runtime._Game.Scripts.Runtime.Services.Audio;
+using Game.Runtime._Game.Scripts.Runtime.Services.Save;
+using Game.Runtime._Game.Scripts.Runtime.Services.States;
+using Game.Runtime._Game.Scripts.Runtime.Services.UI;
 using UnityEngine;
 
-namespace Game.Runtime.Runners
+namespace Game.Runtime._Game.Scripts.Runtime.Runners
 {
     public class GameRunner : MonoBehaviour
     {

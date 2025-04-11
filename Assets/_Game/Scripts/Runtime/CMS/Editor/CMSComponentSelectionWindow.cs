@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace Game.Runtime.CMS.Editor
+namespace Game.Runtime._Game.Scripts.Runtime.CMS.Editor
 {
     public class CMSComponentSelectionWindow : EditorWindow
     {
@@ -18,16 +18,16 @@ namespace Game.Runtime.CMS.Editor
 
         private string _search = "";
         private Vector2 _scrollPos;
-        
+
         private CMSEntityPrefabEditor _editor;
-        
+
         private readonly ComponentFolder _rootFolder = new();
         private readonly Dictionary<string, bool> _folderExpansionStates = new();
 
         public void Initialize(CMSEntityPrefabEditor editor)
         {
             _editor = editor;
-        
+
             var componentTypes = TypeCache.GetTypesDerivedFrom<CMSComponent>()
                 .Where(t => !t.IsAbstract && !t.IsInterface)
                 .OrderBy(t => t.Name);
@@ -42,11 +42,11 @@ namespace Game.Runtime.CMS.Editor
         private void AddComponentToFolder(Type type, string relativePath)
         {
             ComponentFolder currentFolder = _rootFolder;
-        
+
             if (!string.IsNullOrEmpty(relativePath))
             {
                 string folderName = relativePath.Split('/').Last();
-            
+
                 if (!currentFolder.Subfolders.ContainsKey(folderName))
                 {
                     currentFolder.Subfolders[folderName] = new ComponentFolder
@@ -54,16 +54,17 @@ namespace Game.Runtime.CMS.Editor
                         DisplayName = folderName
                     };
                 }
+
                 currentFolder = currentFolder.Subfolders[folderName];
             }
-        
+
             currentFolder.Components.Add(type);
         }
 
         private void OnGUI()
         {
             EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
-            
+
             string newSearch = EditorGUILayout.TextField(_search, EditorStyles.toolbarSearchField);
             if (newSearch != _search)
             {
@@ -74,7 +75,7 @@ namespace Game.Runtime.CMS.Editor
             EditorGUILayout.EndHorizontal();
 
             _scrollPos = EditorGUILayout.BeginScrollView(_scrollPos);
-        
+
             if (string.IsNullOrEmpty(_search))
             {
                 DrawFolder(_rootFolder, 0);
@@ -87,7 +88,7 @@ namespace Game.Runtime.CMS.Editor
 
                 foreach (var type in allComponents)
                 {
-                    if (GUILayout.Button(type.Name, EditorStyles.miniButton, 
+                    if (GUILayout.Button(type.Name, EditorStyles.miniButton,
                             GUILayout.Height(20), GUILayout.ExpandWidth(true)))
                     {
                         _editor.AddComponent(type);
@@ -123,12 +124,12 @@ namespace Game.Runtime.CMS.Editor
                 _folderExpansionStates.TryAdd(folderKey, false);
 
                 EditorGUILayout.BeginHorizontal();
-            
+
                 bool isExpanded = _folderExpansionStates[folderKey];
                 isExpanded = EditorGUILayout.Foldout(isExpanded, subfolder.Value.DisplayName, true);
-            
+
                 EditorGUILayout.EndHorizontal();
-            
+
                 _folderExpansionStates[folderKey] = isExpanded;
 
                 if (isExpanded)
@@ -140,16 +141,16 @@ namespace Game.Runtime.CMS.Editor
             foreach (var type in folder.Components.OrderBy(t => t.Name))
             {
                 EditorGUILayout.BeginHorizontal();
-            
-                GUILayout.Space(indentLevel * 8); 
-            
-                if (GUILayout.Button(type.Name, EditorStyles.miniButton, 
+
+                GUILayout.Space(indentLevel * 8);
+
+                if (GUILayout.Button(type.Name, EditorStyles.miniButton,
                         GUILayout.Height(20), GUILayout.ExpandWidth(true)))
                 {
                     _editor.AddComponent(type);
                     Close();
                 }
-            
+
                 EditorGUILayout.EndHorizontal();
             }
         }

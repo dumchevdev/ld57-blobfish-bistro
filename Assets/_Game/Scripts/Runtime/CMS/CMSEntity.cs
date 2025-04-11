@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Game.Runtime.CMS
+namespace Game.Runtime._Game.Scripts.Runtime.CMS
 {
     public class CMSEntity
     {
@@ -13,7 +13,7 @@ namespace Game.Runtime.CMS
             EntityId = entityId;
             _components = components ?? new List<CMSComponent>();
         }
-        
+
         public T Define<T>() where T : CMSComponent, new()
         {
             var component = GetComponent<T>();
@@ -22,7 +22,7 @@ namespace Game.Runtime.CMS
 
             component = new T();
             _components.Add(component);
-            
+
             return component;
         }
 

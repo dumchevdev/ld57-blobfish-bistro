@@ -3,7 +3,7 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-namespace Game.Runtime.CMS.Editor
+namespace Game.Runtime._Game.Scripts.Runtime.CMS.Editor
 {
     public static class CMSEntityPrefabCreateButton
     {
@@ -26,7 +26,8 @@ namespace Game.Runtime.CMS.Editor
             newPrefab.AddComponent<CMSEntityPrefab>();
 
             // Создаем префаб
-            string prefabPath = AssetDatabase.GenerateUniqueAssetPath(Path.Combine(folderPath, "CMSEntityPrefab.prefab"));
+            string prefabPath =
+                AssetDatabase.GenerateUniqueAssetPath(Path.Combine(folderPath, "CMSEntityPrefab.prefab"));
             PrefabUtility.SaveAsPrefabAsset(newPrefab, prefabPath);
 
             // Уничтожаем временный GameObject

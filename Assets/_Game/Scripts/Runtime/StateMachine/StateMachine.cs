@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Game.Runtime.StateMachine
+namespace Game.Runtime._Game.Scripts.Runtime.StateMachine
 {
     public class StateMachine<T> : IDisposable where T : class
     {

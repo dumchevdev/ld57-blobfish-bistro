@@ -1,4 +1,4 @@
-﻿namespace Game.Runtime.Services.Audio
+﻿namespace Game.Runtime._Game.Scripts.Runtime.Services.Audio
 {
     public enum AudioType
     {

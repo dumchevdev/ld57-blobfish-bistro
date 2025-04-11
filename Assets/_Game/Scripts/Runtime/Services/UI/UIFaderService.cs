@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using Game.Runtime.ServiceLocator;
+using Game.Runtime._Game.Scripts.Runtime.ServiceLocator;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Game.Runtime.Services.UI
+namespace Game.Runtime._Game.Scripts.Runtime.Services.UI
 {
     public class UIFaderService : IService, IDisposable
     {

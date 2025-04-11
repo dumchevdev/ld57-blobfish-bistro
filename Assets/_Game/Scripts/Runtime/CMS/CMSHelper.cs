@@ -1,4 +1,4 @@
-namespace Game.Runtime.CMS
+namespace Game.Runtime._Game.Scripts.Runtime.CMS
 {
     public static class CMSHelper
     {

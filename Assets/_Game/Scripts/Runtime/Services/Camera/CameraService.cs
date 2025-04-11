@@ -1,7 +1,7 @@
 ﻿using DG.Tweening;
-using Game.Runtime.ServiceLocator;
+using Game.Runtime._Game.Scripts.Runtime.ServiceLocator;
 
-namespace Game.Runtime.Framework.Services.Camera
+namespace Game.Runtime._Game.Scripts.Runtime.Services.Camera
 {
     public class CameraService : IService
     {

@@ -1,12 +1,13 @@
 ﻿using System.Threading;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using Game.Runtime._Game.Scripts.Runtime.CMS;
+using Game.Runtime._Game.Scripts.Runtime.CMS.Components.Commons;
+using Game.Runtime._Game.Scripts.Runtime.ServiceLocator;
 using Game.Runtime.CMS;
-using Game.Runtime.CMS.Commons;
-using Game.Runtime.ServiceLocator;
 using TMPro;
 
-namespace Game.Runtime.Services.UI
+namespace Game.Runtime._Game.Scripts.Runtime.Services.UI
 {
     public class UISayService : IService
     {

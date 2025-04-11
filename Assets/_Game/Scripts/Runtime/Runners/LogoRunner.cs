@@ -1,17 +1,16 @@
 ﻿using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using Game.Runtime._Game.Scripts.Runtime.ServiceLocator;
+using Game.Runtime._Game.Scripts.Runtime.Services.Audio;
+using Game.Runtime._Game.Scripts.Runtime.Services.Camera;
+using Game.Runtime._Game.Scripts.Runtime.Services.States;
+using Game.Runtime._Game.Scripts.Runtime.Services.UI;
 using Game.Runtime.CMS;
-using Game.Runtime.Framework;
-using Game.Runtime.Framework.Services.Camera;
-using Game.Runtime.ServiceLocator;
-using Game.Runtime.Services.Audio;
-using Game.Runtime.Services.States;
-using Game.Runtime.Services.UI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Game.Runtime.Runners
+namespace Game.Runtime._Game.Scripts.Runtime.Runners
 {
     public class LogoRunner : MonoBehaviour
     {

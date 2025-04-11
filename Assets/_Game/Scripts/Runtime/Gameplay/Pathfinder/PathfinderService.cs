@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using Game.Runtime.ServiceLocator;
+using Game.Runtime._Game.Scripts.Runtime.ServiceLocator;
 using UnityEngine;
 
-namespace Game.Runtime.Gameplay.Pathfinder
+namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Pathfinder
 {
     public class PathfinderService : IService
     {

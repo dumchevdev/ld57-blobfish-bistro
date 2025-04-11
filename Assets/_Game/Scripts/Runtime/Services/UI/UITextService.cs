@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using Game.Runtime.ServiceLocator;
-using Game.Runtime.Services.Audio;
-using Game.Runtime.Utils.Helpers;
+using Game.Runtime._Game.Scripts.Runtime.ServiceLocator;
+using Game.Runtime._Game.Scripts.Runtime.Services.Audio;
+using Game.Runtime._Game.Scripts.Runtime.Utils.Helpers;
 using TMPro;
 
-namespace Game.Runtime.Services.UI
+namespace Game.Runtime._Game.Scripts.Runtime.Services.UI
 {
     public class UITextService : IService, IDisposable
     {

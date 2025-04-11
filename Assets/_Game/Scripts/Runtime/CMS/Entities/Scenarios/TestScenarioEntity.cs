@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using Game.Runtime.CMS.Commons;
-using Game.Runtime.Services.States;
-using Game.Runtime.ServiceLocator;
-using Game.Runtime.Services.UI;
+using Game.Runtime._Game.Scripts.Runtime.CMS.Components.Commons;
+using Game.Runtime._Game.Scripts.Runtime.ServiceLocator;
+using Game.Runtime._Game.Scripts.Runtime.Services.States;
+using Game.Runtime._Game.Scripts.Runtime.Services.UI;
 
-namespace Game.Runtime.CMS.Entities.Scenarios
+namespace Game.Runtime._Game.Scripts.Runtime.CMS.Entities.Scenarios
 {
     public class TestScenarioEntity : CMSEntity
     {

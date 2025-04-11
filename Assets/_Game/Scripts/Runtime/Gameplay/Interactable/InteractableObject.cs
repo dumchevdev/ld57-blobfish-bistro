@@ -1,11 +1,11 @@
-﻿using Game.Runtime.CMS;
-using Game.Runtime.Framework.Services.Camera;
-using Game.Runtime.ServiceLocator;
-using Game.Runtime.Services.Audio;
+﻿using Game.Runtime._Game.Scripts.Runtime.ServiceLocator;
+using Game.Runtime._Game.Scripts.Runtime.Services.Audio;
+using Game.Runtime._Game.Scripts.Runtime.Services.Camera;
+using Game.Runtime.CMS;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Game.Runtime.Gameplay.Interactives
+namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Interactable
 {
     public abstract class InteractableObject : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
     {
@@ -49,7 +49,6 @@ namespace Game.Runtime.Gameplay.Interactives
             InteractionStrategy?.ExecuteInteraction(this);
             if (InteractionStrategy != null)
             {
-                Debug.Log($"{InteractionStrategy.DebugName}");
                 ServiceLocator<CameraService>.GetService().UIShake();
                 ServiceLocator<AudioService>.GetService().Play(CMSPrefabs.Audio.SFX.SFXTyping);
             }

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Game.Runtime.CMS.Commons
+namespace Game.Runtime._Game.Scripts.Runtime.CMS.Components.Commons
 {
     public class SpriteComponent : CMSComponent
     {

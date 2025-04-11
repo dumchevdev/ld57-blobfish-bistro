@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Game.Runtime.CMS.Audio
+namespace Game.Runtime._Game.Scripts.Runtime.CMS.Components.Audio
 {
     [Serializable]
     public class SFXComponent : CMSComponent

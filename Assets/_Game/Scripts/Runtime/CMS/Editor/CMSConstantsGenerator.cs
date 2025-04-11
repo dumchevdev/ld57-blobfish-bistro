@@ -7,14 +7,14 @@ using System.Text;
 using UnityEditor;
 using UnityEngine;
 
-namespace Game.Runtime.CMS.Editor
+namespace Game.Runtime._Game.Scripts.Runtime.CMS.Editor
 {
     public class CMSConstantsGenerator : AssetPostprocessor
     {
         private const string ResourcesFolderPath = "_Game/Resources/CMS";
         private const string OutputFolderPath = "_Game/Scripts/Runtime/CMS/";
         private const string OutputClassName = "CMSPrefabs";
-        
+
         private static readonly HashSet<string> CSharpKeywords = new HashSet<string>
         {
             "abstract", "as", "base", "bool", "break", "byte", "case", "catch", "char", "checked",
@@ -33,7 +33,7 @@ namespace Game.Runtime.CMS.Editor
         {
             CMSProvider.Unload();
             CMSProvider.Load();
-            
+
             var resourcesPath = Path.Combine(Application.dataPath, ResourcesFolderPath);
             if (!Directory.Exists(resourcesPath))
             {
@@ -49,10 +49,10 @@ namespace Game.Runtime.CMS.Editor
             var codeBuilder = new StringBuilder(2048);
             GenerateFileHeader(codeBuilder);
             GenerateNamespaceAndClass(codeBuilder, resourcesPath);
-            
+
             File.WriteAllText(outputPath, codeBuilder.ToString());
             AssetDatabase.Refresh();
-            
+
             Debug.Log($"[CMS] Successfully generated {OutputClassName} at: {outputPath}");
         }
 
@@ -74,9 +74,9 @@ namespace Game.Runtime.CMS.Editor
             builder.AppendLine("{");
             builder.AppendLine($"    public static class {OutputClassName}");
             builder.AppendLine("    {");
-            
+
             GenerateFolderConstants(resourcesPath, builder, "        ");
-            
+
             builder.AppendLine("    }");
             builder.AppendLine("}");
         }
@@ -92,7 +92,8 @@ namespace Game.Runtime.CMS.Editor
                 builder.AppendLine($"{indent}}}");
             }
 
-            foreach (var file in Directory.GetFiles(folderPath).Where(f => Path.GetExtension(f).Equals(".prefab", StringComparison.OrdinalIgnoreCase)))
+            foreach (var file in Directory.GetFiles(folderPath).Where(f =>
+                         Path.GetExtension(f).Equals(".prefab", StringComparison.OrdinalIgnoreCase)))
             {
                 var fileName = SanitizeIdentifier(Path.GetFileNameWithoutExtension(file));
                 if (string.IsNullOrEmpty(fileName)) continue;
@@ -110,7 +111,7 @@ namespace Game.Runtime.CMS.Editor
             if (string.IsNullOrEmpty(name)) return name;
 
             var builder = new StringBuilder(name.Length + 1);
-            
+
             // Первый символ должен быть буквой или _
             if (!char.IsLetter(name[0]))
             {
@@ -138,7 +139,7 @@ namespace Game.Runtime.CMS.Editor
             var relativePath = fullPath
                 .Substring(resourcesIndex + "Resources".Length + 1)
                 .Replace('\\', '/');
-            
+
             return Path.ChangeExtension(relativePath, null);
         }
     }

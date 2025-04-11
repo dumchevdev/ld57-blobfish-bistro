@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Game.Runtime.Gameplay.Pathfinder
+namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Pathfinder
 {
     public class PathfinderBehaviour : MonoBehaviour
     {

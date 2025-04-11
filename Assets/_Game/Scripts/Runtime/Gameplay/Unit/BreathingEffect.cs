@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Game.Runtime.Gameplay.Character
+namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Unit
 {
     public class BreathingEffect : MonoBehaviour
     {

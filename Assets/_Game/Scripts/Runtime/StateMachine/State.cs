@@ -1,4 +1,4 @@
-﻿namespace Game.Runtime.StateMachine
+﻿namespace Game.Runtime._Game.Scripts.Runtime.StateMachine
 {
     public abstract class State<T> where T : class
     {

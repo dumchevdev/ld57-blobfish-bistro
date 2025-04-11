@@ -1,7 +1,7 @@
-﻿using Game.Runtime.ServiceLocator;
+﻿using Game.Runtime._Game.Scripts.Runtime.ServiceLocator;
 using UnityEngine;
 
-namespace Game.Runtime.Gameplay.Level
+namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Level
 {
     public class LevelPointsService : IService
     {

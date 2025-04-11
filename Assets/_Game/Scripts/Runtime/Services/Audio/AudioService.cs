@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using Game.Runtime.CMS;
-using Game.Runtime.CMS.Audio;
-using Game.Runtime.ServiceLocator;
-using Game.Runtime.Utils.Extensions;
+using Game.Runtime._Game.Scripts.Runtime.CMS;
+using Game.Runtime._Game.Scripts.Runtime.CMS.Components.Audio;
+using Game.Runtime._Game.Scripts.Runtime.ServiceLocator;
+using Game.Runtime._Game.Scripts.Runtime.Utils.Extensions;
 using UnityEngine;
 
-namespace Game.Runtime.Services.Audio
+namespace Game.Runtime._Game.Scripts.Runtime.Services.Audio
 {
     public class AudioService : IService, IDisposable
     {

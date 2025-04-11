@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Game.Runtime.Utils.Helpers
+namespace Game.Runtime._Game.Scripts.Runtime.Utils.Helpers
 {
     public static partial class Helpers
     {

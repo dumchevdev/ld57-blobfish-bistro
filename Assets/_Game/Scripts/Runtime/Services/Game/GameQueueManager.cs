@@ -2,14 +2,16 @@
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using Game.Runtime._Game.Scripts.Runtime.CMS;
+using Game.Runtime._Game.Scripts.Runtime.CMS.Components.Commons;
+using Game.Runtime._Game.Scripts.Runtime.CMS.Components.Gameplay;
+using Game.Runtime._Game.Scripts.Runtime.Gameplay.Customers;
+using Game.Runtime._Game.Scripts.Runtime.Gameplay.Customers.States;
 using Game.Runtime.CMS;
-using Game.Runtime.CMS.Commons;
-using Game.Runtime.CMS.Components.Gameplay;
-using Game.Runtime.Gameplay.Interactives;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Game.Runtime.Framework.Services.Game
+namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
 {
     public class GameQueueManager : IDisposable
     {
@@ -17,10 +19,10 @@ namespace Game.Runtime.Framework.Services.Game
         private readonly float _spawnInterval;
         private int _cachedFirstClientId;
         
-        private readonly List<QueueClientData> _queueClients = new();
-        private readonly List<QueueClientPointData> _queuePoints;
+        private readonly List<CustomerInQueueData> _queueClients = new();
+        private readonly List<CustomerInQueuePointData> _queuePoints;
         
-        private readonly ClientFactory _clientFactory = new();
+        private readonly CustomerFactory _customerFactory = new();
 
         private CancellationTokenSource _spawnTokenSource;
         private CancellationTokenSource _queueTokenSource;
@@ -32,10 +34,10 @@ namespace Game.Runtime.Framework.Services.Game
             var queue = Object.Instantiate(queuePrefab);
             queue.name = nameof(GameQueueManager);
             
-            _queuePoints = new List<QueueClientPointData>();
+            _queuePoints = new List<CustomerInQueuePointData>();
             var clientPoints = queue.GetComponentsInChildren<Transform>();
             for (int i = 1; i < clientPoints.Length; i++)
-                _queuePoints.Add(new QueueClientPointData(clientPoints[i]));
+                _queuePoints.Add(new CustomerInQueuePointData(clientPoints[i]));
             
             _clientModel = CMSProvider.GetEntity(CMSPrefabs.Gameplay.Client);
             _spawnInterval = queueEntity.GetComponent<ClientsQueueComponent>().SpawnInterval;
@@ -43,13 +45,13 @@ namespace Game.Runtime.Framework.Services.Game
             _cachedFirstClientId = -1;
         }
 
-        public void Start(List<ClientData> clients)
+        public void Start(List<CustomerData> clients)
         {
             StartClientSpawning(clients).Forget();
             StartCheckingQueue().Forget();
         }
         
-        public ClientData DequeueFirstClient()
+        public CustomerData DequeueFirstClient()
         {
             if (_queueClients.Count > 0)
             {
@@ -58,7 +60,7 @@ namespace Game.Runtime.Framework.Services.Game
                 _queuePoints[0].IsOccupied = false;
                 _queueClients.RemoveAt(0);
                 
-                return client.ClientData;
+                return client.CustomerData;
             }
 
             return null;
@@ -66,10 +68,10 @@ namespace Game.Runtime.Framework.Services.Game
 
         public bool IsFirstClientInQueue(int clientId)
         {
-            return _queueClients.Count > 0 && _queueClients[0].ClientData.Id == clientId;
+            return _queueClients.Count > 0 && _queueClients[0].CustomerData.Id == clientId;
         }
 
-        private async UniTask StartClientSpawning(List<ClientData> clients)
+        private async UniTask StartClientSpawning(List<CustomerData> clients)
         {
             _spawnTokenSource?.Cancel();
             _spawnTokenSource = new CancellationTokenSource();
@@ -102,12 +104,12 @@ namespace Game.Runtime.Framework.Services.Game
             }
         }
         
-        private void CreateClient(List<ClientData> clients, int positionIndex)
+        private void CreateClient(List<CustomerData> clients, int positionIndex)
         {
-            var client = _clientFactory.CreateClient(_clientModel);
+            var client = _customerFactory.CreateClient(_clientModel);
             clients.Add(client);
             
-            var queueClientData = new QueueClientData(client, positionIndex);
+            var queueClientData = new CustomerInQueueData(client, positionIndex);
             _queueClients.Add(queueClientData);
 
             if (positionIndex == 0)
@@ -116,17 +118,17 @@ namespace Game.Runtime.Framework.Services.Game
             client.Movable.MoveToPoint(_queuePoints[queueClientData.PointIndex].Point.position).Forget();
         }
         
-        public void ReturnClient(ClientData client)
+        public void ReturnClient(CustomerData customer)
         {
-            var queueClient = _queueClients.Find(x => x.ClientData.Id == client.Id);
+            var queueClient = _queueClients.Find(x => x.CustomerData.Id == customer.Id);
             if (queueClient != null)
             {
                 _queuePoints[queueClient.PointIndex].IsOccupied = false;
                 _queueClients.Remove(queueClient);
             }
             
-            client.Dispose();
-            _clientFactory.Return(client);
+            //client.Dispose();
+            //_clientFactory.Return(client);
         }
         
         private void MoveQueueForward()
@@ -142,25 +144,25 @@ namespace Game.Runtime.Framework.Services.Game
                     client.PointIndex = i;
                     targetPoint.IsOccupied = true;
 
-                    client.ClientData.Movable
+                    client.CustomerData.Movable
                         .MoveToPoint(targetPoint.Point.position, _queueTokenSource.Token).Forget();
                 }
 
                 if (client.PointIndex == 0)
-                    SetupFirstQueueClient(client.ClientData);
+                    SetupFirstQueueClient(client.CustomerData);
             }
         }
         
-        private void SetupFirstQueueClient(ClientData client)
+        private void SetupFirstQueueClient(CustomerData customer)
         {
-            if (_cachedFirstClientId == client.Id) return;
-            _cachedFirstClientId = client.Id;
-            client.StateMachine.ChangeState<WaitingInQueueClientState>();
+            if (_cachedFirstClientId == customer.Id) return;
+            _cachedFirstClientId = customer.Id;
+            customer.StateMachine.ChangeState<WaitingInQueueClientState>();
         }
 
         public void Dispose()
         {
-            _clientFactory.Dispose();
+            //_clientFactory.Dispose();
             
             _queueTokenSource?.Dispose();
             _queueTokenSource = null;

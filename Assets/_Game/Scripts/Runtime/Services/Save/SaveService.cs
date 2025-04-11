@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using Game.Runtime.ServiceLocator;
+using Game.Runtime._Game.Scripts.Runtime.ServiceLocator;
 using Newtonsoft.Json;
 using UnityEngine;
 
-namespace Game.Runtime.Services.Save
+namespace Game.Runtime._Game.Scripts.Runtime.Services.Save
 {
     public class SaveService : IService, IDisposable
     {

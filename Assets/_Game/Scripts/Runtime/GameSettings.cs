@@ -1,4 +1,4 @@
-﻿namespace Game.Runtime.Framework
+﻿namespace Game.Runtime._Game.Scripts.Runtime
 {
     public static class GameSettings
     {

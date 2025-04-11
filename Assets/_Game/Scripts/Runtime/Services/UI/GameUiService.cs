@@ -1,10 +1,11 @@
-﻿using Game.Runtime.CMS;
-using Game.Runtime.CMS.Commons;
-using Game.Runtime.Gameplay;
-using Game.Runtime.ServiceLocator;
+﻿using Game.Runtime._Game.Scripts.Runtime.CMS;
+using Game.Runtime._Game.Scripts.Runtime.CMS.Components.Commons;
+using Game.Runtime._Game.Scripts.Runtime.Gameplay;
+using Game.Runtime._Game.Scripts.Runtime.ServiceLocator;
+using Game.Runtime.CMS;
 using UnityEngine;
 
-namespace Game.Runtime.Services.UI
+namespace Game.Runtime._Game.Scripts.Runtime.Services.UI
 {
     public class GameUiService : IService
     {

@@ -1,10 +1,9 @@
 using System;
 
-namespace Game.Runtime.CMS
+namespace Game.Runtime._Game.Scripts.Runtime.CMS
 {
     [Serializable]
     public class CMSComponent
     {
-        
     }
 }

@@ -3,7 +3,7 @@ using System;
 using UnityEditor;
 using UnityEngine;
 
-namespace Game.Runtime.CMS.Editor
+namespace Game.Runtime._Game.Scripts.Runtime.CMS.Editor
 {
     [CustomEditor(typeof(CMSEntityPrefab))]
     public class CMSEntityPrefabEditor : UnityEditor.Editor
@@ -20,7 +20,7 @@ namespace Game.Runtime.CMS.Editor
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
-            
+
             DrawEntityInfoSection();
             DrawComponentsSection();
 
@@ -30,54 +30,58 @@ namespace Game.Runtime.CMS.Editor
         private void DrawEntityInfoSection()
         {
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-            
+
             var entity = (CMSEntityPrefab)target;
-            
+
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField("Entity ID", EditorStyles.boldLabel, GUILayout.Width(EditorGUIUtility.labelWidth - 4));
-            
+            EditorGUILayout.LabelField("Entity ID", EditorStyles.boldLabel,
+                GUILayout.Width(EditorGUIUtility.labelWidth - 4));
+
             EditorGUI.BeginDisabledGroup(true);
             EditorGUILayout.TextField(entity.EntityId, EditorStyles.textField, GUILayout.ExpandWidth(true));
             EditorGUI.EndDisabledGroup();
-            
+
             if (GUILayout.Button("Ping", EditorStyles.miniButton, GUILayout.Width(50)))
             {
                 entity.PingEntity();
                 EditorUtility.SetDirty(entity);
             }
-            
+
             EditorGUILayout.EndHorizontal();
-            
+
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField("Components Count", EditorStyles.label, GUILayout.Width(EditorGUIUtility.labelWidth - 4));
-            EditorGUILayout.LabelField(_componentsProperty.arraySize.ToString(), EditorStyles.label, GUILayout.ExpandWidth(true));
+            EditorGUILayout.LabelField("Components Count", EditorStyles.label,
+                GUILayout.Width(EditorGUIUtility.labelWidth - 4));
+            EditorGUILayout.LabelField(_componentsProperty.arraySize.ToString(), EditorStyles.label,
+                GUILayout.ExpandWidth(true));
             EditorGUILayout.EndHorizontal();
-            
+
             string newSearch = EditorGUILayout.TextField(_searchString, EditorStyles.toolbarSearchField);
             if (newSearch != _searchString)
             {
                 _searchString = newSearch;
                 Repaint();
             }
-            
+
             EditorGUILayout.EndVertical();
         }
 
         private void DrawComponentsSection()
         {
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-            EditorGUILayout.LabelField("Components:", EditorStyles.boldLabel, GUILayout.Width(EditorGUIUtility.labelWidth - 4));
+            EditorGUILayout.LabelField("Components:", EditorStyles.boldLabel,
+                GUILayout.Width(EditorGUIUtility.labelWidth - 4));
 
             _scrollPos = EditorGUILayout.BeginScrollView(_scrollPos, GUILayout.ExpandHeight(false));
-            
+
             for (int i = 0; i < _componentsProperty.arraySize; i++)
             {
                 SerializedProperty element = _componentsProperty.GetArrayElementAtIndex(i);
                 if (element.managedReferenceValue == null) continue;
 
                 string typeName = element.managedReferenceValue.GetType().Name;
-                
-                if (!string.IsNullOrEmpty(_searchString) && 
+
+                if (!string.IsNullOrEmpty(_searchString) &&
                     !typeName.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
                 {
                     continue;
@@ -87,14 +91,14 @@ namespace Game.Runtime.CMS.Editor
 
                 EditorGUILayout.BeginHorizontal();
                 GUILayout.Space(12);
-                
+
                 bool isExpanded = EditorGUILayout.Foldout(
                     element.isExpanded,
                     typeName,
                     true
                 );
                 element.isExpanded = isExpanded;
-                
+
                 if (GUILayout.Button("×", EditorStyles.miniButtonRight, GUILayout.Width(20), GUILayout.Height(18)))
                 {
                     _componentsProperty.DeleteArrayElementAtIndex(i);
@@ -103,7 +107,7 @@ namespace Game.Runtime.CMS.Editor
                     EditorGUILayout.EndVertical();
                     return;
                 }
-                
+
                 EditorGUILayout.EndHorizontal();
 
                 if (isExpanded)
@@ -119,16 +123,17 @@ namespace Game.Runtime.CMS.Editor
                 {
                     EditorGUILayout.Space(2);
                 }
-                
+
                 EditorGUILayout.EndVertical();
             }
+
             EditorGUILayout.EndScrollView();
-            
+
             if (GUILayout.Button("Add Component", EditorStyles.miniButton))
             {
                 ShowAddComponentMenu();
             }
-            
+
             EditorGUILayout.EndVertical();
         }
 
@@ -152,7 +157,7 @@ namespace Game.Runtime.CMS.Editor
             {
                 enterChildren = false;
                 if ("data" == iterator.name) continue;
-                
+
                 EditorGUILayout.BeginHorizontal();
                 EditorGUILayout.PropertyField(iterator, true);
                 EditorGUILayout.EndHorizontal();

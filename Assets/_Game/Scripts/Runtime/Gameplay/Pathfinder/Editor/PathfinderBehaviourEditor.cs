@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Game.Runtime.Gameplay.Pathfinder.Editor
+namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Pathfinder.Editor
 {
     public class PathfinderBehaviourEditor
     {

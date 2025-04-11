@@ -1,20 +1,20 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Game.Runtime.CMS
+namespace Game.Runtime._Game.Scripts.Runtime.CMS
 {
     public class CMSEntityPrefab : MonoBehaviour
     {
         [SerializeField, HideInInspector] private string entityId;
         [SerializeReference] public List<CMSComponent> Components;
-        
+
         public string EntityId => entityId;
 
 #if UNITY_EDITOR
         public void PingEntity()
         {
             string path = UnityEditor.AssetDatabase.GetAssetPath(gameObject);
-        
+
             if (path.StartsWith("Assets/_Game/Resources/CMS/") && path.EndsWith(".prefab"))
             {
                 path = path.Substring("Assets/_Game/Resources/".Length);

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Game.Runtime.ServiceLocator
+namespace Game.Runtime._Game.Scripts.Runtime.ServiceLocator
 {
     public static class ServiceLocator<T> where T : class, IService
     {

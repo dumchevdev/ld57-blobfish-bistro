@@ -1,8 +1,7 @@
-﻿namespace Game.Runtime.Gameplay.Interactives
+﻿namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Interactable
 {
     public interface IInteraction
     {
-        string DebugName { get; }
         void ExecuteInteraction(InteractableObject interactable);
     }
 }

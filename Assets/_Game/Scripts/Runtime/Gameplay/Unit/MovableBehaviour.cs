@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using Game.Runtime.Gameplay.Pathfinder;
-using Game.Runtime.ServiceLocator;
+using Game.Runtime._Game.Scripts.Runtime.Gameplay.Pathfinder;
+using Game.Runtime._Game.Scripts.Runtime.ServiceLocator;
 using UnityEngine;
 
-namespace Game.Runtime.Gameplay.Character
+namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Unit
 {
     public class MovableBehaviour : MonoBehaviour, IDisposable
     {

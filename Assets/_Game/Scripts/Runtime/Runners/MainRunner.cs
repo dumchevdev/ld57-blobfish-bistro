@@ -1,15 +1,15 @@
 ﻿using Cysharp.Threading.Tasks;
-using Game.Runtime.Framework.Services.Camera;
-using Game.Runtime.Framework.Services.Game;
-using Game.Runtime.Gameplay.Character;
-using Game.Runtime.Gameplay.FoodDelivery;
-using Game.Runtime.Gameplay.Level;
-using Game.Runtime.Gameplay.Pathfinder;
-using Game.Runtime.ServiceLocator;
-using Game.Runtime.Services.UI;
+using Game.Runtime._Game.Scripts.Runtime.Gameplay.Character;
+using Game.Runtime._Game.Scripts.Runtime.Gameplay.Kitchen;
+using Game.Runtime._Game.Scripts.Runtime.Gameplay.Level;
+using Game.Runtime._Game.Scripts.Runtime.Gameplay.Pathfinder;
+using Game.Runtime._Game.Scripts.Runtime.ServiceLocator;
+using Game.Runtime._Game.Scripts.Runtime.Services.Camera;
+using Game.Runtime._Game.Scripts.Runtime.Services.Game;
+using Game.Runtime._Game.Scripts.Runtime.Services.UI;
 using UnityEngine;
 
-namespace Game.Runtime.Runners
+namespace Game.Runtime._Game.Scripts.Runtime.Runners
 {
     public class MainRunner : MonoBehaviour
     {
@@ -28,7 +28,7 @@ namespace Game.Runtime.Runners
         {
             ServiceLocator<GameService>.RegisterService(new GameService());
             ServiceLocator<CameraService>.RegisterService(new CameraService(gameCamera));
-            ServiceLocator<FoodDeliveryService>.RegisterService(new FoodDeliveryService());
+            ServiceLocator<KitchenService>.RegisterService(new KitchenService());
             ServiceLocator<DayTimerService>.RegisterService(new DayTimerService());
             ServiceLocator<PathfinderService>.RegisterService(new PathfinderService());
             ServiceLocator<CharacterService>.RegisterService(new CharacterService());
@@ -39,7 +39,7 @@ namespace Game.Runtime.Runners
         {
             ServiceLocator<GameService>.UnregisterService();
             ServiceLocator<CameraService>.UnregisterService();
-            ServiceLocator<FoodDeliveryService>.UnregisterService();
+            ServiceLocator<KitchenService>.UnregisterService();
             ServiceLocator<DayTimerService>.UnregisterService();
             ServiceLocator<PathfinderService>.UnregisterService();
             ServiceLocator<CharacterService>.UnregisterService();

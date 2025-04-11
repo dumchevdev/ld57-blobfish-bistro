@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Game.Runtime.CMS.Components.Gameplay
+namespace Game.Runtime._Game.Scripts.Runtime.CMS.Components.Gameplay
 {
     [Serializable]
     public class FoodComponent

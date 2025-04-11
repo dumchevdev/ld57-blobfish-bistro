@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Game.Runtime.CMS
+namespace Game.Runtime._Game.Scripts.Runtime.CMS
 {
     public class CMSTable<T> where T : CMSEntity
     {

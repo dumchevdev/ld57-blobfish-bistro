@@ -1,18 +1,18 @@
 ﻿using System;
-using Game.Runtime.Gameplay.Interactives;
+using Game.Runtime._Game.Scripts.Runtime.Gameplay.Customers;
 using UnityEngine;
 
-namespace Game.Runtime.CMS.Components.Gameplay
+namespace Game.Runtime._Game.Scripts.Runtime.CMS.Components.Gameplay
 {
     public class ClientMoodComponent : CMSComponent
     {
         public ClientMoodView[] ClientMoodViews;
     }
-    
+
     [Serializable]
     public class ClientMoodView
     {
-        public ClientMood Mood;
+        public CustomerMood Mood;
         public Color Color;
     }
 }

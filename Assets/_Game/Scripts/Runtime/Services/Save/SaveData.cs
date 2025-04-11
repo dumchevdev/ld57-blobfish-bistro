@@ -1,4 +1,4 @@
-namespace Game.Runtime.Services.Save
+namespace Game.Runtime._Game.Scripts.Runtime.Services.Save
 {
     public class SaveData
     {

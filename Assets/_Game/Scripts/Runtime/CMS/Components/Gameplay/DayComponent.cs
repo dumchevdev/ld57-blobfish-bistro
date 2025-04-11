@@ -1,4 +1,4 @@
-﻿namespace Game.Runtime.CMS.Components.Gameplay
+﻿namespace Game.Runtime._Game.Scripts.Runtime.CMS.Components.Gameplay
 {
     public class DayComponent : CMSComponent
     {

@@ -1,9 +1,15 @@
-﻿using Game.Runtime.Gameplay.FoodDelivery;
+﻿using Game.Runtime._Game.Scripts.Runtime.Gameplay.Dishes;
 
-namespace Game.Runtime.Gameplay.Character
+namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Character
 {
     public class CharacterHandData
     {
-        public FoodData FoodData;
+        public bool IsRightHand { get;  }
+        public DinnerData DinnerData;
+
+        public CharacterHandData(bool isRightHand)
+        {
+            IsRightHand = isRightHand;
+        }
     }
 }

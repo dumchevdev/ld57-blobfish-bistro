@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using Game.Runtime._Game.Scripts.Runtime.CMS;
+using Game.Runtime._Game.Scripts.Runtime.CMS.Components.Gameplay;
+using Game.Runtime._Game.Scripts.Runtime.ServiceLocator;
 using Game.Runtime.CMS;
-using Game.Runtime.CMS.Components.Gameplay;
-using Game.Runtime.ServiceLocator;
 using UnityEngine;
 
-namespace Game.Runtime.Gameplay.Level
+namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Level
 {
     public class DayTimerService : IService,IDisposable
     {
