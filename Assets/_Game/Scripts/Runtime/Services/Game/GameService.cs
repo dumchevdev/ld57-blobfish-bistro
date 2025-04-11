@@ -265,6 +265,9 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
 
         public async UniTask RemoveClient(CustomerData customerData)
         {
+            if (_queueManager.IsFirstClientInQueue(customerData.Id) && IsSelectedClient)
+                IsSelectedClient = false;
+            
             _clients.Remove(customerData);
             _queueManager.TryRemoveCustomerInQueue(customerData);
 
@@ -272,6 +275,9 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
             await customerData.Movable.MoveToPoint(leavePosition, _gameTokenSource.Token);
             
             customerData.Dispose();
+            
+            _gameTokenSource.Token.ThrowIfCancellationRequested();
+            
             _queueManager.ReturnPool(customerData);
         }
 

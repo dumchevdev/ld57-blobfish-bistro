@@ -41,11 +41,17 @@ TagManager:
   - name: Background
     uniqueID: 482023339
     locked: 0
-  - name: Outliner
+  - name: Shadow
     uniqueID: 398874763
     locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Character
+    uniqueID: 700554099
+    locked: 0
+  - name: UI
+    uniqueID: 1772342427
     locked: 0
   m_RenderingLayers:
   - Default
