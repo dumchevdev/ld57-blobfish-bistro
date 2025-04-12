@@ -23,6 +23,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Dishes
 
         protected override void ResetBehaviorInternal()
         {
+            if (circleCollider == null) return;
             circleCollider.enabled = false;
         }
     }

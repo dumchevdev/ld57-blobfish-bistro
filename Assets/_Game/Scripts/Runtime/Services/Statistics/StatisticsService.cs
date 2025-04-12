@@ -5,6 +5,6 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Statistics
 {
     public class StatisticsService : IService
     {
-        public GameData GameData;
+        public int CollectedGolds;
     }
 }

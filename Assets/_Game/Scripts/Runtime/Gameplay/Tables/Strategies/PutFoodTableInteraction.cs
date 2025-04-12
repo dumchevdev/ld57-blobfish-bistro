@@ -6,8 +6,6 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Tables.Strategies
 {
     public class PutFoodTableInteraction : IInteraction
     {
-        public string DebugName => nameof(PutFoodTableInteraction);
-
         public void ExecuteInteraction(InteractableObject interactable)
         {
             var gameService = ServiceLocator<GameService>.GetService();

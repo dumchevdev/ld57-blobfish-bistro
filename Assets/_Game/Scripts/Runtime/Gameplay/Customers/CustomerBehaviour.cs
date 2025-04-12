@@ -15,6 +15,8 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Customers
         [SerializeField] private SpriteRenderer iconSpriteRenderer;
         [SerializeField] private Sprite hintWarning;
         [SerializeField] private SpriteFlipper flipper;
+        [SerializeField] private SpriteRenderer moodProgress;
+        [SerializeField] private SpriteRenderer progressBar;
 
         public void ShowHintWarning(bool isShow)
         {
@@ -33,6 +35,23 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Customers
                 var foods = CMSProvider.GetEntity(CMSPrefabs.Gameplay.DishesLibrary).GetComponent<DishesLibraryComponent>();
                 iconSpriteRenderer.sprite = foods.Dishes.First(x => x.Id == foodId).Sprite;
             }
+        }
+
+        public void SetMoodProgress(float progress)
+        {
+            if (moodProgress == null) return;
+            var clampedProgress = Mathf.Clamp01(progress);
+            var progressColor = clampedProgress >= 0.75f ? Color.green : clampedProgress >= 0.25f ? Color.yellow : Color.red;
+            var size = moodProgress.size;
+            size.x = clampedProgress;
+            moodProgress.size = size;
+            moodProgress.color = progressColor;
+        }
+
+        public void SetActiveProgressBar(bool isActive)
+        {
+            if (progressBar == null) return;
+            progressBar.gameObject.SetActive(isActive);
         }
 
         public void ForceFlip(bool isRight)

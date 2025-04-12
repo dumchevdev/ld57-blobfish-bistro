@@ -28,12 +28,13 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
 {
     public class GameService : IService, IDisposable
     {
-        public bool IsSelectedClient { get; private set; }
+        public bool IsSelectedClient => _selectedCustomerData != null;
         
         private CMSEntity _clientModel;
         private readonly float _spawnInterval;
+        private CustomerData _selectedCustomerData;
         
-        private readonly GameData _gameData;
+        public GameData GameData { get; private set; }
         
         private readonly List<TableData> _tables = new();
         private readonly List<CustomerData> _clients = new();
@@ -49,7 +50,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
 
         public GameService()
         {
-            _gameData = new GameData();
+            GameData = new GameData();
             _queueManager = new GameQueueManager();
             _commandManager = new CharacterCommandManager();
             _gameTokenSource = new CancellationTokenSource();
@@ -71,19 +72,23 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
 
         public void SelectQueueClient(int clientId)
         {
-            if (IsSelectedClient) return;
-            if (!_queueManager.IsFirstClientInQueue(clientId)) return;
+            if (_selectedCustomerData != null)
+            {
+                _selectedCustomerData.View.Settings.OutlineColor = Color.white;
+                _selectedCustomerData.View.Settings.IsClickable = true;
+                _selectedCustomerData.View.Settings.IsHighlightable = true;
+                _selectedCustomerData.View.HideOutline();
+                _selectedCustomerData = null;
+            }
             
             var clientData = _clients.Find(client => client.Id == clientId);
-            IsSelectedClient = clientData != null;
-
             if (clientData != null)
             {
-                clientData.View.Settings.OutlineColor = Color.green;
-                clientData.View.Settings.IsClickable = false;
-                clientData.View.Settings.IsHighlightable = false;
-                
-                clientData.View.ShowOutline();
+                _selectedCustomerData = clientData;
+                _selectedCustomerData.View.Settings.OutlineColor = Color.green;
+                _selectedCustomerData.View.Settings.IsClickable = false;
+                _selectedCustomerData.View.Settings.IsHighlightable = false;
+                _selectedCustomerData.View.ShowOutline();
                 
                 ShowFreeTables().Forget();
             }
@@ -139,8 +144,8 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
                 var tableData = _tables.Find(table => table.Id == tableId);
                 if (tableData == null) return;
 
-                var clientData = _queueManager.DequeueFirstClient();
-                IsSelectedClient = false;
+                var clientData = _queueManager.DequeueCustomer(_selectedCustomerData);
+                _selectedCustomerData = null;
                 
                 clientData.View.Settings.OutlineColor = Color.white;
                 clientData.View.HideOutline();
@@ -210,7 +215,35 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
                 return UniTask.CompletedTask;
             });
         }
+        
+        public void ResetCharacterHands(Vector3 trashPosition)
+        {
+            MoveCharacter(trashPosition);
+            _commandManager.AddCommand(() =>
+            {
+                var characterService = ServiceLocator<CharacterService>.GetService();
+                var kitchenService = ServiceLocator<KitchenService>.GetService();
 
+                var leftHand = characterService.CharacterData.LeftHand;
+                if (leftHand.DinnerData != null && leftHand.DinnerData.Behaviour != null)
+                {
+                    kitchenService.ReturnFoodBehaviour(leftHand.DinnerData.Behaviour);
+                    leftHand.DinnerData = null;
+                }
+
+                var rightHand = characterService.CharacterData.RightHand;
+                if (rightHand.DinnerData != null && rightHand.DinnerData.Behaviour != null)
+                {
+                    kitchenService.ReturnFoodBehaviour(rightHand.DinnerData.Behaviour);
+                    rightHand.DinnerData = null;
+                }
+                
+                characterService.HandsVisual.ResetHands();
+
+                return UniTask.CompletedTask;
+            });
+        }
+        
         public void PutOrderFood(OrderData orderData)
         {
             MoveCharacter(orderData.TableData.Behaviour.CharacterPoint.position);
@@ -222,7 +255,9 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
                 {
                     if (characterService.TryGetHandWithFood(orderData.DinnerId, out var dataForRemove))
                     {
-
+                        if (orderData.DinnerBehaviour != null)
+                            ServiceLocator<KitchenService>.GetService().ReturnFoodBehaviour(orderData.DinnerBehaviour);
+                        
                         characterService.HandsVisual.ResetHandSprite(dataForRemove.IsRightHand);
                         dataForRemove.DinnerData = null;
                         return UniTask.CompletedTask;
@@ -259,7 +294,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
                 if (orderData.DinnerBehaviour != null)
                     ServiceLocator<KitchenService>.GetService().ReturnFoodBehaviour(orderData.DinnerBehaviour);
                 
-                _gameData.Golds += orderData.Golds;
+                GameData.Golds += orderData.Golds;
             
                 _orders.Remove(orderData);
                 return UniTask.CompletedTask;
@@ -281,8 +316,8 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
 
         public async UniTask RemoveClient(CustomerData customerData)
         {
-            if (_queueManager.IsFirstClientInQueue(customerData.Id) && IsSelectedClient)
-                IsSelectedClient = false;
+            if (_selectedCustomerData == customerData)
+                _selectedCustomerData = null;
             
             _clients.Remove(customerData);
             _queueManager.TryRemoveCustomerInQueue(customerData);
@@ -353,7 +388,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
         {
             await UniTask.WaitUntil(() => _clients.Count == 0 && _orders.Count == 0, cancellationToken: _gameTokenSource.Token);
             await ServiceLocator<UIFaderService>.GetService().FadeIn();
-            ServiceLocator<StatisticsService>.GetService().GameData = _gameData;
+            ServiceLocator<StatisticsService>.GetService().CollectedGolds = GameData.Golds;
             SceneManager.LoadScene("_Game/Scenes/Statistics");
         }
         

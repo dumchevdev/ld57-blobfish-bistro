@@ -7,8 +7,6 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Tables.Strategies
 {
     public class MoveToTableInteraction : IInteraction
     {
-        public string DebugName => nameof(MoveToTableInteraction);
-
         public void ExecuteInteraction(InteractableObject interactable)
         {
             var gameService = ServiceLocator<GameService>.GetService();

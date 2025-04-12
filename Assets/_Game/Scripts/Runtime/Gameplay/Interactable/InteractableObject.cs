@@ -9,7 +9,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Interactable
 {
     public abstract class InteractableObject : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
     {
-        public int Id;
+        [HideInInspector] public int Id;
         public readonly InteractableSettings Settings = new();
         public IInteraction InteractionStrategy;
 
@@ -25,12 +25,14 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Interactable
 
         public void ShowOutline()
         {
+            if (spriteRenderer == null) return;
             spriteRenderer.material.SetColor(_outlineColor, Settings.OutlineColor);
             spriteRenderer.material.SetFloat(_outlineWidth, 0.06f);
         }
 
         public void HideOutline()
         {
+            if (spriteRenderer == null) return;
             spriteRenderer.material.SetFloat(_outlineWidth, 0);
         }
 
@@ -49,7 +51,6 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Interactable
             InteractionStrategy?.ExecuteInteraction(this);
             if (InteractionStrategy != null)
             {
-                ServiceLocator<CameraService>.GetService().UIShake();
                 ServiceLocator<AudioService>.GetService().Play(CMSPrefabs.Audio.SFX.SFXTyping);
             }
         }

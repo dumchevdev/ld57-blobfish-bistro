@@ -14,16 +14,19 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Kitchen
 {
     public class DinnerFactory : IDisposable
     {
+        public bool IsOccupied { get; private set; }
+        
         private readonly List<DinnerBehaviour> _dinnerPool = new();
         private CancellationTokenSource _factoryTokenSource;
 
         public async UniTask CreateFood(string foodId, DinnerPointData dinnerPointData)
         {
-            _factoryTokenSource?.Cancel();
             _factoryTokenSource = new CancellationTokenSource();
 
             try
             {
+                IsOccupied = true;
+
                 var foodsComponent = CMSProvider.GetEntity(CMSPrefabs.Gameplay.DishesLibrary).GetComponent<DishesLibraryComponent>();
                 var foodComponent = foodsComponent.Dishes.First(food => food.Id == foodId);
 
@@ -42,6 +45,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Kitchen
             }
             finally
             {
+                IsOccupied = false;
                 ResetFactoryToken();
             }
         }

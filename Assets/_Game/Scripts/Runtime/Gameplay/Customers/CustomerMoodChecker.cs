@@ -5,6 +5,7 @@ using Game.Runtime._Game.Scripts.Runtime.CMS;
 using Game.Runtime._Game.Scripts.Runtime.CMS.Components.Gameplay;
 using Game.Runtime._Game.Scripts.Runtime.Gameplay.Customers.States;
 using Game.Runtime.CMS;
+using UnityEngine;
 
 namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Customers
 {
@@ -22,14 +23,24 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Customers
     
         private async UniTask StartMoodTimer()
         {
+            _customerData.View.SetActiveProgressBar(true);
+
             _moodTokenSource?.Cancel();
             _moodTokenSource = new CancellationTokenSource();
-            
-            while (_moodTokenSource != null && !_moodTokenSource.IsCancellationRequested)
+
+            var timer = _patienceTimer;
+            while (timer > 0)
             {
-                await UniTask.WaitForSeconds(_patienceTimer, cancellationToken: _moodTokenSource.Token);
-                HandleMoodTimer();
+                if (_moodTokenSource == null || _moodTokenSource.IsCancellationRequested)
+                    return;
+                
+                timer -= Time.deltaTime;
+                _customerData.View.SetMoodProgress(timer/_patienceTimer);
+                
+                await UniTask.Yield(cancellationToken: _moodTokenSource.Token, cancelImmediately: true);
             }
+            
+            HandleMoodTimer();
         }
         
         public void ResetMoodTimer()
@@ -40,11 +51,14 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Customers
         public void StopMoodTimer()
         {
             _moodTokenSource.Cancel();
+            _customerData.View.SetActiveProgressBar(false);
         }
 
         private void HandleMoodTimer()
         {
             _customerData.StateMachine.ChangeState<LeavingClientState>();
+            _customerData.View.SetMoodProgress(0);
+            _customerData.View.SetActiveProgressBar(false);
         }
 
         public void Dispose()

@@ -25,6 +25,9 @@ namespace Game.Runtime._Game.Scripts.Runtime.StateMachine
         {
             if (_states.TryGetValue(typeof(S), out var newState))
             {
+                if (_currentState == newState)
+                    return;
+                
                 _currentState?.OnExit();
                 _currentState = newState;
                 _currentState.OnEnter();

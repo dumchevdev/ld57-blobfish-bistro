@@ -53,7 +53,7 @@ MonoBehaviour:
     - rid: 8201920502748676229
       type: {class: GameSettingsComponent, ns: Game.Runtime._Game.Scripts.Runtime.CMS.Components.Gameplay, asm: Runtime}
       data:
-        SessionTimer: 300
+        SessionTimer: 120
         GoldRequired: 200
         CustomersSpawnInterval: 5
         CustomerPatienceTimer: 20

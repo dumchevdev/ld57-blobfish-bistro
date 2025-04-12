@@ -39,6 +39,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Runners
         
         private void UnregisterServices()
         {
+            ServiceLocator<GameUiService>.UnregisterService();
             ServiceLocator<GameService>.UnregisterService();
             ServiceLocator<CameraService>.UnregisterService();
             ServiceLocator<KitchenService>.UnregisterService();
@@ -46,7 +47,6 @@ namespace Game.Runtime._Game.Scripts.Runtime.Runners
             ServiceLocator<PathfinderService>.UnregisterService();
             ServiceLocator<CharacterService>.UnregisterService();
             ServiceLocator<LevelPointsService>.UnregisterService();
-            ServiceLocator<GameUiService>.UnregisterService();
         }
 
         private async UniTask StartGame()
@@ -57,7 +57,6 @@ namespace Game.Runtime._Game.Scripts.Runtime.Runners
             ServiceLocator<GameUiService>.GetService().Initialize();
             ServiceLocator<SessionTimerService>.GetService().StartTimer().Forget();
             ServiceLocator<GameService>.GetService().StartGameLoop();
-            ServiceLocator<StatisticsService>.GetService().GameData = null;
             
             await ServiceLocator<UIFaderService>.GetService().FadeOut();
         }

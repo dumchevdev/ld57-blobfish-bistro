@@ -6,8 +6,6 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Tables.Strategies
 {
     public class CleanupTableInteraction : IInteraction
     {
-        public string DebugName => nameof(CleanupTableInteraction);
-
         public void ExecuteInteraction(InteractableObject interactable)
         {
             var gameService = ServiceLocator<GameService>.GetService();

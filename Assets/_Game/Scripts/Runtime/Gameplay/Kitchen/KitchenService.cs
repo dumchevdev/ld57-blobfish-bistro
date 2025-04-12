@@ -18,7 +18,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Kitchen
     {
         private readonly List<DinnerPointData> _foodPoints;
         private readonly ConcurrentQueue<string> _orderQueue;
-        private readonly DinnerFactory _dinnerFactory;
+        private readonly DinnerFactory _dinnerFactory = new();
         private readonly SemaphoreSlim _factoryLock = new(1, 1);
 
         private CancellationTokenSource _foodTokenSource;
@@ -28,18 +28,33 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Kitchen
             _foodPoints = new List<DinnerPointData>();
             _orderQueue = new ConcurrentQueue<string>();
         
+            InitializeKitchen();
+            InitializeTrash();
+
+            ApplyFoodOrders().Forget();
+        }
+
+        private void InitializeKitchen()
+        {
             var kitchenPrefab = CMSProvider.GetEntity(CMSPrefabs.Gameplay.Kitchen)
                 .GetComponent<PrefabComponent>().Prefab;
             var kitchenObject = Object.Instantiate(kitchenPrefab);
             kitchenObject.name = nameof(KitchenService);
         
-            _dinnerFactory = new DinnerFactory();
-
             var foodPoints = kitchenPrefab.GetComponentsInChildren<Transform>();
             for (int i = 2; i < foodPoints.Length; i++)
                 _foodPoints.Add(new DinnerPointData(foodPoints[i]));
+        }
 
-            ApplyFoodOrders().Forget();
+        private static void InitializeTrash()
+        {
+            var trashPrefab = CMSProvider.GetEntity(CMSPrefabs.Gameplay.Trash)
+                .GetComponent<PrefabComponent>().Prefab;
+            var trashObject = Object.Instantiate(trashPrefab).GetComponent<TrashBehaviour>();
+            trashObject.name = nameof(TrashBehaviour);
+            trashObject.InteractionStrategy = new TrashInteraction();
+            trashObject.Settings.IsClickable = true;
+            trashObject.Settings.IsHighlightable = true;
         }
 
         public void Enqueue(string foodId)
@@ -80,7 +95,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Kitchen
 
         private bool NeedCreateNewFood()
         {
-            return _orderQueue.Count > 0 && AnyFoodPointFree();
+            return _orderQueue.Count > 0 && AnyFoodPointFree() && !_dinnerFactory.IsOccupied;
         }
     
         private async UniTask ApplyFoodOrders()

@@ -32,6 +32,7 @@ namespace Game.Runtime.CMS
             public const string GameSettings = "CMS/Gameplay/GameSettings";
             public const string Kitchen = "CMS/Gameplay/Kitchen";
             public const string Tables = "CMS/Gameplay/Tables";
+            public const string Trash = "CMS/Gameplay/Trash";
             public const string UI = "CMS/Gameplay/UI";
         }
         public static class Services

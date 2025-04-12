@@ -37,9 +37,9 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Unit
 
         private void FlipSprite(bool faceRight)
         {
+            if (spriteRenderer == null) return;
             isFacingRight = faceRight;
             spriteRenderer.flipX = !faceRight;
-            // Альтернативный вариант, если flipX не работает как ожидается:
         }
 
         public void ForceFlip(bool faceRight)

@@ -51,24 +51,19 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
             StartCheckingQueue().Forget();
         }
         
-        public CustomerData DequeueFirstClient()
+        public CustomerData DequeueCustomer(CustomerData customerData)
         {
             if (_queueCustomers.Count > 0)
             {
-                var customer = _queueCustomers[0];
+                var customer = _queueCustomers.Find(data => data.CustomerData == customerData);
                 
-                _queuePoints[0].IsOccupied = false;
-                _queueCustomers.RemoveAt(0);
+                _queuePoints[customer.PointIndex].IsOccupied = false;
+                _queueCustomers.RemoveAll(data => data.CustomerData == customerData);
                 
                 return customer.CustomerData;
             }
 
             return null;
-        }
-
-        public bool IsFirstClientInQueue(int customerId)
-        {
-            return _queueCustomers.Count > 0 && _queueCustomers[0].CustomerData.Id == customerId;
         }
 
         private async UniTask StartCustomersSpawning(List<CustomerData> customers)
@@ -118,9 +113,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
             var queueClientData = new CustomerInQueueData(customer, positionIndex);
             _queueCustomers.Add(queueClientData);
 
-            if (positionIndex == 0)
-                SetupFirstQueueClient(customer);
-
+            customer.StateMachine.ChangeState<WaitingInQueueClientState>();
             customer.Movable.MoveToPoint(_queuePoints[queueClientData.PointIndex].Point.position).Forget();
         }
         
@@ -156,18 +149,10 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
                         .MoveToPoint(targetPoint.Point.position, _queueTokenSource.Token).Forget();
                 }
 
-                if (customer.PointIndex == 0)
-                    SetupFirstQueueClient(customer.CustomerData);
+                customer.CustomerData.StateMachine.ChangeState<WaitingInQueueClientState>();
             }
         }
         
-        private void SetupFirstQueueClient(CustomerData customer)
-        {
-            if (_cachedFirstCustomerId == customer.Id) return;
-            _cachedFirstCustomerId = customer.Id;
-            customer.StateMachine.ChangeState<WaitingInQueueClientState>();
-        }
-
         public void Dispose()
         {
             _customerFactory.Dispose();

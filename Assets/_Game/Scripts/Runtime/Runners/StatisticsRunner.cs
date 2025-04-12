@@ -38,7 +38,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Runners
 
             await ServiceLocator<UIFaderService>.GetService().FadeOut();
             
-            if (statisticsService.GameData.Golds >= CMSProvider.GetEntity(CMSPrefabs.Gameplay.GameSettings).GetComponent<GameSettingsComponent>().GoldRequired)
+            if (statisticsService.CollectedGolds >= CMSProvider.GetEntity(CMSPrefabs.Gameplay.GameSettings).GetComponent<GameSettingsComponent>().GoldRequired)
             {
                 await ServiceLocator<UISayService>.GetService().Print("You win!");
             }
@@ -53,7 +53,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Runners
             
             await waiterService.SmartWait(0.5f);
 
-            await ServiceLocator<UISayService>.GetService().Print($"Gold - {statisticsService.GameData.Golds} / {CMSProvider.GetEntity(CMSPrefabs.Gameplay.GameSettings).GetComponent<GameSettingsComponent>().GoldRequired}");
+            await ServiceLocator<UISayService>.GetService().Print($"Gold - {statisticsService.CollectedGolds} / {CMSProvider.GetEntity(CMSPrefabs.Gameplay.GameSettings).GetComponent<GameSettingsComponent>().GoldRequired}");
             
             await waiterService.SmartWait(2f);
 

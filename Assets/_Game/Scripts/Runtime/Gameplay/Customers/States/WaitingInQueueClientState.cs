@@ -15,6 +15,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Customers.States
 
         public override void OnExit()
         {
+            Context.MoodChecker.ResetMoodTimer();
             Context.View.InteractionStrategy = new EmptyInteraction();
         }
     }
