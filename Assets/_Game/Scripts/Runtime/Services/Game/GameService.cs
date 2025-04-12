@@ -157,7 +157,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
                 clientData.View.SetBlockFlipper(true);
                 clientData.View.ForceFlip(tableData.Behaviour.IsRight);
                 
-                StartClientBrowsingMenu(clientData).Forget();
+                StartCustomerBrowsingMenu(clientData).Forget();
             }
         }
         
@@ -277,7 +277,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
                     handData.DinnerData = null;
 
                     orderData.TableData.Behaviour.InteractionStrategy = new MoveToTableInteraction();
-                    StartClientEatingFood(orderData.CustomerData).Forget();
+                    StartCustomerEatingFood(orderData.CustomerData).Forget();
                 }
                 
                 return UniTask.CompletedTask;
@@ -352,8 +352,11 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
             }
         }
 
-        private async UniTask StartClientBrowsingMenu(CustomerData customerData)
+        private async UniTask StartCustomerBrowsingMenu(CustomerData customerData)
         {
+            if (_gameTokenSource == null || _gameTokenSource.IsCancellationRequested)
+                return;
+            
             customerData.StateMachine.ChangeState<BrowsingMenuClientState>();
             await UniTask.WaitForSeconds(_gameSettings.CustomerBrowsingMenuTime, cancellationToken: _gameTokenSource.Token);
             customerData.StateMachine.ChangeState<WaitingOrderClientState>();
@@ -362,7 +365,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
             orderData.TableData.Behaviour.InteractionStrategy = new TakeOrderTableInteraction();
         }
 
-        private async UniTask StartClientEatingFood(CustomerData customerData)
+        private async UniTask StartCustomerEatingFood(CustomerData customerData)
         {
             customerData.StateMachine.ChangeState<EatingOrderFoodClientState>();
             await UniTask.WaitForSeconds(_gameSettings.CustomerEatingTime, cancellationToken: _gameTokenSource.Token);

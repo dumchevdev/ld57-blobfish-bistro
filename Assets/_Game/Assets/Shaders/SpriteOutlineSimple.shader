@@ -5,7 +5,7 @@ Shader "Custom/SpriteOutlineSimple"
         [PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
         _Color ("Tint", Color) = (1,1,1,1)
         _OutlineColor ("Outline Color", Color) = (1,1,1,1)
-        _OutlineWidth ("Outline Width", Range(0.01, 0.5)) = 0.05
+        [Toggle] _OutlineEnabled ("Outline Enabled", Int) = 1
     }
 
     SubShader
@@ -49,7 +49,7 @@ Shader "Custom/SpriteOutlineSimple"
             float4 _MainTex_ST;
             fixed4 _Color;
             fixed4 _OutlineColor;
-            float _OutlineWidth;
+            float _OutlineEnabled;
 
             v2f vert(appdata_t IN)
             {
@@ -63,20 +63,24 @@ Shader "Custom/SpriteOutlineSimple"
             fixed4 frag(v2f IN) : SV_Target
             {
                 fixed4 c = tex2D(_MainTex, IN.texcoord) * IN.color;
-                
-                // Если пиксель прозрачный, проверяем соседей на наличие непрозрачных пикселей
-                if (c.a == 0) {
-                    // Фиксированный размер шага вместо использования TexelSize
-                    float step = _OutlineWidth * 0.1;
-                    
-                    // Проверяем 4 соседних пикселя
-                    if (tex2D(_MainTex, IN.texcoord + float2(step, 0)).a > 0 ||
-                        tex2D(_MainTex, IN.texcoord - float2(step, 0)).a > 0 ||
-                        tex2D(_MainTex, IN.texcoord + float2(0, step)).a > 0 ||
-                        tex2D(_MainTex, IN.texcoord - float2(0, step)).a > 0)
-                    {
-                        c.rgb = _OutlineColor.rgb;
-                        c.a = _OutlineColor.a;
+
+                if (_OutlineEnabled == true)
+                {
+                     // Если пиксель прозрачный, проверяем соседей на наличие непрозрачных пикселей
+                    if (c.a == 0) {
+                        const float outline_width = 0.06f;
+                        // Фиксированный размер шага вместо использования TexelSize
+                        float step = outline_width * 0.1;
+                        
+                        // Проверяем 4 соседних пикселя
+                        if (tex2D(_MainTex, IN.texcoord + float2(step, 0)).a > 0 ||
+                            tex2D(_MainTex, IN.texcoord - float2(step, 0)).a > 0 ||
+                            tex2D(_MainTex, IN.texcoord + float2(0, step)).a > 0 ||
+                            tex2D(_MainTex, IN.texcoord - float2(0, step)).a > 0)
+                        {
+                            c.rgb = _OutlineColor.rgb;
+                            c.a = _OutlineColor.a;
+                        }
                     }
                 }
                 

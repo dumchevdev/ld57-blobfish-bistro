@@ -1,6 +1,5 @@
 ﻿using Game.Runtime._Game.Scripts.Runtime.ServiceLocator;
 using Game.Runtime._Game.Scripts.Runtime.Services.Audio;
-using Game.Runtime._Game.Scripts.Runtime.Services.Camera;
 using Game.Runtime.CMS;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -15,8 +14,8 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Interactable
 
         [SerializeField] protected SpriteRenderer spriteRenderer;
         
-        private readonly int _outlineWidth = Shader.PropertyToID("_OutlineWidth");
         private readonly int _outlineColor = Shader.PropertyToID("_OutlineColor");
+        private readonly int _outlineEnable = Shader.PropertyToID("_OutlineEnabled");
 
         protected void Start()
         {
@@ -27,13 +26,13 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Interactable
         {
             if (spriteRenderer == null) return;
             spriteRenderer.material.SetColor(_outlineColor, Settings.OutlineColor);
-            spriteRenderer.material.SetFloat(_outlineWidth, 0.06f);
+            spriteRenderer.material.SetInt(_outlineEnable, 1);
         }
 
         public void HideOutline()
         {
             if (spriteRenderer == null) return;
-            spriteRenderer.material.SetFloat(_outlineWidth, 0);
+            spriteRenderer.material.SetInt(_outlineEnable, 0);
         }
 
         public void ResetBehaviour()

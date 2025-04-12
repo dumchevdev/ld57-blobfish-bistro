@@ -19,7 +19,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Camera
 
         public void UIShake()
         {
-            Shake(0.025f, 0.4f);
+            Shake(0.025f, 0.2f);
         }
     }
 }

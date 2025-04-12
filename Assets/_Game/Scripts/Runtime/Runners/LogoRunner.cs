@@ -16,6 +16,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Runners
     {
         [SerializeField] private Camera logoCamera;
         [SerializeField] private TMP_Text logoText;
+        [SerializeField] private SpriteRenderer logoRenderer;
         
         private void Start()
         {
@@ -77,6 +78,17 @@ namespace Game.Runtime._Game.Scripts.Runtime.Runners
             
             await waiterService.SmartWait(1.5f);
             
+            audioService.Play(CMSPrefabs.Audio.SFX.SFXTyping);
+            cameraService.UIShake();
+
+            logoRenderer.DOFade(1f, 1f);
+
+            await waiterService.SmartWait(3f);
+
+            logoRenderer.DOFade(0f, 2f);
+
+            await waiterService.SmartWait(1f);
+
             await faderService.FadeIn();
             
             SceneManager.LoadScene("_Game/Scenes/Main");
