@@ -2,6 +2,7 @@ using System.Linq;
 using Game.Runtime._Game.Scripts.Runtime.CMS;
 using Game.Runtime._Game.Scripts.Runtime.CMS.Components.Gameplay;
 using Game.Runtime._Game.Scripts.Runtime.Gameplay.Interactable;
+using Game.Runtime._Game.Scripts.Runtime.Gameplay.Unit;
 using Game.Runtime.CMS;
 using UnityEngine;
 
@@ -13,6 +14,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Customers
         [SerializeField] private GameObject hint;
         [SerializeField] private SpriteRenderer iconSpriteRenderer;
         [SerializeField] private Sprite hintWarning;
+        [SerializeField] private SpriteFlipper flipper;
 
         public void ShowHintWarning(bool isShow)
         {
@@ -28,22 +30,25 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Customers
             hint.SetActive(isShow);
             if (isShow && foodId != null)
             {
-                var foods = CMSProvider.GetEntity(CMSPrefabs.Gameplay.Foods).GetComponent<FoodsComponent>();
-                iconSpriteRenderer.sprite = foods.Foods.First(x => x.Id == foodId).Sprite;
+                var foods = CMSProvider.GetEntity(CMSPrefabs.Gameplay.DishesLibrary).GetComponent<DishesLibraryComponent>();
+                iconSpriteRenderer.sprite = foods.Dishes.First(x => x.Id == foodId).Sprite;
             }
         }
 
+        public void ForceFlip(bool isRight)
+        {
+            flipper.ForceFlip(isRight);
+        }
+
+        public void SetBlockFlipper(bool isBlocked)
+        {
+            flipper.BlockFlipper = isBlocked;
+        }
+        
         public void SetAnimator(AnimatorOverrideController clientAnimator)
         {
             animator.runtimeAnimatorController = clientAnimator;
         }
-
-        public void SetMood(CustomerMood mood)
-        {
-            // var clientMood = CMSProvider.GetEntity(CMSPrefabs.Gameplay.Client).GetComponent<ClientMoodComponent>();
-            // _spriteRenderer.color = clientMood.ClientMoodViews.First(view => view.Mood == mood).Color;
-        }
-
 
         protected override void ResetBehaviorInternal()
         {

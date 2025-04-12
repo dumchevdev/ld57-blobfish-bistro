@@ -28,14 +28,14 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Kitchen
             _foodPoints = new List<DinnerPointData>();
             _orderQueue = new ConcurrentQueue<string>();
         
-            var deliveryPrefab = CMSProvider.GetEntity(CMSPrefabs.Gameplay.FoodDeliveryArea)
+            var kitchenPrefab = CMSProvider.GetEntity(CMSPrefabs.Gameplay.Kitchen)
                 .GetComponent<PrefabComponent>().Prefab;
-            var deliveryObject = Object.Instantiate(deliveryPrefab);
-            deliveryObject.name = nameof(KitchenService);
+            var kitchenObject = Object.Instantiate(kitchenPrefab);
+            kitchenObject.name = nameof(KitchenService);
         
             _dinnerFactory = new DinnerFactory();
 
-            var foodPoints = deliveryPrefab.GetComponentsInChildren<Transform>();
+            var foodPoints = kitchenPrefab.GetComponentsInChildren<Transform>();
             for (int i = 2; i < foodPoints.Length; i++)
                 _foodPoints.Add(new DinnerPointData(foodPoints[i]));
 
@@ -44,7 +44,6 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Kitchen
 
         public void Enqueue(string foodId)
         {
-            Debug.Log($"[FOOD DELIVERY] Enqueue foodId: {foodId}");
             _orderQueue.Enqueue(foodId);
         }
 
@@ -96,7 +95,6 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Kitchen
                 {
                     try
                     {
-                        Debug.Log($"[FOOD DELIVERY] Creating food order for foodId: {foodId}");
                         await _dinnerFactory.CreateFood(foodId, foodPoint);
                     }
                     catch

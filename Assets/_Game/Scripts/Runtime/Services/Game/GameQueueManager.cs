@@ -7,6 +7,7 @@ using Game.Runtime._Game.Scripts.Runtime.CMS.Components.Commons;
 using Game.Runtime._Game.Scripts.Runtime.CMS.Components.Gameplay;
 using Game.Runtime._Game.Scripts.Runtime.Gameplay.Customers;
 using Game.Runtime._Game.Scripts.Runtime.Gameplay.Customers.States;
+using Game.Runtime._Game.Scripts.Runtime.ServiceLocator;
 using Game.Runtime.CMS;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -29,8 +30,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
         
         public GameQueueManager()
         {
-            var queueEntity = CMSProvider.GetEntity(CMSPrefabs.Gameplay.CustomersQueue);
-            var queuePrefab = queueEntity.GetComponent<PrefabComponent>().Prefab;
+            var queuePrefab = CMSProvider.GetEntity(CMSPrefabs.Gameplay.CustomersQueue).GetComponent<PrefabComponent>().Prefab;
             var queue = Object.Instantiate(queuePrefab);
             queue.name = nameof(GameQueueManager);
             
@@ -40,7 +40,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
                 _queuePoints.Add(new CustomerInQueuePointData(customerPoints[i]));
             
             _customerModel = CMSProvider.GetEntity(CMSPrefabs.Gameplay.Customer);
-            _spawnInterval = queueEntity.GetComponent<ClientsQueueComponent>().SpawnInterval;
+            _spawnInterval = CMSProvider.GetEntity(CMSPrefabs.Gameplay.GameSettings).GetComponent<GameSettingsComponent>().CustomersSpawnInterval;
 
             _cachedFirstCustomerId = -1;
         }
@@ -80,6 +80,12 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
             {
                 await UniTask.WaitForSeconds(_spawnInterval, cancellationToken: _spawnTokenSource.Token);
 
+                if (ServiceLocator<SessionTimerService>.GetService().SessionFinished)
+                {
+                    _spawnTokenSource.Cancel();
+                    return;
+                }
+                
                 if (_queueCustomers.Count < _queuePoints.Count)
                 {
                     var queuePoint = _queuePoints[_queueCustomers.Count];

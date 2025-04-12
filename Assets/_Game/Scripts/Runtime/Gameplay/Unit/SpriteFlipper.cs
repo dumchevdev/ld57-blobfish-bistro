@@ -4,6 +4,8 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Unit
 {
     public class SpriteFlipper : MonoBehaviour
     {
+        public bool BlockFlipper;
+        
         public float flipThreshold = 0.1f;
         [SerializeField] private bool isFacingRight = true;
     
@@ -18,6 +20,8 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Unit
         
         void Update()
         {
+            if (BlockFlipper) return;
+            
             float direction = 0f;
         
             direction = transform.parent.position.x - lastXPosition;

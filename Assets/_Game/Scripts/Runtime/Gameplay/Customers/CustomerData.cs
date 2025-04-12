@@ -9,17 +9,6 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Customers
     {
         public int Id;
 
-        public CustomerMood Mood 
-        {
-            get => _mood;
-            set
-            {
-                View.SetMood(value);
-                _mood = value;
-            }
-        }
-        private CustomerMood _mood;
-        
         public readonly MovableBehaviour Movable;
         public readonly CustomerMoodChecker MoodChecker;
         public readonly CustomerBehaviour View;

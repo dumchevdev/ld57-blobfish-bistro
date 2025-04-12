@@ -8,5 +8,6 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Tables
         public Transform CharacterPoint;
         public Transform ClientPoint;
         public Transform FoodPoint;
+        public bool IsRight;
     }
 }

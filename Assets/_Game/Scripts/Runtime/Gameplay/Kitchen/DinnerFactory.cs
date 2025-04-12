@@ -24,14 +24,15 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Kitchen
 
             try
             {
-                var foodsComponent = CMSProvider.GetEntity(CMSPrefabs.Gameplay.Foods).GetComponent<FoodsComponent>();
-                var foodComponent = foodsComponent.Foods.First(food => food.Id == foodId);
+                var foodsComponent = CMSProvider.GetEntity(CMSPrefabs.Gameplay.DishesLibrary).GetComponent<DishesLibraryComponent>();
+                var foodComponent = foodsComponent.Dishes.First(food => food.Id == foodId);
 
                 var foodBehaviour = GetFoodBehaviour();
 
                 await UniTask.WaitForSeconds(foodComponent.CookingTime, cancellationToken: _factoryTokenSource.Token);
                 
                 foodBehaviour.SetFoodSprite(foodComponent.Sprite);
+                foodBehaviour.EnableInteraction();
                 foodBehaviour.transform.position = dinnerPointData.Point.position;
 
                 foodBehaviour.Settings.IsClickable = true;
@@ -59,7 +60,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Kitchen
                 }
             }
          
-            var foodPrefab = CMSProvider.GetEntity(CMSPrefabs.Gameplay.FoodBehaviour).GetComponent<PrefabComponent>().Prefab;
+            var foodPrefab = CMSProvider.GetEntity(CMSPrefabs.Gameplay.DinnerBehaviour).GetComponent<PrefabComponent>().Prefab;
             dinnerBehaviour = Object.Instantiate(foodPrefab).GetComponent<DinnerBehaviour>();
 
             return dinnerBehaviour;

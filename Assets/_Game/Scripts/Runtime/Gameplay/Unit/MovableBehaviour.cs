@@ -34,17 +34,22 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Unit
 
             try
             {
+                _isMoving = true;
+
                 foreach (var targetPoint in path)
                 {
-                    while (_moveTokenSource != null && !linkedToken.IsCancellationRequested &&
-                           Vector2.Distance(transform.position, targetPoint) > 0.1f)
+                    while (_moveTokenSource != null && !linkedToken.IsCancellationRequested)
                     {
-                        _isMoving = true;
-
+                        if (this == null)
+                            return;
+                        
                         Vector2 direction = (targetPoint - (Vector2)transform.position).normalized;
                         transform.position += (Vector3)direction * (_moveSpeed * Time.deltaTime);
-            
-                        await UniTask.Yield(PlayerLoopTiming.Update, _moveTokenSource.Token);
+                        
+                        if (Vector2.Distance(transform.position, targetPoint) <= 0.1f)
+                            break;
+                        
+                        await UniTask.Yield(PlayerLoopTiming.Update, _moveTokenSource.Token, cancelImmediately: true);
                     }
 
                     if (_moveTokenSource != null && !linkedToken.IsCancellationRequested)

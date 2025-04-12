@@ -3,6 +3,7 @@ using Game.Runtime._Game.Scripts.Runtime.ServiceLocator;
 using Game.Runtime._Game.Scripts.Runtime.Services.Audio;
 using Game.Runtime._Game.Scripts.Runtime.Services.Save;
 using Game.Runtime._Game.Scripts.Runtime.Services.States;
+using Game.Runtime._Game.Scripts.Runtime.Services.Statistics;
 using Game.Runtime._Game.Scripts.Runtime.Services.UI;
 using UnityEngine;
 
@@ -39,7 +40,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Runners
             ServiceLocator<UITextService>.RegisterService(new UITextService());
             ServiceLocator<UISayService>.RegisterService(new UISayService());
             ServiceLocator<UIFaderService>.RegisterService(new UIFaderService());
-            ServiceLocator<GameUiService>.RegisterService(new GameUiService());
+            ServiceLocator<StatisticsService>.RegisterService(new StatisticsService());
         }
         
         private void UnregisterServices()
@@ -50,7 +51,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Runners
             ServiceLocator<UITextService>.UnregisterService();
             ServiceLocator<UISayService>.UnregisterService();
             ServiceLocator<UIFaderService>.UnregisterService();
-            ServiceLocator<GameUiService>.UnregisterService();
+            ServiceLocator<StatisticsService>.UnregisterService();
         }
 
         private void OnDestroy()

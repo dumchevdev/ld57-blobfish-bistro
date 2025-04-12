@@ -42,12 +42,6 @@ namespace Game.Runtime._Game.Scripts.Runtime.Runners
             
             audioService.Play(CMSPrefabs.Audio.Ambient);
             
-            if (GameSettings.SKIP_INTRO)
-            {
-                SceneManager.LoadScene(GameSettings.MAIN_SCENE);
-                return;
-            }
-            
             logoText.alpha = 0f;
             logoText.text = "GAME BY DUMCHEVDEV";
             
@@ -58,7 +52,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Runners
             
             logoText.DOFade(1f, 0.5f);
 
-            await waiterService.SmartWait(1f);
+            await waiterService.SmartWait(1.5f);
 
             audioService.Play(CMSPrefabs.Audio.SFX.SFXTyping);
             cameraService.UIShake();
@@ -74,7 +68,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Runners
 
             logoText.DOFade(1f, 0.5f);
 
-            await waiterService.SmartWait(3.5f);
+            await waiterService.SmartWait(2f);
 
             audioService.Play(CMSPrefabs.Audio.SFX.SFXTyping);
             cameraService.UIShake();
@@ -85,7 +79,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Runners
             
             await faderService.FadeIn();
             
-            SceneManager.LoadScene(GameSettings.MAIN_SCENE);
+            SceneManager.LoadScene("_Game/Scenes/Main");
         }
 
         private void OnDestroy()

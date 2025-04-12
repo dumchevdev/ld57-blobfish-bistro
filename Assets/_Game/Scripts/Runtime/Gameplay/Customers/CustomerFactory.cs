@@ -46,20 +46,18 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Customers
         private void ConfigureClient(CustomerData customerData, CMSEntity clientModel)
         {
             var spawnPoint = ServiceLocator<LevelPointsService>.GetService().SpawnClientPoint;
-            var animator = clientModel.GetComponent<ClientAnimationClipsComponent>().ClientAnimators.GetRandom();
+            var animator = clientModel.GetComponent<CustomerAnimatorsComponent>().OverrideAnimators.GetRandom();
             
             customerData.Id = _counter;
             customerData.View.Id = _counter;
             _counter++;
 
-            customerData.View.SetAnimator(animator);
-            customerData.Mood = CustomerMood.Happy;
-            
-            customerData.MoodChecker.StartMoodTimer().Forget();
-            customerData.View.transform.position = spawnPoint.position;
-            
+            customerData.MoodChecker.ResetMoodTimer();
             customerData.StateMachine.ChangeState<EmptyClientState>();
+            
             customerData.View.ResetBehaviour();
+            customerData.View.SetAnimator(animator);
+            customerData.View.transform.position = spawnPoint.position;
             customerData.View.gameObject.SetActive(true);
         }
 

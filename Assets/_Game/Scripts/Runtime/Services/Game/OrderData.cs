@@ -6,10 +6,11 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
 {
     public class OrderData
     {
-        public string FoodId;
+        public string DinnerId;
         public DinnerBehaviour DinnerBehaviour;
         public bool IsClosed;
         public bool OrderAlreadyTaken;
+        public int Golds;
         
         public readonly CustomerData CustomerData;
         public readonly TableData TableData;

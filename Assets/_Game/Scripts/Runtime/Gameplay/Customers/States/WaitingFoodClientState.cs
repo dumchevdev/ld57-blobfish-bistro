@@ -11,7 +11,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Customers.States
         {
             Context.MoodChecker.ResetMoodTimer();
             var orderData = ServiceLocator<GameService>.GetService().GetOrderByClient(Context.Id);
-            Context.View.ShowHint(true, orderData.FoodId);
+            Context.View.ShowHint(true, orderData.DinnerId);
             Context.View.InteractionStrategy = new ServingDinnerCustomerInteraction();
         }
 

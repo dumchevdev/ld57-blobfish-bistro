@@ -26,16 +26,17 @@ namespace Game.Runtime.CMS
             public const string Character = "CMS/Gameplay/Character";
             public const string Customer = "CMS/Gameplay/Customer";
             public const string CustomersQueue = "CMS/Gameplay/CustomersQueue";
-            public const string Day = "CMS/Gameplay/Day";
-            public const string FoodBehaviour = "CMS/Gameplay/FoodBehaviour";
-            public const string FoodDeliveryArea = "CMS/Gameplay/FoodDeliveryArea";
-            public const string Foods = "CMS/Gameplay/Foods";
+            public const string DinnerBehaviour = "CMS/Gameplay/DinnerBehaviour";
+            public const string DishesLibrary = "CMS/Gameplay/DishesLibrary";
+            public const string EmptyPlate = "CMS/Gameplay/EmptyPlate";
+            public const string GameSettings = "CMS/Gameplay/GameSettings";
+            public const string Kitchen = "CMS/Gameplay/Kitchen";
             public const string Tables = "CMS/Gameplay/Tables";
+            public const string UI = "CMS/Gameplay/UI";
         }
         public static class Services
         {
             public const string SayText = "CMS/Services/SayText";
-            public const string UI = "CMS/Services/UI";
         }
     }
 }

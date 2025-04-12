@@ -16,9 +16,12 @@ using Game.Runtime._Game.Scripts.Runtime.Gameplay.Level;
 using Game.Runtime._Game.Scripts.Runtime.Gameplay.Tables;
 using Game.Runtime._Game.Scripts.Runtime.Gameplay.Tables.Strategies;
 using Game.Runtime._Game.Scripts.Runtime.ServiceLocator;
+using Game.Runtime._Game.Scripts.Runtime.Services.Statistics;
+using Game.Runtime._Game.Scripts.Runtime.Services.UI;
 using Game.Runtime._Game.Scripts.Runtime.Utils.Extensions;
 using Game.Runtime.CMS;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 
 namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
@@ -26,18 +29,20 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
     public class GameService : IService, IDisposable
     {
         public bool IsSelectedClient { get; private set; }
-
-        private GameData _gameData;
         
         private CMSEntity _clientModel;
         private readonly float _spawnInterval;
+        
+        private readonly GameData _gameData;
         
         private readonly List<TableData> _tables = new();
         private readonly List<CustomerData> _clients = new();
         private readonly List<OrderData> _orders = new();
 
         private readonly GameQueueManager _queueManager;
-        private readonly PlayerCommandManager _commandManager;
+        private readonly CharacterCommandManager _commandManager;
+        
+        private readonly GameSettingsComponent _gameSettings;
         
         private CancellationTokenSource _gameTokenSource;
         private CancellationTokenSource _selectedClientToken;
@@ -46,10 +51,17 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
         {
             _gameData = new GameData();
             _queueManager = new GameQueueManager();
-            _commandManager = new PlayerCommandManager();
+            _commandManager = new CharacterCommandManager();
             _gameTokenSource = new CancellationTokenSource();
             
+            _gameSettings = CMSProvider.GetEntity(CMSPrefabs.Gameplay.GameSettings).GetComponent<GameSettingsComponent>();
+            
             InitializeTables();
+        }
+
+        public void Initialize()
+        {
+            ServiceLocator<SessionTimerService>.GetService().OnSessionTimerFinished += OnSessionTimerFinished;
         }
 
         public void StartGameLoop()
@@ -137,6 +149,8 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
                 _orders.Add(new OrderData(clientData, tableData));
                 
                 await clientData.Movable.MoveToPoint(tableData.Behaviour.ClientPoint.position, _gameTokenSource.Token);
+                clientData.View.SetBlockFlipper(true);
+                clientData.View.ForceFlip(tableData.Behaviour.IsRight);
                 
                 StartClientBrowsingMenu(clientData).Forget();
             }
@@ -156,8 +170,8 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
         {
             orderData.OrderAlreadyTaken = true;
             
-            var randomFood = CMSProvider.GetEntity(CMSPrefabs.Gameplay.Foods).GetComponent<FoodsComponent>().Foods.GetRandom();
-            orderData.FoodId = randomFood.Id;
+            var randomFood = CMSProvider.GetEntity(CMSPrefabs.Gameplay.DishesLibrary).GetComponent<DishesLibraryComponent>().Dishes.GetRandom();
+            orderData.DinnerId = randomFood.Id;
 
             MoveCharacter(orderData.TableData.Behaviour.CharacterPoint.position);
             _commandManager.AddCommand(() =>
@@ -166,7 +180,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
                 {
                     return UniTask.CompletedTask;
                 }
-                ServiceLocator<KitchenService>.GetService().Enqueue(orderData.FoodId);
+                ServiceLocator<KitchenService>.GetService().Enqueue(orderData.DinnerId);
                 orderData.CustomerData.StateMachine.ChangeState<WaitingFoodClientState>();
                 orderData.TableData.Behaviour.InteractionStrategy = new PutFoodTableInteraction();
                 return UniTask.CompletedTask;
@@ -187,8 +201,8 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
                     dinnerBehaviour.gameObject.SetActive(false);
                     characterHand.DinnerData = new DinnerData(foodId, dinnerBehaviour);
                     
-                    var foodComponent = CMSProvider.GetEntity(CMSPrefabs.Gameplay.Foods)
-                        .GetComponent<FoodsComponent>().Foods.First(food => food.Id == foodId);
+                    var foodComponent = CMSProvider.GetEntity(CMSPrefabs.Gameplay.DishesLibrary)
+                        .GetComponent<DishesLibraryComponent>().Dishes.First(food => food.Id == foodId);
                     characterService.HandsVisual.SetHandSprite(foodComponent.Sprite, characterHand.IsRightHand);
                     
                     ServiceLocator<KitchenService>.GetService().ReturnFoodPoint(dinnerPointData);
@@ -206,7 +220,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
 
                 if (orderData.IsClosed)
                 {
-                    if (characterService.TryGetHandWithFood(orderData.FoodId, out var dataForRemove))
+                    if (characterService.TryGetHandWithFood(orderData.DinnerId, out var dataForRemove))
                     {
 
                         characterService.HandsVisual.ResetHandSprite(dataForRemove.IsRightHand);
@@ -215,7 +229,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
                     }
                 }
                 
-                if (characterService.TryGetHandWithFood(orderData.FoodId, out var handData))
+                if (characterService.TryGetHandWithFood(orderData.DinnerId, out var handData))
                 {
                     orderData.DinnerBehaviour = handData.DinnerData.Behaviour;
                     orderData.DinnerBehaviour.Settings.IsClickable = false;
@@ -244,6 +258,8 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
 
                 if (orderData.DinnerBehaviour != null)
                     ServiceLocator<KitchenService>.GetService().ReturnFoodBehaviour(orderData.DinnerBehaviour);
+                
+                _gameData.Golds += orderData.Golds;
             
                 _orders.Remove(orderData);
                 return UniTask.CompletedTask;
@@ -276,9 +292,8 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
             
             customerData.Dispose();
             
-            _gameTokenSource.Token.ThrowIfCancellationRequested();
-            
-            _queueManager.ReturnPool(customerData);
+            if (_gameTokenSource != null && !_gameTokenSource.IsCancellationRequested)
+                _queueManager.ReturnPool(customerData);
         }
 
         private void InitializeTables()
@@ -305,7 +320,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
         private async UniTask StartClientBrowsingMenu(CustomerData customerData)
         {
             customerData.StateMachine.ChangeState<BrowsingMenuClientState>();
-            await UniTask.WaitForSeconds(3, cancellationToken: _gameTokenSource.Token);
+            await UniTask.WaitForSeconds(_gameSettings.CustomerBrowsingMenuTime, cancellationToken: _gameTokenSource.Token);
             customerData.StateMachine.ChangeState<WaitingOrderClientState>();
 
             var orderData = GetOrderByClient(customerData.Id);
@@ -315,8 +330,31 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
         private async UniTask StartClientEatingFood(CustomerData customerData)
         {
             customerData.StateMachine.ChangeState<EatingOrderFoodClientState>();
-            await UniTask.WaitForSeconds(3, cancellationToken: _gameTokenSource.Token);
+            await UniTask.WaitForSeconds(_gameSettings.CustomerEatingTime, cancellationToken: _gameTokenSource.Token);
+            
+            var orderData = GetOrderByClient(customerData.Id);
+            var emptyPlate = CMSProvider.GetEntity(CMSPrefabs.Gameplay.EmptyPlate).GetComponent<SpriteComponent>().Sprite;
+            orderData.DinnerBehaviour.SetFoodSprite(emptyPlate);
+
+            var dishesLibrary = CMSProvider.GetEntity(CMSPrefabs.Gameplay.DishesLibrary).GetComponent<DishesLibraryComponent>();
+            var dinnerComponent = dishesLibrary.Dishes.First(dinner => dinner.Id == orderData.DinnerId);
+            orderData.Golds += dinnerComponent.BasePrice;
+
             customerData.StateMachine.ChangeState<LeavingClientState>();
+        }
+        
+        private void OnSessionTimerFinished()
+        {
+            FinishSession().Forget();
+            ServiceLocator<SessionTimerService>.GetService().OnSessionTimerFinished -= OnSessionTimerFinished;
+        }
+
+        private async UniTask FinishSession()
+        {
+            await UniTask.WaitUntil(() => _clients.Count == 0 && _orders.Count == 0, cancellationToken: _gameTokenSource.Token);
+            await ServiceLocator<UIFaderService>.GetService().FadeIn();
+            ServiceLocator<StatisticsService>.GetService().GameData = _gameData;
+            SceneManager.LoadScene("_Game/Scenes/Statistics");
         }
         
         public void Dispose()

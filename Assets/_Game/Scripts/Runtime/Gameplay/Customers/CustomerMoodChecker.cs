@@ -1,35 +1,39 @@
 ﻿using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using Game.Runtime._Game.Scripts.Runtime.CMS;
+using Game.Runtime._Game.Scripts.Runtime.CMS.Components.Gameplay;
 using Game.Runtime._Game.Scripts.Runtime.Gameplay.Customers.States;
+using Game.Runtime.CMS;
 
 namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Customers
 {
     public class CustomerMoodChecker : IDisposable
     {
         private readonly CustomerData _customerData;
+        private readonly float _patienceTimer;
         private CancellationTokenSource _moodTokenSource;
 
         public CustomerMoodChecker(CustomerData customerData)
         {
             _customerData = customerData;
+            _patienceTimer = CMSProvider.GetEntity(CMSPrefabs.Gameplay.GameSettings).GetComponent<GameSettingsComponent>().CustomerPatienceTimer;
         }
     
-        public async UniTask StartMoodTimer()
+        private async UniTask StartMoodTimer()
         {
+            _moodTokenSource?.Cancel();
             _moodTokenSource = new CancellationTokenSource();
             
             while (_moodTokenSource != null && !_moodTokenSource.IsCancellationRequested)
             {
-                await UniTask.WaitForSeconds(5f, cancellationToken: _moodTokenSource.Token);
+                await UniTask.WaitForSeconds(_patienceTimer, cancellationToken: _moodTokenSource.Token);
                 HandleMoodTimer();
             }
         }
         
         public void ResetMoodTimer()
         {
-            _customerData.Mood = CustomerMood.Happy;
-            _moodTokenSource.Cancel();
             StartMoodTimer().Forget();
         }
 
@@ -40,13 +44,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Customers
 
         private void HandleMoodTimer()
         {
-            if (_customerData.Mood == CustomerMood.Angry)
-            {
-                _customerData.StateMachine.ChangeState<LeavingClientState>();
-                return;
-            }
-
-            _customerData.Mood++;
+            _customerData.StateMachine.ChangeState<LeavingClientState>();
         }
 
         public void Dispose()

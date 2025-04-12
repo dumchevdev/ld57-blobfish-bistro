@@ -10,6 +10,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Customers.States
     {
         public override void OnEnter()
         {
+            Context.View.SetBlockFlipper(false);
             Context.View.ResetBehaviour();
             Context.View.InteractionStrategy = new EmptyInteraction();
             Context.View.Settings.IsClickable = false;
