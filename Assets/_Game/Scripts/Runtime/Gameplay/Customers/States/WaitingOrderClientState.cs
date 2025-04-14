@@ -8,13 +8,13 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Customers.States
         public override void OnEnter()
         {
             Context.MoodChecker.ResetMoodTimer();
-            Context.View.ShowHintWarning(true);
-            Context.View.InteractionStrategy = new TakeOrderCustomerInteraction();
+            Context.Behaviour.ShowHintWarning(true);
+            Context.Behaviour.InteractionStrategy = new TakeOrderCustomerInteraction();
         }
         
         public override void OnExit()
         {
-            Context.View.ShowHintWarning(false);
+            Context.Behaviour.ShowHintWarning(false);
         }
     }
 }

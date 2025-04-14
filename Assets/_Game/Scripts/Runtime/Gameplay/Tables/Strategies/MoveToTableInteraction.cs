@@ -9,11 +9,11 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Tables.Strategies
     {
         public void ExecuteInteraction(InteractableObject interactable)
         {
-            var gameService = ServiceLocator<GameService>.GetService();
+            var gameService = ServicesProvider.GetService<GameService>();
             var orderData = gameService.GetOrderByTable(interactable.Id);
             if (gameService.IsSelectedClient && orderData == null)
             {
-                ServiceLocator<GameService>.GetService().PutQueueClientAtTable(interactable.Id).Forget();
+                ServicesProvider.GetService<GameService>().PutQueueClientAtTable(interactable.Id).Forget();
                 return;
             }
             

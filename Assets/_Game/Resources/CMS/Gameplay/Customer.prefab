@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5085384585603749859}
   - component: {fileID: 3946628670777762262}
-  - component: {fileID: 9188801299361900932}
   - component: {fileID: 4651528396640189747}
   - component: {fileID: 3694977447742345717}
   - component: {fileID: 8267740950508054681}
@@ -81,7 +80,7 @@ SpriteRenderer:
   m_SortingLayerID: 700554099
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7649489486189614792, guid: 6c856449060c35043890017ed36855a1, type: 3}
+  m_Sprite: {fileID: -9119583415266913145, guid: 6c856449060c35043890017ed36855a1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -92,46 +91,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &9188801299361900932
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2741411689081721600}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a7d5e31aca6646a2a8f00fe99bde6013, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  verticalAmplitude: 0.2
-  horizontalAmplitude: 0.1
-  frequency: 0.8
-  speed: 0.2
-  easeCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 2
-      outSlope: 2
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!114 &4651528396640189747
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -308,7 +267,7 @@ MonoBehaviour:
   entityId: CMS/Gameplay/Customer
   Components:
   - rid: 8201920502748676227
-  - rid: 8201920502748676228
+  - rid: 8201920563645251795
   references:
     version: 2
     RefIds:
@@ -316,14 +275,18 @@ MonoBehaviour:
       type: {class: PrefabComponent, ns: Game.Runtime._Game.Scripts.Runtime.CMS.Components.Commons, asm: Runtime}
       data:
         Prefab: {fileID: 2946776692581078673}
-    - rid: 8201920502748676228
-      type: {class: CustomerAnimatorsComponent, ns: Game.Runtime._Game.Scripts.Runtime.CMS.Components.Gameplay, asm: Runtime}
+    - rid: 8201920563645251795
+      type: {class: CustomerViewsComponent, ns: Game.Runtime._Game.Scripts.Runtime.CMS.Components.Gameplay, asm: Runtime}
       data:
-        OverrideAnimators:
-        - {fileID: 22100000, guid: 7c247fc7b071014429f287b4a00d654e, type: 2}
-        - {fileID: 22100000, guid: 039d82471d6881b46b75eef5d1dfec30, type: 2}
-        - {fileID: 22100000, guid: 1de74586f85b116429f45ba420dc54a1, type: 2}
-        - {fileID: 22100000, guid: 16955fae1f2ebdb49ba5dbc5e42ae8fc, type: 2}
+        Views:
+        - OverrideAnimator: {fileID: 22100000, guid: 7c247fc7b071014429f287b4a00d654e, type: 2}
+          Sprite: {fileID: -7914586359189542566, guid: 6c856449060c35043890017ed36855a1, type: 3}
+        - OverrideAnimator: {fileID: 22100000, guid: 039d82471d6881b46b75eef5d1dfec30, type: 2}
+          Sprite: {fileID: -9119583415266913145, guid: 6c856449060c35043890017ed36855a1, type: 3}
+        - OverrideAnimator: {fileID: 22100000, guid: 1de74586f85b116429f45ba420dc54a1, type: 2}
+          Sprite: {fileID: 4769413903677429357, guid: 6c856449060c35043890017ed36855a1, type: 3}
+        - OverrideAnimator: {fileID: 22100000, guid: 16955fae1f2ebdb49ba5dbc5e42ae8fc, type: 2}
+          Sprite: {fileID: -1965401998591550813, guid: 6c856449060c35043890017ed36855a1, type: 3}
 --- !u!114 &9207997467062988669
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -545,7 +508,7 @@ Transform:
   m_GameObject: {fileID: 8058714986552905847}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.834, z: 0}
+  m_LocalPosition: {x: 0, y: 0.8, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -631,10 +594,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8555015467530609790}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.687, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.65, z: 0}
+  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 5125408401922834486}
   m_Father: {fileID: 297545483483860066}

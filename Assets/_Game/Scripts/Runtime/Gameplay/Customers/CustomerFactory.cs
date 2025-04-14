@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
 using Game.Runtime._Game.Scripts.Runtime.CMS;
 using Game.Runtime._Game.Scripts.Runtime.CMS.Components.Commons;
 using Game.Runtime._Game.Scripts.Runtime.CMS.Components.Gameplay;
@@ -24,7 +23,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Customers
             
             for (int i = 0; i < _clientsPool.Count; i++)
             {
-                if (!_clientsPool[i].View.gameObject.activeInHierarchy)
+                if (!_clientsPool[i].Behaviour.gameObject.activeInHierarchy)
                 {
                     customerData = _clientsPool[i];
                     ConfigureClient(customerData, clientModel);
@@ -45,27 +44,29 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Customers
 
         private void ConfigureClient(CustomerData customerData, CMSEntity clientModel)
         {
-            var spawnPoint = ServiceLocator<LevelPointsService>.GetService().SpawnClientPoint;
-            var animator = clientModel.GetComponent<CustomerAnimatorsComponent>().OverrideAnimators.GetRandom();
+            var spawnPoint = ServicesProvider.GetService<LevelPointsService>().SpawnClientPoint;
+            var view = clientModel.GetComponent<CustomerViewsComponent>().Views.GetRandom();
             
             customerData.Id = _counter;
-            customerData.View.Id = _counter;
-            _counter++;
-
+            customerData.Behaviour.Id = _counter;
+            customerData.ViewId = view.ViewId;
+            
             customerData.MoodChecker.ResetMoodTimer();
             customerData.StateMachine.ChangeState<EmptyClientState>();
             
-            customerData.View.ResetBehaviour();
-            customerData.View.SetAnimator(animator);
-            customerData.View.transform.position = spawnPoint.position;
-            customerData.View.gameObject.SetActive(true);
+            customerData.Behaviour.ResetBehaviour();
+            customerData.Behaviour.SetAnimator(view.OverrideAnimator);
+            customerData.Behaviour.transform.position = spawnPoint.position;
+            customerData.Behaviour.gameObject.SetActive(true);
+            
+            _counter++;
         }
 
         public void Return(CustomerData clientData)
         {
             clientData.Id = -1;
-            clientData.View.Id = -1;
-            clientData.View.gameObject.SetActive(false);
+            clientData.Behaviour.Id = -1;
+            clientData.Behaviour.gameObject.SetActive(false);
             
             _clientsPool.Add(clientData);
         }

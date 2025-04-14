@@ -5,6 +5,7 @@ using Game.Runtime._Game.Scripts.Runtime.Services.Audio;
 using Game.Runtime._Game.Scripts.Runtime.Services.Camera;
 using Game.Runtime._Game.Scripts.Runtime.Services.States;
 using Game.Runtime._Game.Scripts.Runtime.Services.UI;
+using Game.Runtime._Game.Scripts.Runtime.Utils.Сonstants;
 using Game.Runtime.CMS;
 using TMPro;
 using UnityEngine;
@@ -20,26 +21,21 @@ namespace Game.Runtime._Game.Scripts.Runtime.Runners
         
         private void Start()
         {
-            RegisterServices();
+            RegisterCamera();
             ShowLogo().Forget();
         }
 
-        private void RegisterServices()
+        private void RegisterCamera()
         {
-            ServiceLocator<CameraService>.RegisterService(new CameraService(logoCamera));
-        }
-
-        private void UnregisterServices()
-        {
-            ServiceLocator<CameraService>.UnregisterService();
+            ServicesProvider.GetService<CameraService>().RegisterCamera(logoCamera);
         }
 
         private async UniTask ShowLogo()
         {
-            var audioService = ServiceLocator<AudioService>.GetService();
-            var waiterService = ServiceLocator<WaiterService>.GetService();
-            var faderService = ServiceLocator<UIFaderService>.GetService();
-            var cameraService = ServiceLocator<CameraService>.GetService();
+            var audioService = ServicesProvider.GetService<AudioService>();
+            var waiterService = ServicesProvider.GetService<WaiterService>();
+            var faderService = ServicesProvider.GetService<UIService>();
+            var cameraService = ServicesProvider.GetService<CameraService>();
             
             audioService.Play(CMSPrefabs.Audio.Ambient);
             
@@ -74,16 +70,14 @@ namespace Game.Runtime._Game.Scripts.Runtime.Runners
             audioService.Play(CMSPrefabs.Audio.SFX.SFXTyping);
             cameraService.UIShake();
 
-            logoText.DOFade(0f, 1.5f);
+            logoText.DOFade(0f, 1f);
             
             await waiterService.SmartWait(1.5f);
-            
-            audioService.Play(CMSPrefabs.Audio.SFX.SFXTyping);
-            cameraService.UIShake();
 
-            logoRenderer.DOFade(1f, 1f);
+            logoText.text = "";
+            logoRenderer.DOFade(1f, 2f);
 
-            await waiterService.SmartWait(3f);
+            await waiterService.SmartWait(2f);
 
             logoRenderer.DOFade(0f, 2f);
 
@@ -91,12 +85,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Runners
 
             await faderService.FadeIn();
             
-            SceneManager.LoadScene("_Game/Scenes/Main");
-        }
-
-        private void OnDestroy()
-        {
-            UnregisterServices();
+            SceneManager.LoadScene(Const.ScenesConst.GameScene);
         }
     }
 }

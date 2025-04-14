@@ -2,7 +2,6 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Game.Runtime._Game.Scripts.Runtime.Gameplay.Pathfinder;
-using Game.Runtime._Game.Scripts.Runtime.ServiceLocator;
 using UnityEngine;
 
 namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Unit
@@ -21,7 +20,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Unit
             _moveTokenSource?.Cancel();
             _moveTokenSource = new CancellationTokenSource();
             
-            var pathfinderService = ServiceLocator<PathfinderService>.GetService();
+            var pathfinderService = ServiceLocator.ServicesProvider.GetService<PathfinderService>();
             var path = pathfinderService.FindPath(transform.position, targetPosition);
             
             if (path == null || path.Count == 0)

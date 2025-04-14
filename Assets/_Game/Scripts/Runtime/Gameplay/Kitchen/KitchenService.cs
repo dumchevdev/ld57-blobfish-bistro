@@ -8,6 +8,7 @@ using Game.Runtime._Game.Scripts.Runtime.CMS;
 using Game.Runtime._Game.Scripts.Runtime.CMS.Components.Commons;
 using Game.Runtime._Game.Scripts.Runtime.Gameplay.Dishes;
 using Game.Runtime._Game.Scripts.Runtime.ServiceLocator;
+using Game.Runtime._Game.Scripts.Runtime.Services.Save;
 using Game.Runtime.CMS;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -110,7 +111,8 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Kitchen
                 {
                     try
                     {
-                        await _dinnerFactory.CreateFood(foodId, foodPoint);
+                        await _dinnerFactory.CreateDinner(foodId, foodPoint);
+                        ServicesProvider.GetService<SaveService>().UpdateStatisticsData(foodId);
                     }
                     catch
                     {

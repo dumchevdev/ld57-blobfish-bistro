@@ -10,14 +10,14 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Customers.States
         public override void OnEnter()
         {
             Context.MoodChecker.ResetMoodTimer();
-            var orderData = ServiceLocator<GameService>.GetService().GetOrderByClient(Context.Id);
-            Context.View.ShowHint(true, orderData.DinnerId);
-            Context.View.InteractionStrategy = new ServingDinnerCustomerInteraction();
+            var orderData = ServicesProvider.GetService<GameService>().GetOrderByClient(Context.Id);
+            Context.Behaviour.ShowHint(true, orderData.DinnerId);
+            Context.Behaviour.InteractionStrategy = new ServingDinnerCustomerInteraction();
         }
 
         public override void OnExit()
         {
-            Context.View.ShowHint(false);
+            Context.Behaviour.ShowHint(false);
         }
     }
 }

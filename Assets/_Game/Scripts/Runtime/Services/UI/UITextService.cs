@@ -35,7 +35,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.UI
 
                         if (!string.IsNullOrEmpty(audioEntityId))
                         {
-                            ServiceLocator<AudioService>.GetService().Play(audioEntityId);
+                            ServicesProvider.GetService<AudioService>().Play(audioEntityId);
                         }
                     }
                 }
@@ -67,11 +67,10 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.UI
                         await UniTask.WaitForEndOfFrame(cancellationToken: _printTokenSource.Token)
                             .SuppressCancellationThrow();
                     }
-
-                    text.text = "";
                 }
                 finally
                 {
+                    text.text = "";
                     ResetPrintToken();
                 }
             }

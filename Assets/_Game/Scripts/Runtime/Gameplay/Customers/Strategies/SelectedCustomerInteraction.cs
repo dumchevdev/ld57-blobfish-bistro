@@ -8,7 +8,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Customers.Strategies
     {
         public void ExecuteInteraction(InteractableObject interactable)
         {
-            ServiceLocator<GameService>.GetService().SelectQueueClient(interactable.Id);
+            ServicesProvider.GetService<GameService>().SelectQueueClient(interactable.Id);
         }
     }
 }

@@ -1,34 +1,37 @@
 ﻿using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using Game.Runtime._Game.Scripts.Runtime.CMS;
+using Game.Runtime._Game.Scripts.Runtime.CMS.Components.Commons;
 using Game.Runtime._Game.Scripts.Runtime.ServiceLocator;
+using Game.Runtime._Game.Scripts.Runtime.Services.Save;
+using Game.Runtime._Game.Scripts.Runtime.Services.States;
+using Game.Runtime.CMS;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Object = UnityEngine.Object;
 
 namespace Game.Runtime._Game.Scripts.Runtime.Services.UI
 {
-    public class UIFaderService : IService, IDisposable
+    public class UIService : IService, IDisposable
     {
         private readonly Image _fadeImage;
+        private readonly TMP_Text _title;
         private readonly float _fadeDuration = 1f;
 
         private CancellationTokenSource _fadeTokenSource;
 
-        public UIFaderService()
+        public UIService()
         {
-            var canvas = new GameObject("UIFaderService").AddComponent<Canvas>();
-            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            canvas.sortingOrder = 9;
+            var uiServicePrefab = CMSProvider.GetEntity(CMSPrefabs.Services.UIService).GetComponent<PrefabComponent>().Prefab;
+            var uiServiceObject = Object.Instantiate(uiServicePrefab);
+            uiServiceObject.name = nameof(UIService);
 
-            _fadeImage = new GameObject("FadeImage").AddComponent<Image>();
-            _fadeImage.transform.SetParent(canvas.transform, false);
-            
-            _fadeImage.rectTransform.anchoredPosition = Vector2.zero;
-            _fadeImage.rectTransform.sizeDelta = new Vector2(5000, 3000);
-
-            _fadeImage.color = new Color(0f, 0f, 0f, 1f);
+            _fadeImage = uiServiceObject.GetComponentInChildren<Image>();
+            _title = uiServiceObject.GetComponentInChildren<TMP_Text>();
         
-            UnityEngine.Object.DontDestroyOnLoad(canvas.gameObject);
+            Object.DontDestroyOnLoad(uiServiceObject.gameObject);
             
             FadeOut().Forget();
         }
@@ -42,6 +45,33 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.UI
         {
             await Fade(1f, 0f);
         }
+
+        public async UniTask ShowLevelTitle(int level)
+        {
+            var waiterService = ServicesProvider.GetService<WaiterService>();
+            
+            _title.gameObject.SetActive(true);
+            await Print($"Day {level}");
+            await waiterService.SmartWait(1.5f);
+            await UnPrint();
+            await waiterService.SmartWait(0.5f);
+            _title.gameObject.SetActive(false);
+
+            await FadeOut();
+        }
+
+        public async UniTask Print(string message)
+        {
+            _title.gameObject.SetActive(true);
+            await ServicesProvider.GetService<UITextService>().Print(_title, message);
+        }
+        
+        public async UniTask UnPrint()
+        {
+            await ServicesProvider.GetService<UITextService>().UnPrint(_title);
+            _title.gameObject.SetActive(false);
+        }
+        
         
         private async UniTask Fade(float startAlpha, float endAlpha)
         {

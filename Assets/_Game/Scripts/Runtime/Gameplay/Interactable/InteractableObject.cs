@@ -50,7 +50,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Interactable
             InteractionStrategy?.ExecuteInteraction(this);
             if (InteractionStrategy != null)
             {
-                ServiceLocator<AudioService>.GetService().Play(CMSPrefabs.Audio.SFX.SFXTyping);
+                ServicesProvider.GetService<AudioService>().Play(CMSPrefabs.Audio.SFX.SFXTyping);
             }
         }
 

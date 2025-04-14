@@ -20,7 +20,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Dishes
 
         public void ExecuteInteraction(InteractableObject interactable)
         {
-            ServiceLocator<GameService>.GetService().TakeFood(_foodId, _dinnerBehaviour, _dinnerPointData);
+            ServicesProvider.GetService<GameService>().TakeFood(_foodId, _dinnerBehaviour, _dinnerPointData);
         }
     }
 }

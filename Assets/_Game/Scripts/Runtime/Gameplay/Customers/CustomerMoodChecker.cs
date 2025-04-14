@@ -23,7 +23,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Customers
     
         private async UniTask StartMoodTimer()
         {
-            _customerData.View.SetActiveProgressBar(true);
+            _customerData.Behaviour.SetActiveProgressBar(true);
 
             _moodTokenSource?.Cancel();
             _moodTokenSource = new CancellationTokenSource();
@@ -35,7 +35,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Customers
                     return;
                 
                 timer -= Time.deltaTime;
-                _customerData.View.SetMoodProgress(timer/_patienceTimer);
+                _customerData.Behaviour.SetMoodProgress(timer/_patienceTimer);
                 
                 await UniTask.Yield(cancellationToken: _moodTokenSource.Token, cancelImmediately: true);
             }
@@ -51,14 +51,14 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Customers
         public void StopMoodTimer()
         {
             _moodTokenSource.Cancel();
-            _customerData.View.SetActiveProgressBar(false);
+            _customerData.Behaviour.SetActiveProgressBar(false);
         }
 
         private void HandleMoodTimer()
         {
             _customerData.StateMachine.ChangeState<LeavingClientState>();
-            _customerData.View.SetMoodProgress(0);
-            _customerData.View.SetActiveProgressBar(false);
+            _customerData.Behaviour.SetMoodProgress(0);
+            _customerData.Behaviour.SetActiveProgressBar(false);
         }
 
         public void Dispose()

@@ -4,18 +4,19 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
 {
     public class GameData
     {
-        public event Action<int> OnGoldsChanged;
+        public event Action<float> OnGoldsChanged;
         
-        public int Golds
+        public float Money
         {
-            get => _golds;
+            get => _money;
             set
             {
                 OnGoldsChanged?.Invoke(value);
-                _golds = value;
+                _money = value;
             }
         }
-
-        private int _golds;
+        
+        private float _money;
+        
     }
 }

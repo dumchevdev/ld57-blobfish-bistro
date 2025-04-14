@@ -10,7 +10,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
         public DinnerBehaviour DinnerBehaviour;
         public bool IsClosed;
         public bool OrderAlreadyTaken;
-        public int Golds;
+        public float Money;
         
         public readonly CustomerData CustomerData;
         public readonly TableData TableData;

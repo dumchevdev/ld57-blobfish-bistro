@@ -19,7 +19,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Kitchen
         private readonly List<DinnerBehaviour> _dinnerPool = new();
         private CancellationTokenSource _factoryTokenSource;
 
-        public async UniTask CreateFood(string foodId, DinnerPointData dinnerPointData)
+        public async UniTask CreateDinner(string foodId, DinnerPointData dinnerPointData)
         {
             _factoryTokenSource = new CancellationTokenSource();
 

@@ -8,7 +8,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Customers.Strategies
     {
         public void ExecuteInteraction(InteractableObject interactable)
         {
-            var gameService = ServiceLocator<GameService>.GetService();
+            var gameService = ServicesProvider.GetService<GameService>();
             var orderData = gameService.GetOrderByClient(interactable.Id);
             
             if (orderData != null && !orderData.OrderAlreadyTaken)

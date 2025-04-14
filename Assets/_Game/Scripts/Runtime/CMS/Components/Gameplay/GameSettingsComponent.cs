@@ -1,4 +1,5 @@
 ﻿using System;
+using Game.Runtime._Game.Scripts.Runtime.Utils.Structs;
 using UnityEngine;
 
 namespace Game.Runtime._Game.Scripts.Runtime.CMS.Components.Gameplay
@@ -8,12 +9,16 @@ namespace Game.Runtime._Game.Scripts.Runtime.CMS.Components.Gameplay
     {
         [Header("General")]
         public float SessionTimer;
-        public int GoldRequired;
+        public float GoldRequired;
         
         [Header("Customers")]
-        public int CustomersSpawnInterval;
+        public RandomRangeFloat CustomersSpawnInterval;
         public int CustomerPatienceTimer;
         public float CustomerEatingTime;
         public float CustomerBrowsingMenuTime;
+
+        [Header("Mods")] 
+        public float GoalMod;
+        public float OrderMod;
     }
 }

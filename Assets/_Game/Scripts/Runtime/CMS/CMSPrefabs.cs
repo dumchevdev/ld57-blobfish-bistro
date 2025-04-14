@@ -30,14 +30,14 @@ namespace Game.Runtime.CMS
             public const string DishesLibrary = "CMS/Gameplay/DishesLibrary";
             public const string EmptyPlate = "CMS/Gameplay/EmptyPlate";
             public const string GameSettings = "CMS/Gameplay/GameSettings";
+            public const string HUD = "CMS/Gameplay/HUD";
             public const string Kitchen = "CMS/Gameplay/Kitchen";
             public const string Tables = "CMS/Gameplay/Tables";
             public const string Trash = "CMS/Gameplay/Trash";
-            public const string UI = "CMS/Gameplay/UI";
         }
         public static class Services
         {
-            public const string SayText = "CMS/Services/SayText";
+            public const string UIService = "CMS/Services/UIService";
         }
     }
 }

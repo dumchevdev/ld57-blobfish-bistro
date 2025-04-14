@@ -1,17 +1,19 @@
 ﻿using DG.Tweening;
 using Game.Runtime._Game.Scripts.Runtime.ServiceLocator;
+using UnityEngine;
 
 namespace Game.Runtime._Game.Scripts.Runtime.Services.Camera
 {
     public class CameraService : IService
     {
-        private readonly UnityEngine.Camera _camera;
+        private UnityEngine.Camera _camera;
 
-        public CameraService(UnityEngine.Camera camera)
+        public void RegisterCamera(UnityEngine.Camera camera)
         {
             _camera = camera;
+            Debug.Log($"[Service Locator] Set camera: {_camera}");
         }
-        
+
         public void Shake(float duration, float strength)
         {
             _camera.DOShakePosition(duration, strength, 10, 45f);

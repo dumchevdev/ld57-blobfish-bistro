@@ -11,7 +11,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Kitchen
         public void ExecuteInteraction(InteractableObject interactable)
         {
             _trashBehaviour ??= interactable.GetComponent<TrashBehaviour>();
-            ServiceLocator<GameService>.GetService().ResetCharacterHands(_trashBehaviour.CharacterPoint.position);
+            ServicesProvider.GetService<GameService>().ResetCharacterHands(_trashBehaviour.CharacterPoint.position);
         }
     }
 }

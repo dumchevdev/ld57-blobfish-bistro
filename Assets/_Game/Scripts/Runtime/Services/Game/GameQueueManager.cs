@@ -8,6 +8,7 @@ using Game.Runtime._Game.Scripts.Runtime.CMS.Components.Gameplay;
 using Game.Runtime._Game.Scripts.Runtime.Gameplay.Customers;
 using Game.Runtime._Game.Scripts.Runtime.Gameplay.Customers.States;
 using Game.Runtime._Game.Scripts.Runtime.ServiceLocator;
+using Game.Runtime._Game.Scripts.Runtime.Utils.Structs;
 using Game.Runtime.CMS;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -17,8 +18,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
     public class GameQueueManager : IDisposable
     {
         private readonly CMSEntity _customerModel;
-        private readonly float _spawnInterval;
-        private int _cachedFirstCustomerId;
+        private readonly RandomRangeFloat _spawnInterval;
         
         private readonly List<CustomerInQueueData> _queueCustomers = new();
         private readonly List<CustomerInQueuePointData> _queuePoints;
@@ -41,8 +41,6 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
             
             _customerModel = CMSProvider.GetEntity(CMSPrefabs.Gameplay.Customer);
             _spawnInterval = CMSProvider.GetEntity(CMSPrefabs.Gameplay.GameSettings).GetComponent<GameSettingsComponent>().CustomersSpawnInterval;
-
-            _cachedFirstCustomerId = -1;
         }
 
         public void Start(List<CustomerData> customers)
@@ -73,9 +71,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
             
             while (_spawnTokenSource != null && !_spawnTokenSource.IsCancellationRequested)
             {
-                await UniTask.WaitForSeconds(_spawnInterval, cancellationToken: _spawnTokenSource.Token);
-
-                if (ServiceLocator<SessionTimerService>.GetService().SessionFinished)
+                if (ServicesProvider.GetService<SessionTimerService>().SessionFinished)
                 {
                     _spawnTokenSource.Cancel();
                     return;
@@ -90,6 +86,8 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
                         CreateCustomer(customers, _queueCustomers.Count);
                     }
                 }
+                
+                await UniTask.WaitForSeconds(_spawnInterval.Random(), cancellationToken: _spawnTokenSource.Token);
             }
         }
         

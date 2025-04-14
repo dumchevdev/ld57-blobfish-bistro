@@ -10,12 +10,12 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Customers.States
     {
         public override void OnEnter()
         {
-            Context.View.SetBlockFlipper(false);
-            Context.View.ResetBehaviour();
-            Context.View.InteractionStrategy = new EmptyInteraction();
-            Context.View.Settings.IsClickable = false;
-            Context.View.Settings.IsHighlightable = false;
-            var gameService = ServiceLocator<GameService>.GetService();
+            Context.Behaviour.SetBlockFlipper(false);
+            Context.Behaviour.ResetBehaviour();
+            Context.Behaviour.InteractionStrategy = new EmptyInteraction();
+            Context.Behaviour.Settings.IsClickable = false;
+            Context.Behaviour.Settings.IsHighlightable = false;
+            var gameService = ServicesProvider.GetService<GameService>();
             var orderData = gameService.GetOrderByClient(Context.Id);
             if (orderData != null)
             {

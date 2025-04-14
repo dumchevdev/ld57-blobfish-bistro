@@ -6,8 +6,10 @@ using Game.Runtime._Game.Scripts.Runtime.Services.Camera;
 using Game.Runtime._Game.Scripts.Runtime.Services.States;
 using Game.Runtime._Game.Scripts.Runtime.Services.Statistics;
 using Game.Runtime._Game.Scripts.Runtime.Services.UI;
+using Game.Runtime._Game.Scripts.Runtime.Utils.Сonstants;
 using Game.Runtime.CMS;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Game.Runtime._Game.Scripts.Runtime.Runners
 {
@@ -17,56 +19,53 @@ namespace Game.Runtime._Game.Scripts.Runtime.Runners
         
         private void Start()
         {
-            RegisterServices();
+            RegisterCamera();
             ShowLogo().Forget();
         }
 
-        private void RegisterServices()
+        private void RegisterCamera()
         {
-            ServiceLocator<CameraService>.RegisterService(new CameraService(logoCamera));
-        }
-
-        private void UnregisterServices()
-        {
-            ServiceLocator<CameraService>.UnregisterService();
+            ServicesProvider.GetService<CameraService>().RegisterCamera(logoCamera);
         }
 
         private async UniTask ShowLogo()
         {
-            var statisticsService = ServiceLocator<StatisticsService>.GetService();
-            var waiterService = ServiceLocator<WaiterService>.GetService();
+            var statisticsService = ServicesProvider.GetService<StatisticsService>();
+            var uiService = ServicesProvider.GetService<UIService>();
+            var waiterService = ServicesProvider.GetService<WaiterService>();
 
-            await ServiceLocator<UIFaderService>.GetService().FadeOut();
+            await ServicesProvider.GetService<UIService>().FadeOut();
             
-            if (statisticsService.CollectedGolds >= CMSProvider.GetEntity(CMSPrefabs.Gameplay.GameSettings).GetComponent<GameSettingsComponent>().GoldRequired)
+            if (statisticsService.StatisticsData.CollectedGolds >= statisticsService.StatisticsData.Goal)
             {
-                await ServiceLocator<UISayService>.GetService().Print("You win!");
+                await uiService.Print("You win!");
             }
             else
             {
-                await ServiceLocator<UISayService>.GetService().Print("You looooose :(");
+                await uiService.Print("You lose :'(");
             }
             
             await waiterService.SmartWait(2f);
 
-            await ServiceLocator<UISayService>.GetService().UnPrint();
+            await uiService.UnPrint();
             
             await waiterService.SmartWait(0.5f);
 
-            await ServiceLocator<UISayService>.GetService().Print($"Gold - {statisticsService.CollectedGolds} / {CMSProvider.GetEntity(CMSPrefabs.Gameplay.GameSettings).GetComponent<GameSettingsComponent>().GoldRequired}");
+            await uiService.Print($"Gold - {statisticsService.StatisticsData.CollectedGolds} / {statisticsService.StatisticsData.Goal}");
             
             await waiterService.SmartWait(2f);
 
-            await ServiceLocator<UISayService>.GetService().UnPrint();
+            await uiService.UnPrint();
             
             await waiterService.SmartWait(0.5f);
             
-            await ServiceLocator<UISayService>.GetService().Print("Thank you for playing!");
-        }
+            await uiService.Print($"Click to continue");
+            await waiterService.SmartWait(0.5f);
+            await waiterService.WaitClick();
+            uiService.UnPrint().Forget();
+            await uiService.FadeIn();
 
-        private void OnDestroy()
-        {
-            UnregisterServices();
+            SceneManager.LoadScene(Const.ScenesConst.GameScene);
         }
     }
 }

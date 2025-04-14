@@ -66,13 +66,10 @@ Shader "Custom/SpriteOutlineSimple"
 
                 if (_OutlineEnabled == true)
                 {
-                     // Если пиксель прозрачный, проверяем соседей на наличие непрозрачных пикселей
                     if (c.a == 0) {
                         const float outline_width = 0.06f;
-                        // Фиксированный размер шага вместо использования TexelSize
                         float step = outline_width * 0.1;
                         
-                        // Проверяем 4 соседних пикселя
                         if (tex2D(_MainTex, IN.texcoord + float2(step, 0)).a > 0 ||
                             tex2D(_MainTex, IN.texcoord - float2(step, 0)).a > 0 ||
                             tex2D(_MainTex, IN.texcoord + float2(0, step)).a > 0 ||

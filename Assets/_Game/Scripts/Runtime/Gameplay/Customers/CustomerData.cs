@@ -8,18 +8,19 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Customers
     public class CustomerData : IDisposable
     {
         public int Id;
-
+        public string ViewId;
+        
         public readonly MovableBehaviour Movable;
         public readonly CustomerMoodChecker MoodChecker;
-        public readonly CustomerBehaviour View;
+        public readonly CustomerBehaviour Behaviour;
         public readonly StateMachine<CustomerData> StateMachine;
         
-        public CustomerData(CustomerBehaviour view, MovableBehaviour movable)
+        public CustomerData(CustomerBehaviour behaviour, MovableBehaviour movable)
         {
-            View = view;
+            Behaviour = behaviour;
             Movable = movable;
-            MoodChecker = new CustomerMoodChecker(this);
             
+            MoodChecker = new CustomerMoodChecker(this);
             StateMachine = new StateMachine<CustomerData>(this);
             StateMachine.AddState(new BrowsingMenuClientState());
             StateMachine.AddState(new EatingOrderFoodClientState());

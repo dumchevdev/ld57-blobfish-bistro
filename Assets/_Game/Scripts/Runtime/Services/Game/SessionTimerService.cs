@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
 {
-    public class SessionTimerService : IService,IDisposable
+    public class SessionTimerService : IService, IDisposable
     {
         public event Action OnSessionTimerFinished;
         
@@ -28,6 +28,8 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
 
         public async UniTask StartTimer()
         {
+            if (SessionFinished) return;
+            
             _timerTokenSource = new CancellationTokenSource();
 
             while (_timerTokenSource != null && !_timerTokenSource.IsCancellationRequested)

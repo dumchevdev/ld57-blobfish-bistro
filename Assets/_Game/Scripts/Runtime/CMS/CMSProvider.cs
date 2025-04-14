@@ -23,6 +23,12 @@ namespace Game.Runtime._Game.Scripts.Runtime.CMS
             _loaded = false;
             _entitiesDatabase = new CMSTable<CMSEntity>();
         }
+        
+        public static void Reload()
+        {
+            Unload();
+            Load();
+        }
 
         public static CMSEntity GetEntity(string entityId)
         {
