@@ -139,24 +139,14 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Audio
 
         private async UniTask ReturnAudioSourceToPool(AudioSource audioSource, float delay)
         {
-            _poolTokenSource?.Cancel();
-            _poolTokenSource = new CancellationTokenSource();
-
-            try
-            {
-                await UniTask.WaitForSeconds(delay, cancellationToken: _poolTokenSource.Token)
-                    .SuppressCancellationThrow();
+            await UniTask.WaitForSeconds(delay)
+                .SuppressCancellationThrow();
             
-                if ( _poolTokenSource == null || _poolTokenSource.IsCancellationRequested)
-                    return;
+            if ( _poolTokenSource == null || _poolTokenSource.IsCancellationRequested)
+                return;
                 
-                audioSource.Stop();
-                audioSource.clip = null;
-            }
-            finally
-            {
-                ResetPoolToken();
-            }
+            audioSource.Stop();
+            audioSource.clip = null;
         }
 
         private bool CanPlaySFX(CMSEntity entity)

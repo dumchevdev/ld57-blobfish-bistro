@@ -1,6 +1,7 @@
 using System.Linq;
 using Game.Runtime._Game.Scripts.Runtime.CMS;
 using Game.Runtime._Game.Scripts.Runtime.CMS.Components.Gameplay;
+using Game.Runtime._Game.Scripts.Runtime.Gameplay.HUD;
 using Game.Runtime._Game.Scripts.Runtime.Gameplay.Interactable;
 using Game.Runtime._Game.Scripts.Runtime.Gameplay.Unit;
 using Game.Runtime.CMS;
@@ -15,9 +16,8 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Customers
         [SerializeField] private SpriteRenderer iconSpriteRenderer;
         [SerializeField] private Sprite hintWarning;
         [SerializeField] private SpriteFlipper flipper;
-        [SerializeField] private SpriteRenderer moodProgress;
-        [SerializeField] private SpriteRenderer progressBar;
-
+        [SerializeField] private SpriteProgressBar progressBar;
+        
         public void ShowHintWarning(bool isShow)
         {
             hint.SetActive(isShow);
@@ -26,7 +26,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Customers
                 iconSpriteRenderer.sprite = hintWarning;
             }
         }
-
+        
         public void ShowHint(bool isShow, string foodId = null)
         {
             hint.SetActive(isShow);
@@ -39,19 +39,15 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Customers
 
         public void SetMoodProgress(float progress)
         {
-            if (moodProgress == null) return;
+            if (progressBar == null) return;
             var clampedProgress = Mathf.Clamp01(progress);
             var progressColor = clampedProgress >= 0.75f ? Color.green : clampedProgress >= 0.25f ? Color.yellow : Color.red;
-            var size = moodProgress.size;
-            size.x = clampedProgress;
-            moodProgress.size = size;
-            moodProgress.color = progressColor;
+            progressBar.SetProgress(progress, progressColor);
         }
 
         public void SetActiveProgressBar(bool isActive)
         {
-            if (progressBar == null) return;
-            progressBar.gameObject.SetActive(isActive);
+            progressBar.SetActiveProgressBar(isActive);
         }
 
         public void ForceFlip(bool isRight)

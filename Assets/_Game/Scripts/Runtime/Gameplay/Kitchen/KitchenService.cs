@@ -8,6 +8,8 @@ using Game.Runtime._Game.Scripts.Runtime.CMS;
 using Game.Runtime._Game.Scripts.Runtime.CMS.Components.Commons;
 using Game.Runtime._Game.Scripts.Runtime.Gameplay.Dishes;
 using Game.Runtime._Game.Scripts.Runtime.ServiceLocator;
+using Game.Runtime._Game.Scripts.Runtime.Services.Audio;
+using Game.Runtime._Game.Scripts.Runtime.Services.Game;
 using Game.Runtime._Game.Scripts.Runtime.Services.Save;
 using Game.Runtime.CMS;
 using UnityEngine;
@@ -17,22 +19,24 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Kitchen
 {
     public class KitchenService : IService, IDisposable
     {
-        private readonly List<DinnerPointData> _foodPoints;
-        private readonly ConcurrentQueue<string> _orderQueue;
+        private readonly List<DinnerPointData> _dinnerPoints;
+        private readonly Queue<CookingData> _needCooking;
+        private readonly ConcurrentQueue<OrderData> _orderQueue;
         private readonly DinnerFactory _dinnerFactory = new();
         private readonly SemaphoreSlim _factoryLock = new(1, 1);
-
+        
         private CancellationTokenSource _foodTokenSource;
     
         public KitchenService()
         {
-            _foodPoints = new List<DinnerPointData>();
-            _orderQueue = new ConcurrentQueue<string>();
+            _dinnerPoints = new List<DinnerPointData>();
+            _needCooking = new Queue<CookingData>();
+            _orderQueue = new ConcurrentQueue<OrderData>();
         
             InitializeKitchen();
             InitializeTrash();
 
-            ApplyFoodOrders().Forget();
+            ApplyOrders().Forget();
         }
 
         private void InitializeKitchen()
@@ -44,7 +48,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Kitchen
         
             var foodPoints = kitchenPrefab.GetComponentsInChildren<Transform>();
             for (int i = 2; i < foodPoints.Length; i++)
-                _foodPoints.Add(new DinnerPointData(foodPoints[i]));
+                _dinnerPoints.Add(new DinnerPointData(foodPoints[i]));
         }
 
         private static void InitializeTrash()
@@ -58,69 +62,66 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Kitchen
             trashObject.Settings.IsHighlightable = true;
         }
 
-        public void Enqueue(string foodId)
+        public void Enqueue(OrderData orderData)
         {
-            _orderQueue.Enqueue(foodId);
+            _orderQueue.Enqueue(orderData);
         }
+        
+        private bool AnyFreeDinnerPoints() => _dinnerPoints.Any(data => !data.IsOccupied);
 
-        private bool TryDequeue(out string foodId)
+        private DinnerPointData GetFreeDinnerPoint()
         {
-            if (_orderQueue.Count > 0)
-            {
-                _orderQueue.TryDequeue(out foodId);
-                return true;
-            }
-            foodId = null;
-            return false;
-        }
-
-        private bool TryGetFreeFoodPoint(out DinnerPointData dinnerPoint)
-        {
-            foreach (var point in _foodPoints)
+            foreach (var point in _dinnerPoints)
             {
                 if (!point.IsOccupied)
                 {
                     point.IsOccupied = true;
-                    dinnerPoint = point;
-                    return true;
+                    return point;
                 }
             }
-            dinnerPoint = null;
-            return false;
-        }
-
-        private bool AnyFoodPointFree()
-        {
-            return _foodPoints.Any(data => !data.IsOccupied);
-        }
-
-        private bool NeedCreateNewFood()
-        {
-            return _orderQueue.Count > 0 && AnyFoodPointFree() && !_dinnerFactory.IsOccupied;
+            
+            return null;
         }
     
-        private async UniTask ApplyFoodOrders()
+        private async UniTask ApplyOrders()
         {
             _foodTokenSource = new CancellationTokenSource();
-        
+
+
             while (_foodTokenSource != null && !_foodTokenSource.IsCancellationRequested)
             {
-                await UniTask.WaitUntil(NeedCreateNewFood, cancellationToken: _foodTokenSource.Token);
+                await UniTask.Yield(cancellationToken: _foodTokenSource.Token, cancelImmediately: true);
 
-                if (TryDequeue(out var foodId) && TryGetFreeFoodPoint(out var foodPoint))
+                if (AnyFreeDinnerPoints() && _orderQueue.TryDequeue(out OrderData orderData))
                 {
-                    try
-                    {
-                        await _dinnerFactory.CreateDinner(foodId, foodPoint);
-                        ServicesProvider.GetService<SaveService>().UpdateStatisticsData(foodId);
-                    }
-                    catch
-                    {
-                        ReturnFoodPoint(foodPoint);
-                        throw;
-                    }
+                    PreviewOrder(orderData.DinnerId, GetFreeDinnerPoint());
+                }
+
+                CookDinner().Forget();
+            }
+        }
+
+        private async UniTask CookDinner()
+        {
+            if (!_dinnerFactory.IsOccupied && _needCooking.TryDequeue(out CookingData cookingData))
+            {
+                try
+                {
+                    await _dinnerFactory.CookingDinner(cookingData);
+                    ServicesProvider.GetService<AudioService>().Play(CMSPrefabs.Audio.SFX.SFXBubble);
+                    ServicesProvider.GetService<SaveService>().UpdateStatisticsData(cookingData.Model.Id);
+                }
+                catch
+                {
+                    ReturnFoodPoint(cookingData.DinnerPointData);
                 }
             }
+        }
+
+        private void PreviewOrder(string dinnerId, DinnerPointData dinnerPoint)
+        {
+            var dinnerBehaviour = _dinnerFactory.CreateDinner(dinnerId, dinnerPoint);
+            _needCooking.Enqueue(new CookingData(dinnerBehaviour.Item1, dinnerBehaviour.Item2, dinnerPoint));
         }
 
         public void ReturnFoodPoint(DinnerPointData dinnerPointData)

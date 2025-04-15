@@ -17,11 +17,11 @@ namespace Game.Runtime._Game.Scripts.Runtime.ServiceLocator
             var scopeServices = GetScopeServices(scope);
             if (scopeServices.TryAdd(type, service))
             {
-                Debug.Log($"[ServiceLocator] {scope}. Registered {type}.");
+                Debug.Log($"[ServiceLocator] {scope}. Registered {type.Name}.");
             }
             else
             {
-                Debug.LogError($"[ServiceLocator] Cannot registered {type}");
+                Debug.LogError($"[ServiceLocator] Cannot registered {type.Name}");
             }
         }
 
@@ -44,7 +44,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.ServiceLocator
                     return (T)service;
             }
             
-            Debug.LogError($"[ServiceLocator] Cannot resolve type {type}");
+            Debug.LogError($"[ServiceLocator] Cannot resolve type {type.Name}");
             return default;
         }
         
@@ -56,11 +56,11 @@ namespace Game.Runtime._Game.Scripts.Runtime.ServiceLocator
             if (scopeServices.ContainsKey(type))
             {
                 scopeServices.Remove(type);
-                Debug.Log($"[ServiceLocator] Unregistered {type}");
+                Debug.Log($"[ServiceLocator] Unregistered {type.Name}");
             }
             else
             {
-                Debug.LogWarning($"[ServiceLocator] Cannot unregistered {type}");
+                Debug.LogWarning($"[ServiceLocator] Cannot unregistered {type.Name}");
             }
         }
 

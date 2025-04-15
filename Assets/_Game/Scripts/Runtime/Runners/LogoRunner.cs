@@ -67,9 +67,6 @@ namespace Game.Runtime._Game.Scripts.Runtime.Runners
 
             await waiterService.SmartWait(2f);
 
-            audioService.Play(CMSPrefabs.Audio.SFX.SFXTyping);
-            cameraService.UIShake();
-
             logoText.DOFade(0f, 1f);
             
             await waiterService.SmartWait(1.5f);

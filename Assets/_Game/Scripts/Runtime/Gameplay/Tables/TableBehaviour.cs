@@ -9,5 +9,6 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Tables
         public Transform ClientPoint;
         public Transform FoodPoint;
         public bool IsRight;
+        public ParticleSystem MoneyParticle;
     }
 }

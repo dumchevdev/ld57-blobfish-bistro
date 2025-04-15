@@ -55,5 +55,5 @@ MonoBehaviour:
       data:
         Clips:
         - {fileID: 8300000, guid: a5b6f4674cdfcf14b8b0d4d0bde4dde1, type: 3}
-        Volume: 1
+        Volume: 0.8
         Cooldown: 0.1

@@ -20,7 +20,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Runners
         private void Start()
         {
             RegisterCamera();
-            ShowLogo().Forget();
+            ShowStatistics().Forget();
         }
 
         private void RegisterCamera()
@@ -28,7 +28,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Runners
             ServicesProvider.GetService<CameraService>().RegisterCamera(logoCamera);
         }
 
-        private async UniTask ShowLogo()
+        private async UniTask ShowStatistics()
         {
             var statisticsService = ServicesProvider.GetService<StatisticsService>();
             var uiService = ServicesProvider.GetService<UIService>();
@@ -45,24 +45,10 @@ namespace Game.Runtime._Game.Scripts.Runtime.Runners
                 await uiService.Print("You lose :'(");
             }
             
-            await waiterService.SmartWait(2f);
-
-            await uiService.UnPrint();
-            
-            await waiterService.SmartWait(0.5f);
-
-            await uiService.Print($"Gold - {statisticsService.StatisticsData.CollectedGolds} / {statisticsService.StatisticsData.Goal}");
-            
-            await waiterService.SmartWait(2f);
-
-            await uiService.UnPrint();
-            
             await waiterService.SmartWait(0.5f);
             
-            await uiService.Print($"Click to continue");
-            await waiterService.SmartWait(0.5f);
             await waiterService.WaitClick();
-            uiService.UnPrint().Forget();
+            await uiService.UnPrint();
             await uiService.FadeIn();
 
             SceneManager.LoadScene(Const.ScenesConst.GameScene);

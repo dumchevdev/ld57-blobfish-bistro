@@ -14,6 +14,13 @@ namespace Game.Runtime._Game.Scripts.Runtime.Utils.Helpers
 
                 return new Color(red, green, blue);
             }
+
+            public static void SetAlpha(SpriteRenderer sprite, float alpha)
+            {
+                var color = sprite.color;
+                color.a = alpha;
+                sprite.color = color;
+            }
         }
     }
 }

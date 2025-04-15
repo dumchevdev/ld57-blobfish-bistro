@@ -14,6 +14,7 @@ namespace Game.Runtime.CMS
         {
             public static class SFX
             {
+                public const string SFXBubble = "CMS/Audio/SFX/SFXBubble";
                 public const string SFXClick = "CMS/Audio/SFX/SFXClick";
                 public const string SFXImpact = "CMS/Audio/SFX/SFXImpact";
                 public const string SFXKill = "CMS/Audio/SFX/SFXKill";

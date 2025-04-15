@@ -7,20 +7,16 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Dishes
 {
     public class DinnerInteraction : IInteraction
     {
-        private readonly string _foodId;
-        private readonly DinnerBehaviour _dinnerBehaviour;
-        private readonly DinnerPointData _dinnerPointData;
+        private readonly CookingData _cookingData;
 
-        public DinnerInteraction(string foodId, DinnerBehaviour dinnerBehaviour, DinnerPointData dinnerPointData)
+        public DinnerInteraction(CookingData cookingData)
         {
-            _foodId = foodId;
-            _dinnerBehaviour = dinnerBehaviour;
-            _dinnerPointData = dinnerPointData;
+            _cookingData = cookingData;
         }
 
         public void ExecuteInteraction(InteractableObject interactable)
         {
-            ServicesProvider.GetService<GameService>().TakeFood(_foodId, _dinnerBehaviour, _dinnerPointData);
+            ServicesProvider.GetService<GameService>().TakeFood(_cookingData);
         }
     }
 }

@@ -8,6 +8,7 @@ using Game.Runtime._Game.Scripts.Runtime.CMS.Components.Gameplay;
 using Game.Runtime._Game.Scripts.Runtime.Gameplay.Customers;
 using Game.Runtime._Game.Scripts.Runtime.Gameplay.Customers.States;
 using Game.Runtime._Game.Scripts.Runtime.ServiceLocator;
+using Game.Runtime._Game.Scripts.Runtime.Services.Audio;
 using Game.Runtime._Game.Scripts.Runtime.Utils.Structs;
 using Game.Runtime.CMS;
 using UnityEngine;
@@ -113,6 +114,8 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
 
             customer.StateMachine.ChangeState<WaitingInQueueClientState>();
             customer.Movable.MoveToPoint(_queuePoints[queueClientData.PointIndex].Point.position).Forget();
+            
+            ServicesProvider.GetService<AudioService>().Play(CMSPrefabs.Audio.SFX.SFXBubble);
         }
         
         public void TryRemoveCustomerInQueue(CustomerData customer)

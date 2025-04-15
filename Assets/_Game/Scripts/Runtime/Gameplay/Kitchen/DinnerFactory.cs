@@ -8,6 +8,7 @@ using Game.Runtime._Game.Scripts.Runtime.CMS.Components.Commons;
 using Game.Runtime._Game.Scripts.Runtime.CMS.Components.Gameplay;
 using Game.Runtime._Game.Scripts.Runtime.Gameplay.Dishes;
 using Game.Runtime.CMS;
+using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Kitchen
@@ -19,35 +20,43 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Kitchen
         private readonly List<DinnerBehaviour> _dinnerPool = new();
         private CancellationTokenSource _factoryTokenSource;
 
-        public async UniTask CreateDinner(string foodId, DinnerPointData dinnerPointData)
+        public async UniTask CookingDinner(CookingData cookingData)
         {
             _factoryTokenSource = new CancellationTokenSource();
 
             try
             {
                 IsOccupied = true;
+                cookingData.DinnerBehaviour.StartCookingTimer(cookingData.Model.CookingTime);
 
-                var foodsComponent = CMSProvider.GetEntity(CMSPrefabs.Gameplay.DishesLibrary).GetComponent<DishesLibraryComponent>();
-                var foodComponent = foodsComponent.Dishes.First(food => food.Id == foodId);
-
-                var foodBehaviour = GetFoodBehaviour();
-
-                await UniTask.WaitForSeconds(foodComponent.CookingTime, cancellationToken: _factoryTokenSource.Token);
+                await UniTask.WaitForSeconds(cookingData.Model.CookingTime, cancellationToken: _factoryTokenSource.Token);
                 
-                foodBehaviour.SetFoodSprite(foodComponent.Sprite);
-                foodBehaviour.EnableInteraction();
-                foodBehaviour.transform.position = dinnerPointData.Point.position;
-
-                foodBehaviour.Settings.IsClickable = true;
-                foodBehaviour.Settings.IsHighlightable = true;
-                foodBehaviour.InteractionStrategy = new DinnerInteraction(foodId, foodBehaviour, dinnerPointData);
-                foodBehaviour.gameObject.SetActive(true);
+                cookingData.DinnerBehaviour.SetFishingState();
+                cookingData.DinnerBehaviour.EnableInteraction();
+                
+                cookingData.DinnerBehaviour.Settings.IsClickable = true;
+                cookingData.DinnerBehaviour.Settings.IsHighlightable = true;
+                cookingData.DinnerBehaviour.InteractionStrategy = new DinnerInteraction(cookingData);
             }
             finally
             {
                 IsOccupied = false;
                 ResetFactoryToken();
             }
+        }
+
+        public (DinnerComponent, DinnerBehaviour) CreateDinner(string foodId, DinnerPointData dinnerPointData)
+        {
+            var foodsComponent = CMSProvider.GetEntity(CMSPrefabs.Gameplay.DishesLibrary).GetComponent<DishesLibraryComponent>();
+            var foodComponent = foodsComponent.Dishes.First(food => food.Id == foodId);
+
+            var foodBehaviour = GetFoodBehaviour();
+                
+            foodBehaviour.transform.position = dinnerPointData.Point.position;
+            foodBehaviour.SetFoodSprite(foodComponent.Sprite);
+            foodBehaviour.SetQueueState();
+            
+            return (foodComponent, foodBehaviour);
         }
 
         private DinnerBehaviour GetFoodBehaviour()

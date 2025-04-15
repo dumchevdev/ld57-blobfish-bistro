@@ -17,6 +17,7 @@ using Game.Runtime._Game.Scripts.Runtime.Gameplay.Level;
 using Game.Runtime._Game.Scripts.Runtime.Gameplay.Tables;
 using Game.Runtime._Game.Scripts.Runtime.Gameplay.Tables.Strategies;
 using Game.Runtime._Game.Scripts.Runtime.ServiceLocator;
+using Game.Runtime._Game.Scripts.Runtime.Services.Audio;
 using Game.Runtime._Game.Scripts.Runtime.Services.Save;
 using Game.Runtime._Game.Scripts.Runtime.Services.Statistics;
 using Game.Runtime._Game.Scripts.Runtime.Services.UI;
@@ -197,32 +198,35 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
                 {
                     return UniTask.CompletedTask;
                 }
-                ServicesProvider.GetService<KitchenService>().Enqueue(orderData.DinnerId);
+                ServicesProvider.GetService<AudioService>().Play(CMSPrefabs.Audio.SFX.SFXBubble);
+                ServicesProvider.GetService<KitchenService>().Enqueue(orderData);
                 orderData.CustomerData.StateMachine.ChangeState<WaitingFoodClientState>();
                 orderData.TableData.Behaviour.InteractionStrategy = new PutFoodTableInteraction();
                 return UniTask.CompletedTask;
             });
         }
 
-        public void TakeFood(string foodId, DinnerBehaviour dinnerBehaviour, DinnerPointData dinnerPointData)
+        public void TakeFood(CookingData cookingData)
         {
-            dinnerBehaviour.InteractionStrategy = new EmptyInteraction();
+            cookingData.DinnerBehaviour.InteractionStrategy = new EmptyInteraction();
             
-            MoveCharacter(dinnerBehaviour.Point.position);
+            MoveCharacter(cookingData.DinnerBehaviour.Point.position);
             _commandManager.AddCommand(() =>
             {
                 var characterService = ServicesProvider.GetService<CharacterService>();
                 var characterHand = characterService.GetFreeHand();
                 if (characterHand != null)
                 {
-                    dinnerBehaviour.gameObject.SetActive(false);
-                    characterHand.DinnerData = new DinnerData(foodId, dinnerBehaviour);
+                    ServicesProvider.GetService<AudioService>().Play(CMSPrefabs.Audio.SFX.SFXBubble);
+
+                    cookingData.DinnerBehaviour.gameObject.SetActive(false);
+                    characterHand.DinnerData = new DinnerData(cookingData.Model.Id, cookingData.DinnerBehaviour);
                     
                     var foodComponent = CMSProvider.GetEntity(CMSPrefabs.Gameplay.DishesLibrary)
-                        .GetComponent<DishesLibraryComponent>().Dishes.First(food => food.Id == foodId);
+                        .GetComponent<DishesLibraryComponent>().Dishes.First(food => food.Id == cookingData.Model.Id);
                     characterService.HandsVisual.SetHandSprite(foodComponent.Sprite, characterHand.IsRightHand);
                     
-                    ServicesProvider.GetService<KitchenService>().ReturnFoodPoint(dinnerPointData);
+                    ServicesProvider.GetService<KitchenService>().ReturnFoodPoint(cookingData.DinnerPointData);
                 }
                 return UniTask.CompletedTask;
             });
@@ -236,11 +240,13 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
                 var characterService = ServicesProvider.GetService<CharacterService>();
                 var kitchenService = ServicesProvider.GetService<KitchenService>();
 
+                bool reseted = false;
                 var leftHand = characterService.CharacterData.LeftHand;
                 if (leftHand.DinnerData != null && leftHand.DinnerData.Behaviour != null)
                 {
                     kitchenService.ReturnFoodBehaviour(leftHand.DinnerData.Behaviour);
                     leftHand.DinnerData = null;
+                    reseted = true;
                 }
 
                 var rightHand = characterService.CharacterData.RightHand;
@@ -248,8 +254,12 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
                 {
                     kitchenService.ReturnFoodBehaviour(rightHand.DinnerData.Behaviour);
                     rightHand.DinnerData = null;
+                    reseted = true;
                 }
                 
+                if (reseted)
+                    ServicesProvider.GetService<AudioService>().Play(CMSPrefabs.Audio.SFX.SFXBubble);
+
                 characterService.HandsVisual.ResetHands();
 
                 return UniTask.CompletedTask;
@@ -287,6 +297,8 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
                     
                     characterService.HandsVisual.ResetHandSprite(handData.IsRightHand);
                     handData.DinnerData = null;
+                    
+                    ServicesProvider.GetService<AudioService>().Play(CMSPrefabs.Audio.SFX.SFXBubble);
 
                     orderData.TableData.Behaviour.InteractionStrategy = new MoveToTableInteraction();
                     StartCustomerEatingFood(orderData.CustomerData).Forget();
@@ -307,7 +319,11 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
                 orderData.TableData.Behaviour.InteractionStrategy = new MoveToTableInteraction();
 
                 if (orderData.DinnerBehaviour != null)
+                {
+                    orderData.TableData.Behaviour.MoneyParticle.Play();
+                    ServicesProvider.GetService<AudioService>().Play(CMSPrefabs.Audio.SFX.SFXBubble);
                     ServicesProvider.GetService<KitchenService>().ReturnFoodBehaviour(orderData.DinnerBehaviour);
+                }
                 
                 GameData.Money += orderData.Money;
                 
@@ -395,7 +411,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
             
             var orderData = GetOrderByClient(customerData.Id);
             var emptyPlate = CMSProvider.GetEntity(CMSPrefabs.Gameplay.EmptyPlate).GetComponent<SpriteComponent>().Sprite;
-            orderData.DinnerBehaviour.SetFoodSprite(emptyPlate);
+            orderData.DinnerBehaviour.SetMoneyState(emptyPlate);
 
             var dishesLibrary = CMSProvider.GetEntity(CMSPrefabs.Gameplay.DishesLibrary).GetComponent<DishesLibraryComponent>();
             var dinnerComponent = dishesLibrary.Dishes.First(dinner => dinner.Id == orderData.DinnerId);
