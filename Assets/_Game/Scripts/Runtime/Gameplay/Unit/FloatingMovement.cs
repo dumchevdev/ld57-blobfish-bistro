@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Unit
 {
@@ -40,7 +42,7 @@ namespace Game.Runtime._Game.Scripts.Runtime.Gameplay.Unit
                                       verticalSin * easedValue);
             
             Vector2 smoothDamp = Vector2.SmoothDamp(transform.position, newPosition, ref currentVelocity, smoothTime, maxVelocity, Time.deltaTime);
-            velocity = (newPosition - (Vector2)transform.position) / Time.deltaTime;
+            velocity = (newPosition - (Vector2)transform.position) / Mathf.Max(0.01f, Time.deltaTime);
 
             if (velocity.sqrMagnitude > maxVelocity * maxVelocity)
             {

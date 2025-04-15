@@ -217,8 +217,6 @@ namespace Game.Runtime._Game.Scripts.Runtime.Services.Game
                 var characterHand = characterService.GetFreeHand();
                 if (characterHand != null)
                 {
-                    ServicesProvider.GetService<AudioService>().Play(CMSPrefabs.Audio.SFX.SFXBubble);
-
                     cookingData.DinnerBehaviour.gameObject.SetActive(false);
                     characterHand.DinnerData = new DinnerData(cookingData.Model.Id, cookingData.DinnerBehaviour);
                     
