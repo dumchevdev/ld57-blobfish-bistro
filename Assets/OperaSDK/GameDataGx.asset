@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 382dad02f77a3ba42922ebfadd334fba, type: 3}
+  m_Name: GameDataGx
+  m_EditorClassIdentifier: 
+  gameData:
+    name: BLOBFISH BISTRO
+    editUrl: https://dev.gx.games/games/ef2ab743-c9bb-4358-ae9f-89e658077ed7/details
+    group:
+      name: dumchevdev studio
+      studioId: 1ca0678b-cab5-4919-940a-85ca08be9f4d
+      gameMaxSize: 2048
+    id: ef2ab743-c9bb-4358-ae9f-89e658077ed7
+    internalShareUrl: https://gx.games/games/jp0geu/blobfish-bistro/tracks/fdefc56a-3e87-4603-b35b-2e5146fda615/
+    projectId: 
+    publicShareUrl: 
+    version:
+      major: 0
+      minor: 0
+      build: 0
+      revision: 1
+    nextVersion:
+      major: 0
+      minor: 0
+      build: 0
+      revision: 2
